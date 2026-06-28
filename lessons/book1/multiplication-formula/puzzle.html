@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乘法公式拼圖</title>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']]
+            },
+            options: {
+                enableMenu: false /* 關閉右鍵選單以防干擾點擊遊戲 */
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        :root {
+            --bg-color: #20272a;
+            --primary-color: #f1d2a0;
+            --accent-color: #b9a4ee;
+            --card-term: #80c7c4;
+            --card-sym: #d37aa9;
+            --card-sign: #f1d2a0;
+            --track-bg: rgba(0, 0, 0, 0.2);
+            --panel: rgba(9, 16, 18, 0.54);
+            --line: rgba(255, 255, 255, 0.26);
+            --text: #f8f2e8;
+            --muted: rgba(255, 255, 255, 0.72);
+            --chalk: #fffdf4;
+            --cream: #f1d2a0;
+            --pink: #d37aa9;
+            --teal: #80c7c4;
+        }
+        
+        /* 嚴格滿版一頁模式，禁止捲動 */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Noto Sans TC', sans-serif;
+            background:
+                radial-gradient(circle at 88% 84%, rgba(255,255,255,.12) 0 18px, transparent 19px),
+                var(--bg-color);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 20px;
+            box-sizing: border-box;
+        }
+
+        /* 頂部標題列 */
+        .title-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            width: 100%;
+            max-width: 1500px;
+            margin: 0 0 10px;
+            padding: 14px 170px 14px 18px;
+            border: 2px solid var(--line);
+            border-radius: 14px;
+            background:
+                linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
+                linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+                rgba(9, 16, 18, 0.66);
+            background-size: 34px 34px;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,.42), 0 18px 34px rgba(0,0,0,.22);
+            box-sizing: border-box;
+        }
+
+        .title-copy {
+            display: grid;
+            gap: 4px;
+        }
+
+        .lesson-kicker {
+            margin: 0;
+            color: var(--cream);
+            font-size: 0.95rem;
+            font-weight: 900;
+        }
+
+        h1 {
+            margin: 0;
+            color: var(--chalk);
+            font-size: clamp(1.8rem, 4.2vw, 3.4rem);
+            line-height: 1;
+            letter-spacing: 0;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            min-height: 38px;
+            border: 0;
+            border-radius: 999px;
+            background: var(--cream);
+            color: #17151d;
+            cursor: pointer;
+            font-weight: 900;
+            padding: 8px 15px;
+            white-space: nowrap;
+        }
+
+        .btn-info {
+            background-color: var(--accent-color);
+            color: #17151d;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 13px;
+            font-size: 0.86rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+            transition: background-color 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-info:hover { filter: brightness(1.06); }
+        .btn-info:active { transform: scale(0.95); }
+
+        .card-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 0 0 6px 0;
+            border-bottom: 2px solid var(--line);
+            padding-bottom: 2px;
+        }
+
+        /* 主遊戲區塊 */
+        .game-container {
+            display: flex;
+            gap: 12px;
+            max-width: 1500px;
+            width: 100%;
+            flex: 1;
+            min-height: 0; 
+            margin-bottom: 2px;
+        }
+
+        /* 左側公式軌道區 */
+        .formula-section {
+            flex: 1.75;
+            background: var(--panel);
+            padding: 8px;
+            border-radius: 12px;
+            border: 2px solid var(--line);
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,.42), 0 14px 30px rgba(0,0,0,.18);
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .formula-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            border-bottom: 2px solid var(--line);
+            padding-bottom: 2px;
+        }
+
+        .formula-header h3 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+        }
+
+        /* 隨機排序按鈕樣式 */
+        .btn-shuffle {
+            background-color: var(--cream);
+            color: #17151d;
+            border: none;
+            border-radius: 4px;
+            padding: 3px 10px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn-shuffle:hover { filter: brightness(1.06); }
+
+        .formula-track-container {
+            display: flex;
+            flex-direction: column;
+            gap: 4px; 
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* 公式列橫向排列 */
+        .formula-row {
+            display: flex;
+            align-items: center;
+            background: var(--track-bg);
+            padding: 1px 8px; 
+            border-radius: 8px;
+            border: 1px solid var(--line);
+            border-left: 5px solid var(--primary-color);
+            flex: 1; 
+            min-height: 0;
+        }
+
+        /* 公式區域靠左對齊 */
+        .math-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; 
+            color: var(--primary-color);
+            user-select: none;
+            white-space: nowrap; 
+            padding-right: 8px; 
+            min-width: 178px;
+        }
+
+        .math-index {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-right: 4px;
+        }
+
+        .math-formula {
+            display: inline-block;
+            font-size: 1.1rem;
+        }
+
+        /* 右側拼圖放置軌道 */
+        .formula-track {
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            gap: 3px;
+            height: calc(100% - 2px);
+            flex: 1; 
+            background-color: rgba(0, 0, 0, 0.18);
+            border: 2px dashed rgba(255,255,255,.32);
+            border-radius: 6px;
+            padding: 1px 6px;
+            box-sizing: border-box;
+            transition: all 0.2s;
+            min-height: 32px;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        .formula-track.hovered {
+            background-color: rgba(128, 199, 196, 0.16);
+            border-color: var(--teal);
+        }
+
+        /* 右側按鈕零件庫區 */
+        .card-section {
+            flex: 0.95;
+            background: var(--panel);
+            padding: 8px;
+            border-radius: 12px;
+            border: 2px solid var(--line);
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,.42), 0 14px 30px rgba(0,0,0,.18);
+            display: flex;
+            flex-direction: column;
+            min-height: 0; 
+        }
+
+        .card-section h3 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+        }
+
+        /* 縱向三等分容器 */
+        .category-rows-container {
+            display: grid;
+            grid-template-rows: repeat(3, 1fr);
+            gap: 6px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* 灰色大容器 */
+        .category-row {
+            display: flex;
+            flex-direction: column;
+            padding: 4px 8px;
+            background-color: rgba(0, 0, 0, 0.16);
+            border-radius: 8px;
+            border: 1px solid var(--line);
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        /* 放大三個列別的標題字體 */
+        .category-title {
+            font-size: 1.05rem; 
+            font-weight: 800;   
+            color: var(--chalk);     
+            margin-bottom: 4px;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 6px;
+            white-space: nowrap;
+        }
+
+        /* 第一列：基礎單項式網格（1列7格均分） */
+        .grid-row1 {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr); 
+            gap: 4px;
+            flex: 1; 
+            min-height: 0;
+        }
+
+        /* 第二列：乘積與係數項網格（2列5格均分） */
+        .grid-row2 {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); 
+            grid-template-rows: repeat(2, 1fr);
+            gap: 4px;
+            flex: 1; 
+            min-height: 0;
+        }
+
+        /* 第三列：基礎運算符與括號（2x2 特製適合網格） */
+        .grid-row3 {
+            display: grid;
+            grid-template-columns: repeat(2, 90px); 
+            grid-template-rows: repeat(2, 1fr);      
+            gap: 6px;
+            flex: 1;
+            min-height: 0;
+        }
+
+        /* 零件按鈕基礎樣式 */
+        .drag-card {
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            user-select: none;
+            position: relative;
+            transition: transform 0.1s;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+            width: 100%; 
+            height: calc(100% - 2px); 
+            overflow: hidden;
+        }
+        
+        /* 按鈕內部的公式字級 */
+        .drag-card .mjx-container {
+            font-size: calc(1.1vh + 6px) !important; 
+            color: white !important;
+            max-width: 100%;
+        }
+        
+        .drag-card:active { transform: scale(0.95); }
+
+        .source-card { border: 2px solid rgba(0,0,0,0.15); }
+        .source-card::after {
+            content: "∞";
+            position: absolute;
+            top: 1px;
+            right: 5px;
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* 放置到左側軌道內的字卡 */
+        .placed-card {
+            animation: fadeIn 0.15s ease;
+            padding: 1px 7px;
+            display: inline-flex;
+            height: 27px;
+            width: auto; 
+            flex: 0 0 auto;
+        }
+        .placed-card .mjx-container {
+            font-size: 0.94rem !important;
+        }
+        .placed-card:hover {
+            opacity: 0.9;
+            background-color: #d90429 !important;
+        }
+        .placed-card:hover .mjx-container {
+            visibility: hidden;
+        }
+        .placed-card:hover::after {
+            content: "× 刪除";
+            position: absolute;
+            font-size: 0.7rem;
+            color: white;
+            font-weight: bold;
+            font-family: system-ui;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .card-term { background-color: var(--card-term); }
+        .card-sym  { background-color: var(--card-sym); }
+        .card-sign { background-color: var(--card-sign); }
+
+        /* 控制按鈕區 */
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 4px; 
+            padding-top: 2px;
+        }
+
+        button.main-btn {
+            flex: 1;
+            padding: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-check { background-color: #2a9d8f; color: white; }
+        .btn-check:hover { background-color: #21766c; }
+        .btn-reset { background-color: #e63946; color: white; }
+        .btn-reset:hover { background-color: #b82d38; }
+
+        .result-msg {
+            margin-top: 2px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-align: center;
+            min-height: 16px;
+            line-height: 16px;
+        }
+        
+        .correct { color: #2a9d8f; }
+        .wrong { color: #e63946; }
+
+        /* 說明視窗 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+
+        .modal-content {
+            background-color: #151b1d;
+            padding: 16px;
+            border-radius: 12px;
+            max-width: 550px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            border-left: 6px solid var(--accent-color);
+        }
+
+        .modal-overlay.active .modal-content { transform: translateY(0); }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 14px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            user-select: none;
+        }
+        .modal-close:hover { color: #333; }
+
+        .modal-content h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            border-bottom: 2px solid var(--line);
+            padding-bottom: 4px;
+            margin-bottom: 8px;
+        }
+
+        .modal-content p {
+            margin: 6px 0;
+            font-size: 0.85rem;
+            color: var(--muted);
+            line-height: 1.4;
+        }
+
+        @media (max-width: 900px) {
+            html, body {
+                height: auto;
+                min-height: 100%;
+                overflow: auto;
+            }
+
+            .title-container {
+                padding: 70px 18px 18px;
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .back-button {
+                left: 16px;
+                right: auto;
+            }
+
+            .game-container {
+                flex-direction: column;
+                overflow: visible;
+            }
+
+            .formula-section,
+            .card-section {
+                min-height: 520px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="title-container">
+        <button class="back-button" type="button" onclick="history.back()">回上一頁</button>
+        <div class="title-copy">
+            <p class="lesson-kicker">高一數學｜第一章 數與式｜主題 002 乘法公式</p>
+            <h1>乘法公式拼圖</h1>
+        </div>
+    </div>
+    
+    <div class="game-container">
+        <div class="formula-section">
+            <div class="formula-header">
+                <h3>公式題目填充軌道</h3>
+                <button class="btn-shuffle" onclick="shuffleFormulas()">🔀 隨機排列公式</button>
+            </div>
+            <div class="formula-track-container" id="formula-tracks">
+                </div>
+        </div>
+
+        <div class="card-section">
+            <div class="card-section-header">
+                <h3>無限零件按鈕庫</h3>
+                <button class="btn-info" onclick="openModal()">遊戲說明</button>
+            </div>
+            
+            <div class="category-rows-container">
+                <div class="category-row">
+                    <div class="category-title">第一列：基礎單項式</div>
+                    <div class="grid-row1" id="row1-container"></div>
+                </div>
+
+                <div class="category-row">
+                    <div class="category-title">第二列：乘積與係數項</div>
+                    <div class="grid-row2" id="row2-container"></div>
+                </div>
+
+                <div class="category-row">
+                    <div class="category-title">第三列：基礎運算符與括號</div>
+                    <div class="grid-row3" id="row3-container"></div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="main-btn btn-check" onclick="checkAnswers()">檢查答案</button>
+                <button class="main-btn btn-reset" onclick="resetTracks()">清空軌道</button>
+            </div>
+            <div class="result-msg" id="result-msg"></div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="instructionModal" onclick="closeModalOnOverlay(event)">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h2>乘法公式拼圖 遊戲說明</h2>
+            <p><b>① 先點擊左側公式</b>：選定您目前想要拼湊的公式列（點擊後外框會變深藍色）。</p>
+            <p><b>② 點擊右側數學零件</b>：選中的數學零件字卡就會自動飛入該公式中。</p>
+            <p><b>③ 點擊公式內的字卡即可刪除</b>：如果選錯，點一下該卡片就能移除。</p>
+            <p><b>④ 隨機排列</b>：點擊左上角「隨機排列公式」按鈕，可以把題目順序打亂喔！</p>
+        </div>
+    </div>
+
+    <script>
+        // 原始公式資料
+        const originalFormulasData = [
+            { id: 1, left: "$(a + b)^2=$", right: ["$a^2$", "$+$", "$2ab$", "$+$", "$b^2$"] },
+            { id: 2, left: "$(a - b)^2=$", right: ["$a^2$", "$-$", "$2ab$", "$+$", "$b^2$"] },
+            { id: 3, left: "$(a + b)(a - b)=$", right: ["$a^2$", "$-$", "$b^2$"] },
+            { id: 4, left: "$(a + b + c)^2=$", right: ["$a^2$", "$+$", "$b^2$", "$+$", "$c^2$", "$+$", "$2ab$", "$+$", "$2bc$", "$+$", "$2ac$"] },
+            { id: 5, left: "$(a + b)^3=$", right: ["$a^3$", "$+$", "$3a^2b$", "$+$", "$3ab^2$", "$+$", "$b^3$"] },
+            { id: 6, left: "$(a - b)^3=$", right: ["$a^3$", "$-$", "$3a^2b$", "$+$", "$3ab^2$", "$-$", "$b^3$"] },
+            { id: 7, left: "$a^3 + b^3=$", right: ["$($", "$a$", "$+$", "$b$", "$)$", "$($", "$a^2$", "$-$", "$ab$", "$+$", "$b^2$", "$)$"] },
+            { id: 8, left: "$a^3 - b^3=$", right: ["$($", "$a$", "$-$", "$b$", "$)$", "$($", "$a^2$", "$+$", "$ab$", "$+$", "$b^2$", "$)$"] }
+        ];
+
+        // 當前用於渲染的公式陣列
+        let currentFormulas = [...originalFormulasData];
+
+        // 按鈕元件（依您指定的精準順序排列）
+        const row1Components = ["$a$", "$b$", "$a^2$", "$b^2$", "$c^2$", "$a^3$", "$b^3$"];
+        const row2Components = ["$ab$", "$2ab$", "$2bc$", "$2ac$", "$3a^2b$", "$3ab^2$", "$2a^2b$", "$2ab^2$", "$3ab$", "$3a^2b^2$"];
+        const row3Components = ["$($", "$)$", "$+$", "$-$"];
+
+        let activeTrack = null;
+        let draggedText = null;
+        let draggedTypeClass = "";
+
+        function openModal() { document.getElementById('instructionModal').classList.add('active'); }
+        function closeModal() { document.getElementById('instructionModal').classList.remove('active'); }
+        function closeModalOnOverlay(e) { if (e.target === document.getElementById('instructionModal')) closeModal(); }
+
+        // 初始化遊戲與按鈕庫
+        function initGame() {
+            renderTracks();
+
+            const row1Container = document.getElementById('row1-container');
+            const row2Container = document.getElementById('row2-container');
+            const row3Container = document.getElementById('row3-container');
+            
+            row1Container.innerHTML = '';
+            row2Container.innerHTML = '';
+            row3Container.innerHTML = '';
+            document.getElementById('result-msg').innerHTML = '';
+
+            renderSourceCards(row1Components, row1Container);
+            renderSourceCards(row2Components, row2Container);
+            renderSourceCards(row3Components, row3Container); // 修正原本 Container 語法錯誤
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise();
+            }
+        }
+
+        // 單獨渲染左側軌道
+        function renderTracks() {
+            const tracksContainer = document.getElementById('formula-tracks');
+            tracksContainer.innerHTML = '';
+
+            currentFormulas.forEach((formula, index) => {
+                const row = document.createElement('div');
+                row.className = 'formula-row';
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'math-wrapper';
+                
+                const indexSpan = document.createElement('span');
+                indexSpan.className = 'math-index';
+                indexSpan.innerText = `（${formula.id}）`;
+                
+                const formulaSpan = document.createElement('span');
+                formulaSpan.className = 'math-formula';
+                formulaSpan.innerHTML = formula.left;
+
+                wrapper.appendChild(indexSpan);
+                wrapper.appendChild(formulaSpan);
+                row.appendChild(wrapper);
+
+                const track = document.createElement('div');
+                track.className = 'formula-track';
+                track.dataset.formulaId = formula.id; // 用固定 ID 綁定答案基準
+                
+                track.addEventListener('dragover', e => e.preventDefault());
+                track.addEventListener('dragenter', function(e) { e.preventDefault(); this.classList.add('hovered'); });
+                track.addEventListener('dragleave', function() { this.classList.remove('hovered'); });
+                track.addEventListener('drop', dropOntoTrack);
+                
+                track.addEventListener('click', function(e) {
+                    if(e.target === this || e.target.classList.contains('formula-track')) { setActiveTrack(this); }
+                });
+
+                row.appendChild(track);
+                tracksContainer.appendChild(row);
+            });
+
+            // 預設選取第一個軌道
+            setActiveTrack(document.querySelector('.formula-track'));
+            
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([tracksContainer]);
+            }
+        }
+
+        // 隨機打亂左側公式排序
+        function shuffleFormulas() {
+            for (let i = currentFormulas.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [currentFormulas[i], currentFormulas[j]] = [currentFormulas[j], currentFormulas[i]];
+            }
+            renderTracks();
+        }
+
+        function renderSourceCards(componentsList, container) {
+            componentsList.forEach((item) => {
+                const card = document.createElement('div');
+                const typeClass = getCardClass(item);
+                card.className = `drag-card source-card ${typeClass}`;
+                card.draggable = true;
+                card.innerHTML = item;
+                card.dataset.text = item;
+                card.dataset.typeClass = typeClass;
+
+                card.addEventListener('dragstart', function() {
+                    draggedText = this.dataset.text;
+                    draggedTypeClass = this.dataset.typeClass;
+                });
+
+                card.addEventListener('click', function() {
+                    if (activeTrack) {
+                        createPlacedCard(activeTrack, this.dataset.text, this.dataset.typeClass);
+                    }
+                });
+
+                container.appendChild(card);
+            });
+        }
+
+        function getCardClass(item) {
+            if (item.includes('+') || item.includes('-')) return 'card-sign';
+            if (item.includes('(') || item.includes(')')) return 'card-sym';
+            return 'card-term';
+        }
+
+        function setActiveTrack(track) {
+            document.querySelectorAll('.formula-track').forEach(t => t.style.borderColor = 'rgba(255,255,255,.32)');
+            activeTrack = track;
+            if(track) track.style.borderColor = 'var(--primary-color)';
+        }
+
+        function dropOntoTrack(e) {
+            e.preventDefault();
+            this.classList.remove('hovered');
+            if (draggedText) {
+                createPlacedCard(this, draggedText, draggedTypeClass);
+                setActiveTrack(this);
+            }
+        }
+
+        function createPlacedCard(track, text, typeClass) {
+            const card = document.createElement('div');
+            card.className = `drag-card placed-card ${typeClass}`;
+            card.innerHTML = text;
+            card.dataset.rawText = text; 
+            
+            card.addEventListener('click', function(e) {
+                e.stopPropagation();
+                card.remove();
+            });
+
+            track.appendChild(card);
+            
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([card]);
+            }
+        }
+
+        function resetTracks() { 
+            currentFormulas = [...originalFormulasData]; // 恢復預設順序
+            initGame(); 
+        }
+
+        function checkAnswers() {
+            const tracks = document.querySelectorAll('.formula-track');
+            let correctCount = 0;
+
+            tracks.forEach((track) => {
+                const formulaId = parseInt(track.dataset.formulaId);
+                const targetFormula = originalFormulasData.find(f => f.id === formulaId);
+
+                const userElements = Array.from(track.children).map(card => card.dataset.rawText ? card.dataset.rawText.trim() : card.innerHTML.trim());
+                const targetElements = targetFormula.right.map(item => item.trim());
+
+                // 採排序比較，允許交換律（例如：a^2 + b^2 + 2ab 亦算對）
+                const sortedUserStr = [...userElements].sort().join(' ➔ ');
+                const sortedTargetStr = [...targetElements].sort().join(' ➔ ');
+
+                if (sortedUserStr === sortedTargetStr) {
+                    track.parentElement.style.backgroundColor = 'rgba(128, 199, 196, 0.16)';
+                    track.parentElement.style.borderColor = 'var(--teal)';
+                    correctCount++;
+                } else {
+                    track.parentElement.style.backgroundColor = 'rgba(211, 122, 169, 0.16)';
+                    track.parentElement.style.borderColor = 'var(--pink)';
+                }
+            });
+
+            const msgDiv = document.getElementById('result-msg');
+            if (correctCount === originalFormulasData.length) {
+                msgDiv.className = 'result-msg correct';
+                msgDiv.innerText = `🎉 恭喜！8 組公式拼湊全部正確！`;
+            } else {
+                msgDiv.className = 'result-msg wrong';
+                msgDiv.innerText = `❌ 還不完全正確喔！目前過關 ${correctCount} / 8 組。再調整看看！`;
+            }
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>

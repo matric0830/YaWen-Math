@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>主題 001 數系｜Ya-Wen 的高中數學教室</title>
+  <title>主題 002 乘法公式｜Ya-Wen 的高中數學教室</title>
   <script>
     window.MathJax = {
       tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] },
@@ -24,7 +24,6 @@
       --pink: #d37aa9;
       --teal: #80c7c4;
       --purple: #b9a4ee;
-      --wood: #bd8959;
     }
 
     * { box-sizing: border-box; }
@@ -86,9 +85,7 @@
       white-space: nowrap;
     }
 
-    .home-link:hover {
-      filter: brightness(1.06);
-    }
+    .home-link:hover { filter: brightness(1.06); }
 
     .kicker {
       margin: 0 0 10px;
@@ -107,7 +104,7 @@
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 16px;
     }
 
@@ -166,11 +163,6 @@
     }
 
     .button.teal { background: var(--teal); }
-    .button.muted {
-      background: rgba(255,255,255,.18);
-      color: var(--muted);
-      cursor: default;
-    }
 
     .note-panel {
       padding: 18px;
@@ -203,27 +195,19 @@
   <main class="page">
     <header class="hero">
       <a class="home-link" href="../../../index.html">回首頁</a>
-      <p class="kicker">高一數學｜第一章 數與式｜主題 001 數系</p>
-      <h1>數系</h1>
+      <p class="kicker">高一數學｜第一章 數與式｜主題 002 乘法公式</p>
+      <h1>乘法公式</h1>
     </header>
 
-    <section class="grid" aria-label="數系教材清單">
+    <section class="grid" aria-label="乘法公式教材清單">
       <article class="lesson-card">
         <div class="tag-row">
           <span class="tag">互動題</span>
-          <span class="tag">基礎練習</span>
+          <span class="tag">公式拼圖</span>
         </div>
-        <h2>實數系統互動教具</h2>
-        <a class="button" href="classification.html">開始練習</a>
-      </article>
-
-      <article class="lesson-card">
-        <div class="tag-row">
-          <span class="tag">觀念整理</span>
-          <span class="tag">互動教具</span>
-        </div>
-        <h2>數系觀念說明</h2>
-        <a class="button teal" href="concept.html">進入教材</a>
+        <h2>乘法公式拼圖</h2>
+        <p>點選或拖拉公式零件，將常見乘法公式拼回完整展開式。</p>
+        <a class="button" href="puzzle.html">開始練習</a>
       </article>
 
       <article class="lesson-card">
@@ -231,14 +215,15 @@
           <span class="tag">練習題</span>
           <span class="tag">建置中</span>
         </div>
-        <h2>循環小數化分數</h2>
-        <span class="button muted">教材建置中</span>
+        <h2>乘法公式練習</h2>
+        <p>之後可加入展開、化簡與因式分解的分層練習。</p>
+        <span class="button teal">教材建置中</span>
       </article>
     </section>
 
     <section class="note-panel">
-      <strong>後續新增方式：</strong>把新的教材網頁放在這個資料夾中，例如
-      <code>explanation.html</code>、<code>practice.html</code>，再把上方卡片連結改成對應檔名即可。
+      <strong>後續新增方式：</strong>乘法公式相關教材可繼續放在這個資料夾中，例如
+      <code>practice.html</code>、<code>quiz.html</code>。
     </section>
   </main>
 </body>
