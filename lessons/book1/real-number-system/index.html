@@ -60,12 +60,34 @@
     }
 
     .hero {
+      position: relative;
       padding: clamp(20px, 4vw, 34px);
+      padding-right: 160px;
       background:
         linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
         linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
         rgba(9, 16, 18, 0.66);
       background-size: 34px 34px;
+    }
+
+    .home-link {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      padding: 8px 15px;
+      border-radius: 999px;
+      background: var(--cream);
+      color: #17151d;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .home-link:hover {
+      filter: brightness(1.06);
     }
 
     .kicker {
@@ -173,11 +195,23 @@
       .grid { grid-template-columns: 1fr; }
       .lesson-card { min-height: 190px; }
     }
+
+    @media (max-width: 560px) {
+      .hero {
+        padding: 70px 18px 18px;
+      }
+
+      .home-link {
+        left: 18px;
+        right: auto;
+      }
+    }
   </style>
 </head>
 <body>
   <main class="page">
     <header class="hero">
+      <a class="home-link" href="../../../index.html">回首頁</a>
       <p class="kicker">高一數學｜第一章 數與式｜主題 001 數系</p>
       <h1>數系</h1>
       <p class="summary">從自然數、整數、有理數、無理數到實數，建立後續代數運算與函數學習的共同語言。</p>
@@ -196,10 +230,10 @@
       <article class="lesson-card">
         <div class="tag-row">
           <span class="tag">觀念整理</span>
-          <span class="tag">建置中</span>
+          <span class="tag">互動教具</span>
         </div>
         <h2>數系觀念說明</h2>
-        <span class="button muted">教材建置中</span>
+        <a class="button teal" href="concept.html">進入教材</a>
       </article>
 
       <article class="lesson-card">

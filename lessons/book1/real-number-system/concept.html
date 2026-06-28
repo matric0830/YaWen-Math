@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>數系觀念說明｜Ya-Wen 的高中數學教室</title>
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] },
+      options: { enableMenu: false }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root {
+      --bg: #20272a;
+      --panel: rgba(9, 16, 18, 0.54);
+      --panel-strong: rgba(0, 0, 0, 0.22);
+      --line: rgba(255, 255, 255, 0.26);
+      --text: #f8f2e8;
+      --muted: rgba(255, 255, 255, 0.72);
+      --chalk: #fffdf4;
+      --cream: #f1d2a0;
+      --pink: #d37aa9;
+      --teal: #80c7c4;
+      --purple: #b9a4ee;
+      --orange: #e6a05b;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 22px;
+      background:
+        radial-gradient(circle at 88% 84%, rgba(255,255,255,.12) 0 18px, transparent 19px),
+        var(--bg);
+      color: var(--text);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .page {
+      width: min(1180px, 100%);
+      min-height: calc(100vh - 44px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 18px;
+    }
+
+    .lesson-header,
+    .board-panel,
+    .control-panel {
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.42), 0 18px 34px rgba(0,0,0,.22);
+    }
+
+    .lesson-header {
+      position: relative;
+      padding: clamp(18px, 4vw, 28px);
+      padding-right: 170px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        rgba(9, 16, 18, 0.66);
+      background-size: 34px 34px;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      min-height: 38px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--cream);
+      color: #17151d;
+      cursor: pointer;
+      font-weight: 900;
+      padding: 8px 15px;
+      white-space: nowrap;
+    }
+
+    .back-button:hover {
+      filter: brightness(1.06);
+    }
+
+    .lesson-kicker {
+      margin: 0 0 10px;
+      color: var(--cream);
+      font-weight: 900;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--chalk);
+      font-size: clamp(2.7rem, 8vw, 5.8rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .lesson-summary {
+      max-width: 860px;
+      margin: 16px 0 0;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.7;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 230px;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .board-panel {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 14px;
+      min-height: 560px;
+      padding: 18px;
+    }
+
+    .system-title {
+      color: var(--cream);
+      font-size: 1.25rem;
+      font-weight: 900;
+    }
+
+    .map-grid {
+      display: grid;
+      grid-template-columns: 1.25fr .85fr;
+      gap: 16px;
+      min-height: 470px;
+    }
+
+    .zone {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.16);
+      padding: 14px;
+    }
+
+    .zone-label {
+      color: var(--chalk);
+      font-size: 1.05rem;
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .zone-hint {
+      color: var(--muted);
+      font-size: .92rem;
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    #q-zone { border-color: rgba(185, 164, 238, .72); }
+    #z-zone {
+      min-height: 300px;
+      border-color: rgba(128, 199, 196, .72);
+    }
+    #n-zone {
+      min-height: 145px;
+      border-color: rgba(241, 210, 160, .78);
+    }
+    #irr-zone { border-color: rgba(230, 160, 91, .82); }
+
+    #q-zone > .zone-label { color: var(--purple); }
+    #z-zone > .zone-label { color: var(--teal); }
+    #n-zone > .zone-label { color: var(--cream); }
+    #irr-zone > .zone-label { color: var(--orange); }
+
+    .space-slot {
+      flex: 1;
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 4px;
+    }
+
+    .number-token {
+      min-width: 88px;
+      min-height: 58px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--pink), var(--purple));
+      color: #151719;
+      font-size: 1.35rem;
+      font-weight: 900;
+      box-shadow: 0 12px 26px rgba(0,0,0,.24);
+      animation: popIn .22s ease-out;
+    }
+
+    .number-token mjx-container {
+      color: #151719 !important;
+      margin: 0 !important;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(.88); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .control-panel {
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .control-panel h2 {
+      margin: 0;
+      color: var(--chalk);
+      font-size: 1.25rem;
+      line-height: 1.35;
+    }
+
+    .control-note {
+      margin: 0 0 4px;
+      color: var(--muted);
+      font-size: .95rem;
+      font-weight: 800;
+      line-height: 1.55;
+    }
+
+    .action-button {
+      min-height: 46px;
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.1);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 900;
+      text-align: left;
+      padding: 10px 14px;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .action-button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.55);
+      background: rgba(255,255,255,.16);
+    }
+
+    .reset-button {
+      margin-top: 8px;
+      background: var(--cream);
+      color: #17151d;
+      text-align: center;
+    }
+
+    .status-card {
+      margin-top: 8px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(0,0,0,.16);
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.55;
+    }
+
+    .status-card strong {
+      color: var(--cream);
+    }
+
+    @media (max-width: 920px) {
+      body { padding: 14px; }
+
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .board-panel {
+        min-height: auto;
+      }
+
+      .map-grid {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .control-panel {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .control-panel h2,
+      .control-note,
+      .status-card {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (max-width: 560px) {
+      h1 { font-size: clamp(2.35rem, 14vw, 4rem); }
+
+      .lesson-header {
+        padding: 70px 18px 18px;
+      }
+
+      .back-button {
+        left: 18px;
+        right: auto;
+      }
+
+      .control-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .zone {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="lesson-header">
+      <button class="back-button" type="button" onclick="history.back()">回上一頁</button>
+      <p class="lesson-kicker">高一數學｜第一章 數與式｜主題 001 數系</p>
+      <h1>數系觀念說明</h1>
+    </header>
+
+    <section class="workspace">
+      <section class="board-panel" aria-label="實數系統圖">
+        <div class="system-title">實數 Real Numbers $\mathbb{R}$</div>
+        <div class="map-grid">
+          <div class="zone" id="q-zone">
+            <div class="zone-label">有理數 Rational $\mathbb{Q}$</div>
+            <div class="zone-hint">可以化成分數的數，包含整數、有限小數與循環小數。</div>
+
+            <div class="zone" id="z-zone">
+              <div class="zone-label">整數 Integers $\mathbb{Z}$</div>
+
+              <div class="zone" id="n-zone">
+                <div class="zone-label">自然數 Natural $\mathbb{N}$</div>
+                <div id="n-space" class="space-slot"></div>
+              </div>
+
+              <div id="z-space" class="space-slot"></div>
+            </div>
+
+            <div id="q-space" class="space-slot"></div>
+          </div>
+
+          <div class="zone" id="irr-zone">
+            <div class="zone-label">無理數 Irrational</div>
+            <div class="zone-hint">無法化成分數，是無限不循環小數。例如：$\sqrt{2}$、$\pi$、$e$。</div>
+            <div id="irr-space" class="space-slot"></div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="control-panel" aria-label="操作卡片">
+        <h2>操作目前的數</h2>
+        <p class="control-note">目前的數一開始是 $1$。點擊卡片後，觀察它移動到哪個數系。</p>
+        <button class="action-button" type="button" onclick="playCard('+2')">加 $2$</button>
+        <button class="action-button" type="button" onclick="playCard('-3')">減 $3$</button>
+        <button class="action-button" type="button" onclick="playCard('/2')">除以 $2$</button>
+        <button class="action-button" type="button" onclick="playCard('sqrt')">開根號 $\sqrt{\quad}$</button>
+        <button class="action-button reset-button" type="button" onclick="resetGame()">重設為 $1$</button>
+        <div class="status-card" id="statusCard">目前分類：<strong>自然數</strong></div>
+      </aside>
+    </section>
+  </main>
+
+  <div id="slime" class="number-token" style="display: none;">$1$</div>
+
+  <script>
+    let current = {
+      value: 1,
+      isIrrational: false,
+      displayLaTeX: "1"
+    };
+
+    function isPerfectSquare(n) {
+      if (n < 0) return false;
+      const root = Math.round(Math.sqrt(n));
+      return root * root === n;
+    }
+
+    function formatRationalDisplay(num) {
+      if (Number.isInteger(num)) return num.toString();
+      return num.toFixed(2);
+    }
+
+    function playCard(action) {
+      if (action === "sqrt") {
+        if (current.value < 0 || current.displayLaTeX.includes("-")) {
+          alert("負數不能在實數系中開根號，會進入虛數的範圍。");
+          return;
+        }
+
+        if (current.isIrrational) {
+          current.displayLaTeX = "\\sqrt{" + current.displayLaTeX + "}";
+          current.value = Math.sqrt(current.value);
+        } else if (Number.isInteger(current.value) && isPerfectSquare(current.value)) {
+          current.value = Math.sqrt(current.value);
+          current.displayLaTeX = formatRationalDisplay(current.value);
+          current.isIrrational = false;
+        } else {
+          current.displayLaTeX = "\\sqrt{" + current.displayLaTeX + "}";
+          current.value = Math.sqrt(current.value);
+          current.isIrrational = true;
+        }
+      } else {
+        let suffix = "";
+        if (action === "+2") suffix = "+2";
+        if (action === "-3") suffix = "-3";
+
+        if (current.isIrrational) {
+          if (action === "/2") {
+            current.displayLaTeX = "\\frac{" + current.displayLaTeX + "}{2}";
+          } else {
+            current.displayLaTeX = current.displayLaTeX + suffix;
+          }
+        } else {
+          if (action === "+2") current.value += 2;
+          if (action === "-3") current.value -= 3;
+          if (action === "/2") current.value /= 2;
+          current.value = Math.round(current.value * 10000) / 10000;
+          current.displayLaTeX = formatRationalDisplay(current.value);
+        }
+
+        if (current.isIrrational) {
+          if (action === "+2") current.value += 2;
+          if (action === "-3") current.value -= 3;
+          if (action === "/2") current.value /= 2;
+        }
+      }
+
+      updateNumberPosition();
+    }
+
+    function checkRealm() {
+      if (current.isIrrational) return "Irrational";
+      if (!Number.isInteger(current.value)) return "Rational";
+      if (current.value <= 0) return "Integer";
+      return "Natural";
+    }
+
+    function realmText(realm) {
+      if (realm === "Natural") return "自然數";
+      if (realm === "Integer") return "整數";
+      if (realm === "Rational") return "有理數";
+      return "無理數";
+    }
+
+    function updateNumberPosition() {
+      const token = document.getElementById("slime");
+      token.style.display = "inline-flex";
+      token.innerHTML = "$" + current.displayLaTeX + "$";
+
+      const realm = checkRealm();
+      document.getElementById("n-space").innerHTML = "";
+      document.getElementById("z-space").innerHTML = "";
+      document.getElementById("q-space").innerHTML = "";
+      document.getElementById("irr-space").innerHTML = "";
+
+      if (realm === "Natural") document.getElementById("n-space").appendChild(token);
+      if (realm === "Integer") document.getElementById("z-space").appendChild(token);
+      if (realm === "Rational") document.getElementById("q-space").appendChild(token);
+      if (realm === "Irrational") document.getElementById("irr-space").appendChild(token);
+
+      document.getElementById("statusCard").innerHTML = "目前分類：<strong>" + realmText(realm) + "</strong>";
+
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        MathJax.typesetPromise([token, document.getElementById("statusCard")]);
+      }
+    }
+
+    function resetGame() {
+      current = {
+        value: 1,
+        isIrrational: false,
+        displayLaTeX: "1"
+      };
+      updateNumberPosition();
+    }
+
+    window.addEventListener("load", updateNumberPosition);
+  </script>
+</body>
+</html>
