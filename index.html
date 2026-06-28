@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ya-Wen 的高中數學教室</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page">
+    <section class="banner" aria-labelledby="siteTitle">
+      <img src="images/chalk-banner.png" alt="Ya-Wen 的高中數學教室互動教材首頁">
+      <h1 id="siteTitle">Ya-Wen 的高中數學教室</h1>
+    </section>
+
+    <section class="layout">
+      <aside class="side-menu" aria-label="主選單">
+        <button class="menu-button" type="button" data-category="junior">國中基礎建立</button>
+        <button class="menu-button is-active" type="button" data-category="book1">高中數學第一冊</button>
+        <button class="menu-button" type="button" data-category="book2">高中數學第二冊</button>
+        <button class="menu-button" type="button" data-category="book3">高中數學第三冊</button>
+        <button class="menu-button" type="button" data-category="book4">高中數學第四冊</button>
+        <button class="menu-button" type="button" data-category="book5">高中數學第五冊</button>
+        <button class="menu-button" type="button" data-category="book6">高中數學第六冊</button>
+        <button class="menu-button" type="button" data-category="review">學測複習</button>
+        <button class="menu-button" type="button" data-category="games">互動小遊戲</button>
+        <button class="menu-button teacher-menu-button" type="button" data-category="teacher">教師專區</button>
+      </aside>
+
+      <section class="content-area">
+        <div class="content-heading">
+          <p id="categoryKicker">高一數學</p>
+          <h2 id="categoryTitle">高中數學第一冊</h2>
+        </div>
+
+        <nav class="chapter-tabs" id="chapterTabs" aria-label="章節選單"></nav>
+        <div class="chapter-content" id="chapterContent"></div>
+
+        <section class="teacher-panel" id="teacherPanel" hidden>
+          <div class="teacher-login" id="teacherLoginBox">
+            <h3>教師管理登入</h3>
+            <p>登入後可新增教材、隱藏教材與修改教材狀態。</p>
+            <form id="loginForm">
+              <label>帳號<input id="teacherAccount" type="text" autocomplete="username" required></label>
+              <label>密碼<input id="teacherPassword" type="password" autocomplete="current-password" required></label>
+              <p class="login-message" id="loginMessage"></p>
+              <button type="submit">登入</button>
+            </form>
+          </div>
+
+          <div class="teacher-tools" id="teacherTools" hidden>
+            <div class="teacher-tools-head">
+              <div>
+                <h3>新增教材</h3>
+                <p>新增的教材會存於目前瀏覽器，適合先做首頁草稿。</p>
+              </div>
+              <button type="button" id="logoutButton">登出</button>
+            </div>
+
+            <form id="lessonForm">
+              <label>
+                分類
+                <select id="lessonCategory" required>
+                  <option value="junior">國中基礎建立</option>
+                  <option value="book1">高中數學第一冊</option>
+                  <option value="book2">高中數學第二冊</option>
+                  <option value="book3">高中數學第三冊</option>
+                  <option value="book4">高中數學第四冊</option>
+                  <option value="book5">高中數學第五冊</option>
+                  <option value="book6">高中數學第六冊</option>
+                  <option value="review">學測複習</option>
+                  <option value="games">互動小遊戲</option>
+                </select>
+              </label>
+              <label>章節<input id="lessonChapter" type="text" placeholder="例如：第一章 數與式" required></label>
+              <label>教材名稱<input id="lessonTitle" type="text" placeholder="例如：主題058 弧度量" required></label>
+              <label>標籤<input id="lessonTags" type="text" placeholder="例如：基礎練習, 互動題"></label>
+              <label>教材連結<input id="lessonUrl" type="text" placeholder="例如：lessons/book3/radian/index.html"></label>
+              <label>
+                狀態
+                <select id="lessonStatus" required>
+                  <option value="ready">進入教材</option>
+                  <option value="practice">開始練習</option>
+                  <option value="building">教材建置中</option>
+                </select>
+              </label>
+              <button type="submit">新增教材卡片</button>
+            </form>
+          </div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <footer>© Ya Wen 的數學教室｜讓數學不只會算，還能玩。</footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
