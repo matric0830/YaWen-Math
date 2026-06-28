@@ -25,7 +25,8 @@ function topic(number, title, options = {}) {
 const CHAPTERS = {
   book1: [
     { title: "第一章 數與式", lessons: [
-      topic("001", "數系"), topic("002", "乘法公式"), topic("003", "雙重根號"),
+      topic("001", "數系", { href: "lessons/book1/real-number-system/index.html", status: "practice", tags: ["基礎練習", "互動題", "數系分類"] }),
+      topic("002", "乘法公式"), topic("003", "雙重根號"),
       topic("004", "算幾不等式", { href: "lessons/book1/am-gm/index.html", status: "practice", tags: ["基礎練習", "互動題", "學測常考"] }),
       topic("005", "分點公式"), topic("006", "絕對值方程式與不等式"), topic("007", "指數"), topic("008", "常用對數")
     ]},

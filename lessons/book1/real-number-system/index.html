@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>實數系統互動教具｜Ya-Wen 的高中數學教室</title>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["$", "$"], ["\\(", "\\)"]]
+      },
+      options: {
+        enableMenu: false
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root {
+      --bg: #20272a;
+      --panel: rgba(9, 16, 18, 0.52);
+      --panel-strong: rgba(0, 0, 0, 0.2);
+      --line: rgba(255, 255, 255, 0.26);
+      --text: #f8f2e8;
+      --muted: rgba(255, 255, 255, 0.72);
+      --chalk: #fffdf4;
+      --wood: #bd8959;
+      --pink: #d37aa9;
+      --teal: #80c7c4;
+      --cream: #f1d2a0;
+      --purple: #b9a4ee;
+      --orange: #e6a05b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 22px;
+      background:
+        radial-gradient(circle at 88% 84%, rgba(255,255,255,.12) 0 18px, transparent 19px),
+        var(--bg);
+      color: var(--text);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    #main-container {
+      width: min(1180px, 100%);
+      min-height: calc(100vh - 44px);
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    .lesson-header {
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        rgba(9, 16, 18, 0.64);
+      background-size: 34px 34px;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.42), 0 18px 34px rgba(0,0,0,.25);
+      padding: 22px 24px;
+    }
+
+    .lesson-kicker {
+      margin: 0 0 8px;
+      color: var(--cream);
+      font-weight: 900;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--chalk);
+      font-size: clamp(2rem, 5vw, 4.2rem);
+      line-height: 1.08;
+    }
+
+    .lesson-intro {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.7;
+    }
+
+    #example-panel,
+    #real-number-system {
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.42);
+    }
+
+    #example-panel {
+      padding: 16px;
+    }
+
+    .panel-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .panel-title {
+      color: var(--text);
+      font-weight: 900;
+      line-height: 1.5;
+    }
+
+    .btn-reset {
+      min-height: 38px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--cream);
+      color: #17151d;
+      cursor: pointer;
+      font-weight: 900;
+      padding: 8px 14px;
+      white-space: nowrap;
+    }
+
+    .btn-reset:hover {
+      filter: brightness(1.06);
+    }
+
+    #example-buttons {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .card-example {
+      min-height: 42px;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--line);
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.2);
+      color: var(--chalk);
+      cursor: grab;
+      font-size: 1rem;
+      font-weight: 900;
+      user-select: none;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .card-example:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,.55);
+    }
+
+    .card-example.selected {
+      background: linear-gradient(135deg, #d37aa9, #b9a4ee);
+      border-color: rgba(255,255,255,.68);
+      color: #151719;
+      cursor: grabbing;
+      box-shadow: 0 0 0 3px rgba(211, 122, 169, 0.22);
+    }
+
+    .card-example.selected mjx-container {
+      color: #151719 !important;
+    }
+
+    .card-example * {
+      pointer-events: none !important;
+    }
+
+    .card-example mjx-container {
+      margin: 0 !important;
+    }
+
+    #chart-area {
+      display: grid;
+      min-height: 520px;
+    }
+
+    #real-number-system {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 14px;
+      padding: 18px;
+    }
+
+    #system-title {
+      color: var(--cream);
+      font-size: 1.2rem;
+      font-weight: 900;
+    }
+
+    #map-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 16px;
+      min-height: 440px;
+    }
+
+    .zone {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border: 2px solid var(--line);
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.16);
+      padding: 14px;
+      transition: background 160ms ease, border-color 160ms ease;
+    }
+
+    .zone.drag-over {
+      background: rgba(128, 199, 196, 0.16);
+      border-color: var(--teal);
+    }
+
+    .zone-label {
+      color: var(--chalk);
+      font-weight: 900;
+    }
+
+    .zone-hint {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    #q-zone {
+      border-color: rgba(185, 164, 238, 0.72);
+    }
+
+    #z-zone {
+      min-height: 300px;
+      border-color: rgba(128, 199, 196, 0.72);
+    }
+
+    #n-zone {
+      min-height: 145px;
+      border-color: rgba(241, 210, 160, 0.78);
+    }
+
+    #irr-zone {
+      border-color: rgba(230, 160, 91, 0.82);
+    }
+
+    #q-zone > .zone-label { color: var(--purple); }
+    #z-zone > .zone-label { color: var(--teal); }
+    #n-zone > .zone-label { color: var(--cream); }
+    #irr-zone > .zone-label { color: var(--orange); }
+
+    .space-slot {
+      flex: 1;
+      min-height: 64px;
+      display: flex;
+      align-content: flex-start;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-top: 4px;
+    }
+
+    .placed-number {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 13px;
+      border-radius: 999px;
+      background: var(--pink);
+      color: #151719;
+      font-weight: 900;
+      box-shadow: 0 8px 20px rgba(0,0,0,.2);
+      animation: popIn 0.22s ease-out;
+      white-space: nowrap;
+    }
+
+    .placed-number mjx-container {
+      color: #151719 !important;
+      margin: 0 !important;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    #drag-ghost-container {
+      position: absolute;
+      top: -500px;
+      left: -500px;
+      z-index: -9999;
+    }
+
+    @media (max-width: 960px) {
+      body {
+        padding: 12px;
+      }
+
+      #example-buttons {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      #map-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .panel-header-row {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      #example-buttons {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="main-container">
+    <header class="lesson-header">
+      <p class="lesson-kicker">高一數學｜第一章 數與式｜主題 001 數系</p>
+      <h1>實數系統互動教具</h1>
+    </header>
+
+    <section id="example-panel">
+      <div class="panel-header-row">
+        <div class="panel-title">請用滑鼠點擊或拖拉上方數字卡，將其分類至下方對應的數系方框中。</div>
+        <button class="btn-reset" onclick="resetGame()">清空重置</button>
+      </div>
+      <div id="example-buttons">
+        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-2" data-realm="Natural" data-latex="2">$2$</div>
+        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-0" data-realm="Integer" data-latex="0">$0$</div>
+        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-m87" data-realm="Integer" data-latex="-87">$-87$</div>
+        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-half" data-realm="Rational" data-latex="\frac{1}{2}">$\frac{1}{2}$</div>
+        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-repeat12" data-realm="Rational" data-latex="3.\overline{12}">$3.\overline{12}$</div>
+        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-pi" data-realm="Irrational" data-latex="\pi">$\pi$</div>
+        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-sq2" data-realm="Irrational" data-latex="\sqrt{2}">$\sqrt{2}$</div>
+        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-sq3m2" data-realm="Irrational" data-latex="\sqrt{3}-2">$\sqrt{3}-2$</div>
+        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-sq4" data-realm="Natural" data-latex="\sqrt{4}">$\sqrt{4}$</div>
+        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-sq16" data-realm="Rational" data-latex="\sqrt{0.16}">$\sqrt{0.16}$</div>
+        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-frac62" data-realm="Natural" data-latex="\frac{6}{2}">$\frac{6}{2}$</div>
+        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-frac153" data-realm="Integer" data-latex="-\frac{15}{3}">$-\frac{15}{3}$</div>
+        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-float20" data-realm="Natural" data-latex="2.0">$2.0$</div>
+        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-fakepi" data-realm="Rational" data-latex="3.14159">$3.14159$</div>
+        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-pattern" data-realm="Irrational" data-latex="0.101001...">$0.101001...$</div>
+        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-pipi" data-realm="Natural" data-latex="\frac{\pi}{\pi}">$\frac{\pi}{\pi}$</div>
+      </div>
+    </section>
+
+    <section id="chart-area">
+      <div id="real-number-system">
+        <div id="system-title">實數 Real Numbers ($R$)</div>
+        <div id="map-grid">
+          <div class="zone" id="q-zone" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" data-accept="Rational">
+            <div class="zone-label">有理數 Rational ($Q$)</div>
+            <div class="zone-hint">可化成分數，包含有限小數與循環小數。</div>
+            <div class="zone" id="z-zone" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" data-accept="Integer">
+              <div class="zone-label">整數 Integers ($Z$)</div>
+              <div class="zone" id="n-zone" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" data-accept="Natural">
+                <div class="zone-label">自然數 Natural ($N$)</div>
+                <div id="n-space" class="space-slot"></div>
+              </div>
+              <div id="z-space" class="space-slot"></div>
+            </div>
+            <div id="q-space" class="space-slot"></div>
+          </div>
+          <div class="zone" id="irr-zone" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" data-accept="Irrational">
+            <div class="zone-label">無理數 Irrational</div>
+            <div class="zone-hint">無法化成分數，為無限不循環小數。</div>
+            <div id="irr-space" class="space-slot"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="drag-ghost-container"></div>
+
+  <script>
+    function selectCard(element) {
+      const card = element.closest(".card-example");
+      if (!card) return;
+      document.querySelectorAll(".card-example").forEach(item => item.classList.remove("selected"));
+      card.classList.add("selected");
+    }
+
+    function drag(event) {
+      const targetCard = event.currentTarget.closest(".card-example");
+      if (!targetCard) return;
+      event.dataTransfer.setData("text/plain", targetCard.id);
+      selectCard(targetCard);
+
+      const ghostContainer = document.getElementById("drag-ghost-container");
+      ghostContainer.innerHTML = "";
+      const ghost = targetCard.cloneNode(true);
+      ghost.classList.add("selected");
+      ghost.style.width = targetCard.offsetWidth + "px";
+      ghost.style.height = targetCard.offsetHeight + "px";
+      ghost.style.opacity = "0.9";
+      ghostContainer.appendChild(ghost);
+      event.dataTransfer.setDragImage(ghost, targetCard.offsetWidth / 2, targetCard.offsetHeight / 2);
+    }
+
+    function allowDrop(event) {
+      event.preventDefault();
+    }
+
+    function dragEnter(event) {
+      event.stopPropagation();
+      const zone = event.target.closest(".zone");
+      if (zone) zone.classList.add("drag-over");
+    }
+
+    function dragLeave(event) {
+      const zone = event.target.closest(".zone");
+      if (zone) zone.classList.remove("drag-over");
+    }
+
+    function drop(event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      document.querySelectorAll(".zone").forEach(zone => zone.classList.remove("drag-over"));
+      document.querySelectorAll(".card-example").forEach(card => card.classList.remove("selected"));
+
+      const id = event.dataTransfer.getData("text/plain");
+      const draggedElement = document.getElementById(id);
+      if (!draggedElement) return;
+
+      const correctRealm = draggedElement.getAttribute("data-realm");
+      const latexStr = draggedElement.getAttribute("data-latex");
+      const targetZone = event.target.closest(".zone");
+      if (!targetZone) return;
+
+      const targetRealm = targetZone.getAttribute("data-accept");
+      if (correctRealm === targetRealm) {
+        let spaceId = "";
+        if (correctRealm === "Natural") spaceId = "n-space";
+        else if (correctRealm === "Integer") spaceId = "z-space";
+        else if (correctRealm === "Rational") spaceId = "q-space";
+        else if (correctRealm === "Irrational") spaceId = "irr-space";
+
+        if (document.getElementById("placed-" + id)) {
+          alert("這張數字卡已經放進分類中了。");
+          return;
+        }
+
+        draggedElement.style.visibility = "hidden";
+        const newNum = document.createElement("div");
+        newNum.className = "placed-number";
+        newNum.id = "placed-" + id;
+        newNum.innerHTML = "$" + latexStr + "$";
+        document.getElementById(spaceId).appendChild(newNum);
+
+        if (window.MathJax && window.MathJax.typesetPromise) {
+          MathJax.typesetPromise([newNum]);
+        }
+      } else {
+        alert("分類不正確，請再想想這個數屬於哪一個數系。");
+      }
+    }
+
+    function resetGame() {
+      ["n-space", "z-space", "q-space", "irr-space"].forEach(id => {
+        document.getElementById(id).innerHTML = "";
+      });
+      document.querySelectorAll(".card-example").forEach(card => {
+        card.style.visibility = "visible";
+        card.classList.remove("selected");
+      });
+      document.getElementById("drag-ghost-container").innerHTML = "";
+    }
+  </script>
+</body>
+</html>
