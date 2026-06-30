@@ -1,0 +1,179 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>混和練習｜雙重根號｜Ya-Wen 的高中數學教室</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    :root{--bg:#20272a;--card:rgba(9,16,18,.54);--ink:#f8f2e8;--muted:rgba(255,255,255,.72);--line:rgba(255,255,255,.26);--accent:#80c7c4;--accent2:#f1d2a0;--good:#80c7c4;--bad:#d37aa9;--chalk:#fffdf4;--panel-strong:rgba(0,0,0,.24);--pink:#d37aa9;--purple:#b9a4ee;--shadow:0 18px 34px rgba(0,0,0,.22)}
+    *{box-sizing:border-box} html,body{height:100%;overflow:hidden}
+    body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;color:var(--ink);background:radial-gradient(circle at 88% 84%,rgba(255,255,255,.12) 0 18px,transparent 19px),var(--bg);line-height:1.42}
+    .page{height:100dvh;display:grid;grid-template-rows:auto 1fr;gap:10px;padding:12px clamp(12px,2vw,24px)}
+    header,main{max-width:1200px;width:100%;margin:0 auto}
+    .hero{height:170px;border:2px solid var(--line);border-radius:14px;background:linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),rgba(9,16,18,.66);background-size:34px 34px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.42),var(--shadow);padding:22px 170px 22px 26px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+    .lesson-kicker{margin:0 0 8px;color:var(--accent2);font-weight:900;font-size:clamp(15px,1.7vw,21px)}
+    .back-button{position:absolute;top:18px;right:18px;min-height:38px;border:0;border-radius:999px;background:var(--accent2);color:#17151d;cursor:pointer;font-weight:900;padding:8px 15px;white-space:nowrap}
+    .back-button:hover{filter:brightness(1.06)}
+    h1{margin:0 0 18px;color:var(--chalk);font-size:clamp(38px,5vw,64px);letter-spacing:0;line-height:1.02}
+    .tabs{display:flex;gap:12px;align-items:center;flex-wrap:nowrap}.tab{background:rgba(255,255,255,.1);color:var(--ink);border:1px solid var(--line);box-shadow:none;font-size:clamp(16px,1.8vw,22px)}.tab.active{background:var(--purple);color:#17151d;border-color:var(--purple);box-shadow:0 8px 20px rgba(0,0,0,.18)}
+    button{font:inherit;border:0;border-radius:999px;padding:10px 18px;cursor:pointer;transition:.15s ease;white-space:nowrap}button:hover{transform:translateY(-1px)}
+    main{height:100%;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:14px;overflow:hidden}.card{background:var(--card);border:2px solid var(--line);border-radius:14px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.42),var(--shadow);padding:16px;min-height:0;overflow:hidden}
+    #gameCard{display:grid;grid-template-rows:auto minmax(0,1fr) auto;gap:8px}.question-top{display:flex;justify-content:space-between;gap:12px;align-items:center;border-bottom:1px dashed var(--line);padding-bottom:9px}.level{color:var(--accent2);font-weight:900;font-size:clamp(17px,1.8vw,23px);white-space:nowrap}.question-actions{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-shrink:0}.secondary{background:rgba(255,255,255,.1);color:var(--ink);border:1px solid var(--line)}.next{background:var(--accent);color:#17151d;font-weight:900}
+    .study-area{min-height:0;display:grid;grid-template-rows:minmax(0,1fr) auto;gap:9px}.flip-shell{perspective:1200px;min-height:0;height:100%;cursor:pointer}.flip-shell.locked{cursor:default}.flip-shell.locked .tap-note{display:none}.flip-card{position:relative;width:100%;height:100%;min-height:205px;transition:transform .45s ease;transform-style:preserve-3d}.flip-shell.flipped .flip-card{transform:rotateY(180deg)}
+    .face{position:absolute;inset:0;backface-visibility:hidden;border:1px solid var(--line);border-radius:20px;background:var(--panel-strong);display:flex;align-items:center;justify-content:center;overflow:hidden}.front{padding:16px}.back{transform:rotateY(180deg);padding:12px;display:grid;grid-template-columns:.9fr 1.1fr;gap:12px;align-items:stretch;justify-content:stretch}.q-panel,.explain-panel{background:rgba(0,0,0,.18);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;justify-content:center;min-width:0}.mini-title{font-weight:900;color:var(--accent2);margin-bottom:8px;font-size:17px}.formula-main{font-size:clamp(44px,6.8vw,78px);line-height:1;width:100%;text-align:center}.formula-small{font-size:clamp(30px,3.8vw,50px);text-align:center}.steps{margin:0;padding-left:1.25rem;color:var(--ink);font-size:clamp(16px,1.65vw,21px)}.steps li{margin:8px 0}.tap-note{position:absolute;right:14px;bottom:10px;color:var(--muted);font-size:13px;opacity:.75}
+    .answer-area{display:grid;gap:7px}.choice-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.choice{background:rgba(255,255,255,.1);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:8px 7px;box-shadow:none;min-height:48px;text-align:center;display:flex;align-items:center;justify-content:center;font-size:clamp(15px,1.45vw,19px);line-height:1.2;white-space:normal}.choice.correct{border-color:rgba(128,199,196,.9);background:rgba(128,199,196,.16);color:var(--chalk);font-weight:900}.choice.wrong{border-color:rgba(211,122,169,.9);background:rgba(211,122,169,.18);color:var(--chalk);font-weight:900}.feedback{display:none}
+    .side{display:grid;grid-template-rows:auto auto auto 1fr;gap:11px;align-self:start;padding:16px}.side h3{margin:0;font-size:23px}.progress-wrap{height:13px;background:rgba(255,255,255,.14);border-radius:999px;overflow:hidden}.progress{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:.25s ease}.score{display:grid;grid-template-columns:1fr 1fr;gap:9px}.score div{background:rgba(0,0,0,.18);border:1px solid var(--line);border-radius:16px;padding:10px 6px;text-align:center}.score span{display:block;font-size:15px}.score strong{display:block;font-size:26px;color:var(--accent2);line-height:1.1}.rule-toggle{width:100%;text-align:center;justify-content:center;margin-top:2px}.rule-content{display:none;margin-top:8px;padding:10px 12px;background:rgba(0,0,0,.18);border:1px solid var(--line);border-radius:15px;font-size:15px;color:var(--muted)}.rule-content.show{display:block}.rule-content ol{margin:0;padding-left:1.15rem}.rule-content li{margin:4px 0}.challenge-end{display:none;text-align:center;align-self:center}.challenge-end.show{display:block}.challenge-end h2{font-size:34px}.challenge-end p{font-size:20px;color:var(--muted)}mjx-container{margin:0!important}.choice mjx-container{font-size:110%!important}.steps mjx-container{font-size:105%!important}
+    @media (max-width:900px){.page{padding:8px;gap:8px}.hero{height:148px;padding:18px 20px;border-radius:22px}h1{font-size:42px;margin-bottom:18px}.hero:after{font-size:180px;top:-48px}main{grid-template-columns:minmax(0,1fr) 215px;gap:9px}.card{padding:11px;border-radius:19px}.side h3{font-size:20px}.score strong{font-size:22px}.score div{padding:7px 4px}.flip-card{min-height:205px}.formula-main{font-size:clamp(40px,7.2vw,62px)}.choice{padding:6px 5px;min-height:46px;font-size:14px}.tabs button{padding:8px 13px}.back{grid-template-columns:.85fr 1.15fr;gap:8px;padding:9px}.steps{font-size:15px}.q-panel,.explain-panel{padding:9px}.rule-content{font-size:13px}}
+    @media (max-height:760px){.page{gap:6px;padding-top:6px;padding-bottom:6px}.hero{height:136px;padding:14px 18px}h1{font-size:38px;margin-bottom:14px}.tab{padding:7px 12px}main{gap:8px}.card{padding:10px}.question-top{padding-bottom:5px}.flip-card{min-height:180px}.choice{min-height:42px;padding:5px}.side{gap:7px}.side h3{font-size:20px}.rule-content{font-size:13px;padding:8px}button{padding:7px 13px}}
+    @media (max-width:650px){main{grid-template-columns:1fr}.side{display:none}.hero{height:150px;padding:58px 18px 16px}.back-button{left:18px;right:auto}.choice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media (min-width:651px) and (max-height:820px){.page{padding:6px 10px;gap:6px}.hero{height:144px;padding:14px 18px}h1{font-size:40px}main{grid-template-columns:minmax(0,1fr) 230px;gap:8px}.card{padding:9px}.question-top{padding-bottom:4px}.level{font-size:16px}.flip-card{min-height:170px}.front{padding:8px}.formula-main{font-size:clamp(34px,5.5vw,60px)}.choice-grid{gap:6px}.choice{min-height:40px;padding:5px 4px}.side{gap:6px}.rule-content{font-size:12.5px;padding:7px}}
+
+    /* 平板一頁模式優化 */
+    @media (min-width:700px) and (max-width:1180px){
+      .page{padding:8px 12px; gap:7px}
+      .hero{height:128px; padding:14px 20px}
+      h1{font-size:clamp(34px,4.2vw,48px); margin-bottom:14px}
+      .tabs{gap:8px}
+      .tab{padding:8px 14px}
+      main{grid-template-columns:minmax(0,1fr) 220px; gap:9px}
+      .card{padding:10px; border-radius:20px}
+      .question-top{padding-bottom:5px}
+      .level{font-size:17px}
+      .question-actions button{padding:7px 13px}
+      .flip-card{min-height:174px}
+      .front{padding:8px}
+      .formula-main{font-size:clamp(38px,5.6vw,64px)}
+      .back{padding:8px; gap:8px}
+      .q-panel,.explain-panel{padding:9px}
+      .formula-small{font-size:clamp(28px,3.6vw,44px)}
+      .steps{font-size:15px}
+      .steps li{margin:5px 0}
+      .choice-grid{gap:6px}
+      .choice{min-height:40px; padding:5px 4px; font-size:14px}
+      .side{gap:7px}
+      .side h3{font-size:19px}
+      .score div{padding:7px 4px}
+      .score strong{font-size:21px}
+      .rule-content{font-size:12.5px; padding:7px}
+    }
+    @media (min-width:700px) and (max-width:1180px) and (max-height:760px){
+      .hero{height:112px; padding:10px 18px}
+      h1{font-size:32px; margin-bottom:10px}
+      .tab{padding:6px 12px}
+      .flip-card{min-height:158px}
+      .formula-main{font-size:clamp(34px,5.2vw,56px)}
+      .choice{min-height:38px}
+      .tap-note{display:none}
+    }
+
+  </style>
+</head>
+<body>
+<div class="page"><header><section class="hero"><button class="back-button" type="button" onclick="location.href='index.html'">回上一頁</button><p class="lesson-kicker">高一數學｜第一章 數與式｜主題 003 雙重根號</p><h1>混和練習</h1></section></header>
+  <main><section class="card" id="gameCard"><div class="question-top"><div class="level" id="levelText">第 1 關 / 共 6 關</div><div class="question-actions"><button onclick="event.stopPropagation(); nextQuestion()" class="next">下一題</button><button onclick="event.stopPropagation(); resetGame()" class="secondary">重新開始</button></div></div><div class="study-area" id="studyArea"><div class="flip-shell locked" id="flipShell" onclick="toggleFlashcard()" title="答題後點擊題目翻面看詳解"><div class="flip-card"><div class="face front"><div class="formula-main" id="formula">\[\sqrt{a\pm2\sqrt{b}}\]</div><div class="tap-note">答題後點題目看詳解</div></div><div class="face back"><div class="q-panel"><div class="mini-title">題目</div><div class="formula-small" id="backQuestion"></div></div><div class="explain-panel"><div class="mini-title">詳解</div><ol class="steps" id="detailSteps"></ol></div><div class="tap-note">再點一次回題目</div></div></div></div><div class="answer-area" id="answerArea"><div class="choice-grid" id="choices"></div><div class="feedback" id="feedback"></div></div></div><div class="challenge-end" id="challengeEnd"><h2>挑戰完成！</h2><p id="endMessage"></p><button onclick="startGame(currentMode || 'basic')" class="next">再練一次</button></div></section><aside class="card side"><h3>目前戰況</h3><div class="progress-wrap"><div class="progress" id="progress"></div></div><div class="score"><div><span>答對</span><strong id="rightCount">0</strong></div><div><span>題數</span><strong id="totalCount">1/6</strong></div></div><section class="rule"><button type="button" class="secondary rule-toggle" onclick="toggleRules()" id="ruleBtn">解題規則</button><div class="rule-content" id="ruleContent"><ol><li>先看成 \(\sqrt{a\pm2\sqrt{b}}\)。</li><li>找 \(m+n=a\)，\(mn=b\)。</li><li>判斷兩根號相加？相減？</li><li>找不到漂亮整數，再估算。</li></ol></div></section></aside></main>
+</div>
+<script>
+const allQuestions=[
+{mode:'basic',q:'√(5 + 2√6)',ans:'√3 + √2',choices:['√3 + √2','√3 - √2','√6 + 1','√6 - 1'],hint:'找 m+n=5、mn=6，所以 m=3, n=2。'},
+{mode:'basic',q:'√(5 - 2√6)',ans:'√3 - √2',choices:['√3 + √2','√3 - √2','√6 + 1','√6 - 1'],hint:'找 m+n=5、mn=6，所以 m=3, n=2。'},
+{mode:'basic',q:'√(10 + 6√3)',ans:'3 + √3',choices:['3 + √3','3 - √3','√7 + √3','√7 - √3'],hint:'6√3 = 2√27，找 m+n=10、mn=27。'},
+{mode:'basic',q:'√(10 - 6√3)',ans:'3 - √3',choices:['3 + √3','3 - √3','√7 + √3','√7 - √3'],hint:'6√3 = 2√27，找 m+n=10、mn=27。'},
+{mode:'basic',q:'√(11 + 4√7)',ans:'√7 + 2',choices:['√7 + 2','√7 - 2','√8 + √3','√8 - √3'],hint:'4√7 = 2√28，找 m+n=11、mn=28。'},
+{mode:'basic',q:'√(13 - 4√10)',ans:'√10 - √3',choices:['√10 + √3','√10 - √3','√7 + √6','√7 - √6'],hint:'4√10 = 2√40，找 m+n=13、mn=40。'},
+{mode:'estimate',q:'√(5 + 2√3)',ans:'約 2',choices:['約 1','約 2','約 3','約 4'],hint:'√3≈1.732，內部約 8.464。'},
+{mode:'estimate',q:'√(12 - 2√20)',ans:'約 1',choices:['約 0','約 1','約 2','約 3'],hint:'√20≈4.472，所以內部約 3.056。'},
+{mode:'estimate',q:'√(8 + 2√5)',ans:'約 3',choices:['約 2','約 3','約 4','約 5'],hint:'√5≈2.236，內部約 12.472。'},
+{mode:'estimate',q:'√(10 - 2√7)',ans:'約 2',choices:['約 1','約 2','約 3','約 4'],hint:'√7≈2.646，內部約 4.708。'},
+{mode:'estimate',q:'√(6 + 2√2)',ans:'約 2',choices:['約 1','約 2','約 3','約 4'],hint:'√2≈1.414，內部約 8.828。'},
+{mode:'estimate',q:'√(7 - 2√5)',ans:'約 1',choices:['約 0','約 1','約 2','約 3'],hint:'√5≈2.236，內部約 2.528。'},
+{mode:'mixed',q:'√(6 + 2√5)',ans:'√5 + 1',choices:['√5 + 1','√5 - 1','√3 + √2','約 3'],hint:'找 m+n=6、mn=5。'},
+{mode:'mixed',q:'√(7 + 2√10)',ans:'√5 + √2',choices:['√5 + √2','√5 - √2','√10 + 1','約 4'],hint:'找 m+n=7、mn=10。'},
+{mode:'mixed',q:'√(9 + 2√14)',ans:'√7 + √2',choices:['√7 + √2','√7 - √2','√14 + 1','約 4'],hint:'找 m+n=9、mn=14。'},
+{mode:'mixed',q:'√(12 - 2√20)',ans:'約 1',choices:['√10 - √2','√8 - 2','√5 - 1','約 1'],hint:'找 m+n=12、mn=20；沒有漂亮整數組合。√20≈4.472。'},
+{mode:'mixed',q:'√(5 + 2√3)',ans:'約 2',choices:['√3 + √2','√3 - √2','√4 + 1','約 2'],hint:'找 m+n=5、mn=3；沒有漂亮整數組合。√3≈1.732。'},
+{mode:'mixed',q:'√(8 - 2√7)',ans:'√7 - 1',choices:['√7 + 1','√7 - 1','√5 - √3','約 2'],hint:'找 m+n=8、mn=7。'}
+];
+let currentSet=[],currentIndex=0,right=0,answered=false,currentMode='basic';
+function texExpr(raw){let s=String(raw).trim();const convertInner=x=>x.replace(/√\s*(\d+)/g,'\\sqrt{$1}').replace(/√\s*([a-zA-Z])/g,'\\sqrt{$1}').replace(/\s*([+\-])\s*/g,' $1 ').trim();const outer=s.match(/^√\((.*)\)$/);if(outer)return '\\sqrt{'+convertInner(outer[1])+'}';return convertInner(s)}
+function renderChoice(raw){const t=String(raw);if(t.startsWith('約'))return t;return '\\('+texExpr(t)+'\\)'}
+function typesetMath(){if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise()}
+function shuffle(arr){return[...arr].sort(()=>Math.random()-.5)}
+function setActiveTab(mode){['basic','estimate','mixed'].forEach(m=>{const tab=document.getElementById('tab-'+m);if(tab)tab.classList.toggle('active',m===mode)})}
+function parseQuestion(item){const m=item.q.match(/^√\((\d+)\s*([+\-])\s*(\d+)√(\d+)\)$/);if(!m)return null;const a=Number(m[1]),sign=m[2],coef=Number(m[3]),rad=Number(m[4]);return{a,sign,coef,rad,b:coef*coef*rad/4}}
+function answerTerms(ans){if(ans.startsWith('約'))return[];return ans.split(/\s+[+\-]\s+/).map(x=>x.trim())}
+function termSquare(t){t=t.trim();if(t.startsWith('√'))return Number(t.replace('√',''));return Number(t)*Number(t)}
+function fmt3(x){return Number(x.toFixed(3)).toString()}
+function fmt2(x){return Number(x.toFixed(2)).toString()}
+function extractApprox(ans){const m=String(ans).match(/([0-9]+(?:\.[0-9]+)?)/);return m?Number(m[1]):null}
+function detailSteps(item){
+  const p=parseQuestion(item), final=renderChoice(item.ans);
+  if(!p) return ['檢查題型。','判斷兩根號相加？相減？',`最後答案：${final}`];
+  if(item.ans.startsWith('約')){
+    const innerRad = p.coef * p.coef * p.rad;
+    const rootInnerRad = Math.sqrt(innerRad);
+    const rootInnerRadTxt = fmt3(rootInnerRad);
+    const inner = p.sign==='+' ? p.a + rootInnerRad : p.a - rootInnerRad;
+    const innerTxt = fmt3(inner);
+    const sqrtInner = Math.sqrt(inner);
+    const sqrtInnerTxt = fmt3(sqrtInner);
+    const finalTxt = Math.floor(sqrtInner).toString();
+    const signTex = p.sign==='+' ? '+' : '-';
+    return [
+      String.raw`找：\(m+n=${p.a}\)，\(mn=${p.b}\)。`,
+      '沒有漂亮的整數組合，所以估算。',
+      String.raw`\(${texExpr(item.q)} = \sqrt{${p.a} ${signTex} \sqrt{${innerRad}}}\)`,
+      String.raw`\(\sqrt{${p.a} ${signTex} \sqrt{${innerRad}}} \approx \sqrt{${p.a} ${signTex} ${rootInnerRadTxt}} = \sqrt{${innerTxt}}\)`,
+      String.raw`\(\sqrt{${innerTxt}} \approx ${sqrtInnerTxt}\)`,
+      String.raw`所以：\(${texExpr(item.q)} \approx ${finalTxt}\)`
+    ];
+  }
+  const terms=answerTerms(item.ans), m=termSquare(terms[0]), n=termSquare(terms[1]);
+  return [
+    String.raw`找數字：\(m+n=${p.a}\)，\(mn=${p.b}\)，所以可取 \(m=${m}\)，\(n=${n}\)。`,
+    '判斷兩根號相加？相減？',
+    `最後答案：${final}`
+  ];
+}
+
+function playSound(ok){
+  try{
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if(!AudioContext) return;
+    const ctx = new AudioContext();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = ok ? 'sine' : 'triangle';
+    osc.frequency.setValueAtTime(ok ? 660 : 220, ctx.currentTime);
+    if(ok) osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.12);
+    else osc.frequency.exponentialRampToValueAtTime(160, ctx.currentTime + 0.16);
+    gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.16, ctx.currentTime + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.18);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    osc.stop(ctx.currentTime + 0.2);
+  }catch(e){}
+}
+
+function startGame(mode){currentMode=mode;setActiveTab(mode);currentSet=shuffle(allQuestions.filter(x=>x.mode===mode));currentIndex=0;right=0;answered=false;document.getElementById('challengeEnd').classList.remove('show');document.getElementById('studyArea').style.display='grid';updateStats();renderQuestion()}
+function renderQuestion(){const item=currentSet[currentIndex];if(!item)return finishGame();answered=false;const flip=document.getElementById('flipShell');flip.classList.remove('flipped');flip.classList.add('locked');document.getElementById('levelText').textContent=`第 ${currentIndex+1} 關 / 共 ${currentSet.length} 關`;document.getElementById('formula').innerHTML='\\['+texExpr(item.q)+'\\]';document.getElementById('backQuestion').innerHTML='\\['+texExpr(item.q)+'\\]';document.getElementById('detailSteps').innerHTML=detailSteps(item).map(x=>`<li>${x}</li>`).join('');const choicesBox=document.getElementById('choices');choicesBox.innerHTML='';shuffle(item.choices).forEach(c=>{const btn=document.createElement('button');btn.className='choice';btn.innerHTML=renderChoice(c);btn.dataset.choice=c;btn.onclick=ev=>{ev.stopPropagation();checkAnswer(btn,c)};choicesBox.appendChild(btn)});typesetMath()}
+function checkAnswer(btn,choice){if(answered)return;answered=true;const item=currentSet[currentIndex];document.querySelectorAll('.choice').forEach(b=>{if(b.dataset.choice===item.ans)b.classList.add('correct');else if(b===btn)b.classList.add('wrong')});const isCorrect=choice===item.ans;if(isCorrect)right++;playSound(isCorrect);document.getElementById('flipShell').classList.remove('locked');updateStats()}
+function nextQuestion(){if(!currentSet.length)return;currentIndex++;if(currentIndex>=currentSet.length)finishGame();else renderQuestion();updateStats()}
+function resetGame(){startGame(currentMode||'basic')}
+function finishGame(){document.getElementById('studyArea').style.display='none';document.getElementById('challengeEnd').classList.add('show');const percent=currentSet.length?Math.round(right/currentSet.length*100):0;let msg=`你完成 ${currentSet.length} 題，答對 ${right} 題，正確率 ${percent}%。`;if(percent>=90)msg+=' 根號已經被你馴服。';else if(percent>=70)msg+=' 表現不錯，符號正負再盯緊一點。';else msg+=' 建議回到 m+n=a、mn=b 重新練一次。';document.getElementById('endMessage').textContent=msg}
+function updateStats(){document.getElementById('rightCount').textContent=right;document.getElementById('totalCount').textContent=currentSet.length?`${Math.min(currentIndex+1,currentSet.length)}/${currentSet.length}`:'0';const progress=currentSet.length?Math.min(currentIndex,currentSet.length)/currentSet.length*100:0;document.getElementById('progress').style.width=progress+'%'}
+function toggleRules(){const box=document.getElementById('ruleContent'),btn=document.getElementById('ruleBtn');box.classList.toggle('show');btn.textContent=box.classList.contains('show')?'收起解題規則':'解題規則';typesetMath()}
+function toggleFlashcard(){if(!currentSet.length||!answered)return;document.getElementById('flipShell').classList.toggle('flipped');typesetMath()}
+window.addEventListener('load',()=>startGame('mixed'));
+</script>
+</body>
+</html>
+
