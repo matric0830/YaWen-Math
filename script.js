@@ -61,7 +61,7 @@ const CHAPTERS = {
     { title: "第四章 三角比的性質與應用", lessons: [
       topic("048", "銳角三角比的定義"), topic("049", "廣義角三角比的定義"), topic("050", "三角函數與單位圓"),
       topic("051", "特別角的三角比"), topic("052", "三角比角度變換公式"), topic("053", "極座標與直角坐標"),
-      topic("054", "三角形面積公式"), topic("055", "正弦定理", { href: "lessons/book2/sine-law/index.html", status: "ready", tags: ["正弦定理教材", "正弦定理練習題"] }), topic("056", "餘弦定理", { href: "lessons/book2/cosine-law/index.html", status: "ready", tags: ["餘弦定理教材", "餘弦定理練習題"] }), topic("057", "三角形中分線")
+      topic("054", "三角形面積公式"), topic("055", "正弦定理", { href: "lessons/book2/sine-law/index.html", status: "ready", tags: ["正弦定理教材", "正弦基礎題"] }), topic("056", "餘弦定理", { href: "lessons/book2/cosine-law/index.html", status: "ready", tags: ["餘弦定理教材", "餘弦基礎題"] }), topic("057", "三角形中分線")
     ]}
   ],
   book3: [
