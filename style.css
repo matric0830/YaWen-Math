@@ -210,19 +210,25 @@ body:not(.teacher-logged-in) .lesson-card.is-hidden-by-teacher { display: none; 
 .tag-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 8px;
+  align-content: flex-start;
 }
 
 .tag {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
   min-height: 26px;
-  padding: 3px 9px;
+  padding: 6px 14px;
   border-radius: 999px;
   background: rgba(255,255,255,.13);
   color: #fff;
-  font-size: .82rem;
+  font-size: .9rem;
   font-weight: 800;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .card-actions,

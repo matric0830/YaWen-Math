@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>挑戰像素玉米｜最簡根式｜Ya-Wen 的高中數學教室</title>
+    <link rel="stylesheet" href="../../topic-page.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        window.MathJax = {
+            tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+            options: { enableMenu: false }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root { 
+            --corn-leaf: #8bc34a; 
+            --bg-color: #f3f4f6; 
+            --main-blue: #0f172a;
+            --border-radius-lg: 16px;
+            --border-radius-sm: 8px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif; 
+            background-color: var(--bg-color);
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            height: 100vh; 
+            width: 100vw;
+            overflow: hidden; 
+            padding: 15px;
+        }
+        
+        .app-container {
+            width: 100%; 
+            height: 100%;
+            background: #fff; 
+            border-radius: 24px; 
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+            display: grid; 
+            grid-template-columns: 380px 1fr; 
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .sidebar {
+            background-color: #f8fafc; 
+            padding: 18px 20px 16px;
+            display: flex; 
+            flex-direction: column; 
+            border-right: 1px solid #e2e8f0; 
+            height: 100%;
+            overflow: hidden; 
+        }
+
+        .sidebar-top {
+            display: flex;
+            flex-direction: column;
+            flex: 1; 
+            min-height: 0; 
+        }
+
+        .title-area {
+            flex-shrink: 0;
+            margin-bottom: 10px;
+        }
+        .title-area h1 { 
+            font-size: 24px; 
+            color: var(--main-blue); 
+            font-weight: 700; 
+            margin-bottom: 6px; 
+        }
+        
+        .palette-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 0;
+        }
+        .palette-title { 
+            font-size: 14px; 
+            color: #64748b; 
+            font-weight: 700; 
+            margin-bottom: 8px; 
+            flex-shrink: 0;
+        }
+        
+        .palette { 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between;
+            gap: 10px; 
+            flex: 1;
+            min-height: 0;
+        }
+        
+        .color-button { 
+            display: flex; 
+            align-items: center; 
+            min-height: 58px;
+            padding: 8px 16px; 
+            background: #fff; 
+            border-radius: var(--border-radius-lg); 
+            cursor: pointer; 
+            border: 2px solid #e2e8f0; 
+            transition: all 0.2s ease; 
+            flex: 1 1 0; 
+        }
+        .color-button:hover {
+            transform: translateY(-1px);
+            border-color: #cbd5e1;
+        }
+        .swatch { width: 18px; height: 18px; border-radius: var(--border-radius-sm); margin-right: 12px; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.08); }
+        
+        .color-info { 
+            display: flex; 
+            flex-direction: row; 
+            align-items: center; 
+            gap: 8px; 
+            min-width: 0; 
+        }
+        .color-name { 
+            font-size: 18px; 
+            font-weight: 700; 
+            color: #1e293b; 
+            white-space: nowrap;
+        }
+        .color-rule { 
+            font-size: 18px; 
+            font-weight: 500;
+            color: #475569; 
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .color-rule mjx-container {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+        
+        .color-button[data-color="orange"].active { border-color: #e67e22; background: linear-gradient(135deg, #fffaf5 0%, #fff5eb 100%); }
+        .color-button[data-color="yellow"].active { border-color: #f1c40f; background: linear-gradient(135deg, #fffff0 0%, #fef9e7 100%); }
+        .color-button[data-color="purple"].active { border-color: #9b59b6; background: linear-gradient(135deg, #faf5fc 0%, #f5ebf7 100%); }
+        .color-button[data-color="brown"].active { border-color: #967e76; background: linear-gradient(135deg, #fbfaf9 0%, #f5f2f0 100%); }
+        
+        .sidebar-bottom {
+            flex-shrink: 0;
+            margin-top: 14px;
+        }
+        .control-bar { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        .btn-row { display: flex; gap: 10px; }
+        .btn-row > .btn { flex: 1 1 0; }
+        
+        .btn { min-height: 46px; padding: 8px 12px; border: none; border-radius: var(--border-radius-lg); font-weight: 700; cursor: pointer; font-family: inherit; font-size: 18px; transition: all 0.15s ease; text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn:active { transform: scale(0.97); }
+        
+        .btn-teacher-open { background: #334155; color: white; width: 100%; min-height: 48px; padding: 12px; font-size: 14px; border-radius: 12px; }
+        .btn-teacher-open:hover { background: #1e293b; }
+        
+        .btn-easy { background: #10b981; color: #fff; }
+        .btn-easy:hover { background: #059669; }
+
+        .btn-random { background: #2563eb; color: #fff; }
+        .btn-random:hover { background: #1d4ed8; }
+        
+        .btn-clear { background: #e2e8f0; color: #475569; }
+        .btn-clear:hover { background: #cbd5e1; }
+        
+        .btn-check { background: #e67e22; color: #fff; }
+        .btn-check:hover { background: #d35400; }
+        
+        .canvas { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px); 
+            background-size: 20px 20px; 
+            padding: 20px; 
+            overflow: hidden;
+            height: 100%;
+        }
+        
+        .corn-grid { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 4px; 
+            align-items: center; 
+            background: #ffffff; 
+            padding: 20px; 
+            border-radius: 24px; 
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
+            max-height: 95vh;
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+        .corn-row { display: flex; gap: 4px; }
+        
+        .pixel-cell { 
+            width: 8.8vh; 
+            height: 6.0vh; 
+            max-width: 80px;
+            max-height: 55px;
+            background-color: #f8fafc; 
+            border: 2px solid #e2e8f0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            font-size: 15px; 
+            font-weight: 700; 
+            color: #334155; 
+            cursor: pointer; 
+            user-select: none; 
+            position: relative; 
+            border-radius: 8px;
+            overflow: hidden; 
+        }
+        
+        .pixel-cell mjx-container {
+            transform: scale(0.85); 
+            transform-origin: center center;
+        }
+
+        .pixel-cell.empty-space { background-color: transparent !important; border-color: transparent !important; cursor: default; pointer-events: none; }
+        .leaf-fixed { background-color: var(--corn-leaf) !important; border-color: #7cb342; color: transparent !important; cursor: default; pointer-events: none; }
+        
+        .fill-yellow { background-color: #f1c40f !important; border-color: #f39c12; color: #000; }
+        .fill-orange { background-color: #e67e22 !important; border-color: #d35400; color: #fff; }
+        .fill-brown { background-color: #967e76 !important; border-color: #6f5953; color: #fff; }
+        .fill-purple { background-color: #9b59b6 !important; border-color: #8e44ad; color: #fff; }
+        
+        .mark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 26px; font-weight: 900; text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000; pointer-events: none; z-index: 10; }
+        .mark.correct { color: #2ecc71; }
+        .mark.incorrect { color: #e74c3c; }
+        
+        .modal-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.4);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(6px);
+        }
+        .modal-content {
+            background: white;
+            width: 440px;
+            padding: 25px;
+            border-radius: 20px;
+            position: relative;
+        }
+        .modal-content h3 { font-size: 18px; color: var(--main-blue); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .modal-content p, .modal-content li { font-size: 14px; color: #475569; line-height: 1.6; }
+        .modal-content ul { margin-left: 18px; margin-top: 6px; margin-bottom: 12px; }
+        .modal-content li { margin-bottom: 6px; }
+        .modal-close-btn { position: absolute; top: 15px; right: 20px; font-size: 20px; cursor: pointer; color: #94a3b8; }
+        body.site-body {
+            min-height: 100vh;
+            height: auto;
+            width: auto;
+            padding: 0;
+            display: block;
+            overflow: auto;
+            background: radial-gradient(circle at 88% 84%, rgba(255,255,255,.12) 0 18px, transparent 19px), #20272a;
+            color: #f8f2e8;
+        }
+
+        .site-body .play-page {
+            padding: 20px;
+        }
+
+        .site-body .play-shell {
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.18);
+            padding: 16px;
+        }
+
+        .site-body .heading-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .site-body .heading-copy {
+            min-width: 0;
+        }
+
+        .site-body .heading-copy p {
+            margin: 0 0 8px;
+        }
+
+        .site-body .heading-back {
+            flex: 0 0 auto;
+            background: #f1d2a0;
+            color: #17151d;
+            min-height: 42px;
+            padding: 8px 16px;
+        }
+
+        .site-body .play-shell .app-container {
+            min-height: 720px;
+            height: min(80vh, 960px);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+        }
+
+        .site-body .content-heading h2 {
+            font-size: clamp(2rem, 5vw, 3.8rem);
+        }
+
+        .site-body .lesson-link {
+            text-decoration: none;
+        }
+
+        .site-body .modal-overlay {
+            position: fixed;
+        }
+
+        @media (max-width: 850px) {
+            .site-body .play-page {
+                padding: 14px;
+            }
+
+            .site-body .play-shell {
+                padding: 10px;
+            }
+
+            .site-body .play-shell .app-container {
+                min-height: auto;
+                height: auto;
+                grid-template-columns: 1fr;
+            }
+
+            .site-body .heading-row {
+                flex-direction: column;
+            }
+
+            .palette {
+                justify-content: flex-start;
+            }
+
+            .color-button {
+                flex: 0 0 auto;
+                min-height: 54px;
+            }
+
+            .btn {
+                min-height: 46px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body class="site-body">
+
+<main class="page">
+    <section class="banner" aria-labelledby="siteTitle">
+        <img src="../../../images/chalk-banner.png" alt="Ya-Wen 的高中數學教室黑板橫幅">
+        <h1 id="siteTitle">Ya-Wen 的高中數學教室</h1>
+    </section>
+
+    <section class="layout">
+        <aside class="side-menu" aria-label="教材導覽">
+            <a class="menu-button is-active" href="../../../index.html">國中基礎建立</a>
+            <a class="menu-button" href="../../../index.html">高中數學第一冊</a>
+            <a class="menu-button" href="../../../index.html">高中數學第二冊</a>
+            <a class="menu-button" href="../../../index.html">高中數學第三冊</a>
+            <a class="menu-button" href="../../../index.html">高中數學第四冊</a>
+            <a class="menu-button" href="../../../index.html">高中數學第五冊</a>
+            <a class="menu-button" href="../../../index.html">高中數學第六冊</a>
+            <a class="menu-button" href="../../../index.html">學測複習</a>
+            <a class="menu-button" href="../../../index.html">互動小遊戲</a>
+            <a class="menu-button teacher-menu-button" href="../../../index.html">教師專區</a>
+        </aside>
+
+        <section class="content-area play-page">
+            <div class="content-heading">
+                <div class="heading-row">
+                    <div class="heading-copy">
+                        <p>國中基礎建立｜根式與化簡｜主題 001</p>
+                        <h2>最簡根式</h2>
+                    </div>
+                    <a class="lesson-link heading-back" href="index.html">回上一頁</a>
+                </div>
+            </div>
+
+            <section class="play-shell">
+
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-top">
+            <div class="title-area">
+                <h1>🌽 挑戰像素玉米</h1>
+                <button class="btn btn-teacher-open" onclick="openTeacherModal()"><i class="fa-solid fa-circle-info"></i> 遊戲說明</button>
+            </div>
+            <div class="palette-container">
+                <div class="palette-title">🧠 第一步：點選顏色</div>
+                <div class="palette">
+                    <div class="color-button active" data-color="orange">
+                        <div class="swatch" style="background: #e67e22;"></div>
+                        <div class="color-info">
+                            <span class="color-name">橘色家族</span>
+                            <span class="color-rule" id="rule-orange">\( \sqrt{2} \text{ 的同類方根} \)</span>
+                        </div>
+                    </div>
+                    <div class="color-button" data-color="yellow">
+                        <div class="swatch" style="background: #f1c40f;"></div>
+                        <div class="color-info">
+                            <span class="color-name">黃色家族</span>
+                            <span class="color-rule" id="rule-yellow">\( \sqrt{3} \text{ 的同類方根} \)</span>
+                        </div>
+                    </div>
+                    <div class="color-button" data-color="purple">
+                        <div class="swatch" style="background: #9b59b6;"></div>
+                        <div class="color-info">
+                            <span class="color-name">紫色家族</span>
+                            <span class="color-rule" id="rule-purple">\( \sqrt{5} \text{ 的同類方根} \)</span>
+                        </div>
+                    </div>
+                    <div class="color-button" data-color="brown">
+                        <div class="swatch" style="background: #967e76;"></div>
+                        <div class="color-info">
+                            <span class="color-name">棕色家族</span>
+                            <span class="color-rule">\( \text{整數的同類方根} \)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sidebar-bottom">
+            <div class="control-bar">
+                <div class="btn-row">
+                    <button class="btn btn-easy" onclick="switchToEasyMode()">🌱 簡易版</button>
+                    <button class="btn btn-random" onclick="randomizeQuestions()">🔥 進階版</button>
+                </div>
+                <div class="btn-row">
+                    <button class="btn btn-clear" onclick="resetGrid()">清除重來</button>
+                    <button class="btn btn-check" onclick="checkAnswers()">驗證答案</button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="canvas">
+        <div class="corn-grid" id="pixelCorn"></div>
+    </main>
+
+    <div class="modal-overlay" id="teacherModal">
+        <div class="modal-content">
+            <span class="modal-close-btn" onclick="closeTeacherModal()">&times;</span>
+            <h3><i class="fa-solid fa-gamepad" style="color:#e67e22;"></i> 像素玉米：遊戲說明</h3>
+            <ol>
+                <li><b>將右方玉米粒格子內的方根化簡。</b></li>
+                <li><b>判定屬於哪一個家族，點選該家族並填入該顏色。</b></li>
+            </ol>
+            <hr style="margin: 10px 0; border: none; border-top: 1px dashed #cbd5e1;">
+            <p><b>🌱 簡易版：</b>包含 \( \sqrt{2}, \sqrt{3}, \sqrt{5} \) 的延伸化簡題與完整整數題庫</p>
+            <p><b>🔥 進階版：</b>加入 \( \sqrt{6}, \sqrt{7}, \sqrt{11} \) 等更高階的題庫打亂挑戰</p>
+            <p><b>🧡 驗證答案：</b>直接在格子上標記對錯。</p>
+            <p style="color: #7cb342; font-weight: 700; margin-top: 8px;">※ 所有的綠色格子為玉米葉背景裝飾，無須著色。</p>
+            <button class="btn btn-check" style="width: 100%; margin-top: 12px; justify-content: center;" onclick="closeTeacherModal()">開始挑戰！</button>
+        </div>
+    </div>
+</div>
+
+            </section>
+        </section>
+    </section>
+</main>
+
+<footer class="site-footer">© Ya Wen 的數學教室｜讓數學不只會算，還能玩。</footer>
+
+<script>
+    const gridStructureTemplate = [
+        [ 'none', 'none', 'quest', 'none', 'none' ],
+        [ 'quest', 'quest', 'quest', 'quest', 'quest' ],
+        [ 'quest', 'quest', 'quest', 'quest', 'quest' ],
+        [ 'quest', 'quest', 'quest', 'quest', 'quest' ],
+        [ 'quest', 'quest', 'quest', 'quest', 'quest' ],
+        [ 'quest', 'quest', 'quest', 'quest', 'quest' ],
+        [ 'quest', 'quest', 'quest', 'quest', 'leaf' ],
+        [ 'leaf', 'quest', 'quest', 'quest', 'leaf' ],
+        [ 'leaf', 'leaf', 'quest', 'quest', 'leaf' ],
+        [ 'leaf', 'leaf', 'leaf', 'leaf', 'leaf' ],
+        [ 'leaf', 'leaf', 'leaf', 'leaf', 'leaf' ],
+        [ 'none', 'none', 'leaf', 'none', 'none' ]
+    ];
+
+    // 🔥 進階版題庫：全新設計 35 個完全不重複題目
+    const standardPool = [
+        // 棕色家族 (整數) - 8題
+        {v: "\\( \\sqrt{9} \\)", a: "brown"}, {v: "\\( \\sqrt{36} \\)", a: "brown"}, {v: "\\( \\sqrt{100} \\)", a: "brown"}, {v: "\\( \\sqrt{144} \\)", a: "brown"}, 
+        {v: "\\( \\sqrt{225} \\)", a: "brown"}, {v: "\\( \\sqrt{256} \\)", a: "brown"}, {v: "\\( \\sqrt{361} \\)", a: "brown"}, {v: "\\( \\sqrt{400} \\)", a: "brown"},
+        // 橘色家族 (\sqrt{6} 與 \sqrt{2}) - 9題
+        {v: "\\( \\sqrt{24} \\)", a: "orange"}, {v: "\\( \\sqrt{54} \\)", a: "orange"}, {v: "\\( \\sqrt{96} \\)", a: "orange"}, {v: "\\( \\sqrt{150} \\)", a: "orange"}, 
+        {v: "\\( \\sqrt{216} \\)", a: "orange"}, {v: "\\( \\sqrt{294} \\)", a: "orange"}, {v: "\\( \\sqrt{384} \\)", a: "orange"}, {v: "\\( \\sqrt{486} \\)", a: "orange"},
+        {v: "\\( \\sqrt{600} \\)", a: "orange"},
+        // 黃色家族 (\sqrt{7} 與 \sqrt{3}) - 9題
+        {v: "\\( \\sqrt{28} \\)", a: "yellow"}, {v: "\\( \\sqrt{63} \\)", a: "yellow"}, {v: "\\( \\sqrt{112} \\)", a: "yellow"}, {v: "\\( \\sqrt{175} \\)", a: "yellow"}, 
+        {v: "\\( \\sqrt{252} \\)", a: "yellow"}, {v: "\\( \\sqrt{343} \\)", a: "yellow"}, {v: "\\( \\sqrt{448} \\)", a: "yellow"}, {v: "\\( \\sqrt{567} \\)", a: "yellow"},
+        {v: "\\( \\sqrt{700} \\)", a: "yellow"},
+        // 紫色家族 (\sqrt{11} 與 \sqrt{5}) - 9題
+        {v: "\\( \\sqrt{44} \\)", a: "purple"}, {v: "\\( \\sqrt{99} \\)", a: "purple"}, {v: "\\( \\sqrt{176} \\)", a: "purple"}, {v: "\\( \\sqrt{275} \\)", a: "purple"}, 
+        {v: "\\( \\sqrt{396} \\)", a: "purple"}, {v: "\\( \\sqrt{539} \\)", a: "purple"}, {v: "\\( \\sqrt{704} \\)", a: "purple"}, {v: "\\( \\sqrt{891} \\)", a: "purple"},
+        {v: "\\( \\sqrt{1100} \\)", a: "purple"}
+    ];
+
+    // 🌱 簡易版題庫：精確嚴格審查 35 題（15個完全平方整數 + 7個√2家族 + 7個√3家族 + 6個√5家族）
+    const easyPool = [
+        // 棕色家族 (整數) - 15題
+        {v: "\\( \\sqrt{1} \\)", a: "brown"}, {v: "\\( \\sqrt{4} \\)", a: "brown"}, {v: "\\( \\sqrt{16} \\)", a: "brown"}, {v: "\\( \\sqrt{25} \\)", a: "brown"}, 
+        {v: "\\( \\sqrt{49} \\)", a: "brown"}, {v: "\\( \\sqrt{64} \\)", a: "brown"}, {v: "\\( \\sqrt{81} \\)", a: "brown"}, {v: "\\( \\sqrt{100} \\)", a: "brown"}, 
+        {v: "\\( \\sqrt{121} \\)", a: "brown"}, {v: "\\( \\sqrt{144} \\)", a: "brown"}, {v: "\\( \\sqrt{169} \\)", a: "brown"}, {v: "\\( \\sqrt{196} \\)", a: "brown"}, 
+        {v: "\\( \\sqrt{225} \\)", a: "brown"}, {v: "\\( \\sqrt{256} \\)", a: "brown"}, {v: "\\( \\sqrt{324} \\)", a: "brown"},
+        
+        // 橘色家族 (化簡後純粹是 \sqrt{2} 家族) - 7題
+        {v: "\\( \\sqrt{8} \\)", a: "orange"},    // 2√2
+        {v: "\\( \\sqrt{18} \\)", a: "orange"},   // 3√2
+        {v: "\\( \\sqrt{32} \\)", a: "orange"},   // 4√2
+        {v: "\\( \\sqrt{50} \\)", a: "orange"},   // 5√2
+        {v: "\\( \\sqrt{72} \\)", a: "orange"},   // 6√2
+        {v: "\\( \\sqrt{98} \\)", a: "orange"},   // 7√2
+        {v: "\\( \\sqrt{128} \\)", a: "orange"},  // 8√2
+        
+        // 黃色家族 (化簡後純粹是 \sqrt{3} 家族) - 7題
+        {v: "\\( \\sqrt{12} \\)", a: "yellow"},   // 2√3
+        {v: "\\( \\sqrt{27} \\)", a: "yellow"},   // 3√3
+        {v: "\\( \\sqrt{48} \\)", a: "yellow"},   // 4√3
+        {v: "\\( \\sqrt{75} \\)", a: "yellow"},   // 5√3
+        {v: "\\( \\sqrt{108} \\)", a: "yellow"},  // 6√3
+        {v: "\\( \\sqrt{147} \\)", a: "yellow"},  // 7√3
+        {v: "\\( \\sqrt{192} \\)", a: "yellow"},  // 8√3
+        
+        // 紫色家族 (化簡後純粹是 \sqrt{5} 家族) - 6題
+        {v: "\\( \\sqrt{20} \\)", a: "purple"},   // 2√5
+        {v: "\\( \\sqrt{45} \\)", a: "purple"},   // 3√5
+        {v: "\\( \\sqrt{80} \\)", a: "purple"},   // 4√5
+        {v: "\\( \\sqrt{125} \\)", a: "purple"},  // 5√5
+        {v: "\\( \\sqrt{180} \\)", a: "purple"},  // 6√5
+        {v: "\\( \\sqrt{245} \\)", a: "purple"}   // 7√5
+    ];
+
+    let currentQuestions = [...easyPool]; 
+    let currentSelectedColor = 'orange';
+
+    function openTeacherModal() { document.getElementById('teacherModal').style.display = 'flex'; }
+    function closeTeacherModal() { document.getElementById('teacherModal').style.display = 'none'; }
+
+    document.querySelectorAll('.color-button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.color-button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentSelectedColor = btn.dataset.color;
+            
+            const checkBtn = document.querySelector('.btn-check');
+            if(currentSelectedColor === 'orange') checkBtn.style.background = '#e67e22';
+            if(currentSelectedColor === 'yellow') checkBtn.style.background = '#f1c40f';
+            if(currentSelectedColor === 'purple') checkBtn.style.background = '#9b59b6';
+            if(currentSelectedColor === 'brown') checkBtn.style.background = '#967e76';
+        });
+    });
+
+    const gridContainer = document.getElementById('pixelCorn');
+
+    function initGrid() {
+        gridContainer.innerHTML = '';
+        let questIndex = 0;
+
+        // 洗牌演算法打亂題目
+        let shuffled = [...currentQuestions];
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+
+        gridStructureTemplate.forEach(rowData => {
+            const rowElement = document.createElement('div');
+            rowElement.className = 'corn-row';
+            
+            rowData.forEach(type => {
+                const cellElement = document.createElement('div');
+                cellElement.className = 'pixel-cell';
+
+                if (type === 'none') {
+                    cellElement.classList.add('empty-space');
+                } else if (type === 'leaf') {
+                    cellElement.classList.add('leaf-fixed');
+                } else if (type === 'quest') {
+                    const q = shuffled[questIndex];
+                    if (q) {
+                        cellElement.innerHTML = q.v;
+                        cellElement.dataset.correctAns = q.a;
+                        cellElement.dataset.userAns = "";
+                        cellElement.onclick = function() {
+                            this.classList.remove('fill-yellow', 'fill-orange', 'fill-brown', 'fill-purple');
+                            const oldMark = this.querySelector('.mark'); if (oldMark) oldMark.remove();
+                            this.classList.add('fill-' + currentSelectedColor);
+                            this.dataset.userAns = currentSelectedColor;
+                        };
+                    }
+                    questIndex++;
+                }
+                rowElement.appendChild(cellElement);
+            });
+            gridContainer.appendChild(rowElement);
+        });
+
+        if (window.MathJax) {
+            MathJax.typesetPromise();
+        }
+    }
+
+    function randomizeQuestions() {
+        currentQuestions = [...standardPool];
+        document.getElementById('rule-orange').innerHTML = "\\( \\sqrt{6} \\text{ 與 } \\sqrt{2} \\text{ 的同類方根} \\)";
+        document.getElementById('rule-yellow').innerHTML = "\\( \\sqrt{7} \\text{ 與 } \\sqrt{3} \\text{ 的同類方根} \\)";
+        document.getElementById('rule-purple').innerHTML = "\\( \\sqrt{11} \\text{ 與 } \\sqrt{5} \\text{ 的同類方根} \\)";
+        initGrid();
+    }
+
+    function switchToEasyMode() {
+        currentQuestions = [...easyPool];
+        document.getElementById('rule-orange').innerHTML = "\\( \\sqrt{2} \\text{ 的同類方根} \\)";
+        document.getElementById('rule-yellow').innerHTML = "\\( \\sqrt{3} \\text{ 的同類方根} \\)";
+        document.getElementById('rule-purple').innerHTML = "\\( \\sqrt{5} \\text{ 的同類方根} \\)";
+        initGrid();
+    }
+
+    function checkAnswers() {
+        const cells = document.querySelectorAll('.pixel-cell[data-correct-ans]');
+        let emptyCheck = false;
+        cells.forEach(c => {
+            const user = c.dataset.userAns, correct = c.dataset.correctAns;
+            const oldMark = c.querySelector('.mark'); if (oldMark) oldMark.remove();
+            const markSpan = document.createElement('span'); markSpan.className = 'mark';
+
+            if (!user) emptyCheck = true;
+            else if (user === correct) { markSpan.innerText = "✓"; markSpan.className += " correct"; c.appendChild(markSpan); }
+            else { markSpan.innerText = "✗"; markSpan.className += " incorrect"; c.appendChild(markSpan); }
+        });
+        if (emptyCheck) alert("還有玉米題目格子沒有塗色喔！");
+    }
+
+    function resetGrid() { initGrid(); }
+    
+    switchToEasyMode();
+</script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>餘弦定理｜Ya-Wen 的高中數學教室</title>
+    <style>
+        :root {
+            --page-bg: #20272b;
+            --panel-bg: #141b1f;
+            --panel-border: rgba(244, 239, 226, 0.18);
+            --panel-shadow: 0 24px 48px rgba(0, 0, 0, 0.28);
+            --text-main: #f7f3e8;
+            --text-muted: #ffd89a;
+            --accent: #f6d38f;
+            --accent-ink: #2d2414;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+            color: var(--text-main);
+            background:
+                radial-gradient(circle at top, rgba(255, 255, 255, 0.03), transparent 35%),
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                var(--page-bg);
+            background-size: auto, 48px 48px, 48px 48px, auto;
+        }
+
+        .page-shell {
+            width: min(1380px, calc(100% - 44px));
+            margin: 18px auto 0;
+            padding-bottom: 20px;
+        }
+
+        .page-header,
+        .lesson-wrap {
+            background: rgba(20, 27, 31, 0.96);
+            border: 1px solid var(--panel-border);
+            border-radius: 24px;
+            box-shadow: var(--panel-shadow);
+        }
+
+        .page-header {
+            position: relative;
+            padding: 24px 28px 20px;
+            margin-bottom: 12px;
+        }
+
+        .eyebrow {
+            margin: 0 0 10px;
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            color: var(--text-muted);
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: clamp(42px, 6.8vw, 76px);
+            line-height: 0.98;
+            letter-spacing: 0;
+        }
+
+        .back-link {
+            position: absolute;
+            top: 28px;
+            right: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 120px;
+            height: 58px;
+            padding: 0 22px;
+            border-radius: 999px;
+            background: var(--accent);
+            color: var(--accent-ink);
+            text-decoration: none;
+            font-size: 17px;
+            font-weight: 900;
+            box-shadow: 0 12px 28px rgba(246, 211, 143, 0.2);
+        }
+
+        .back-link:hover {
+            transform: translateY(-1px);
+        }
+
+        .lesson-wrap {
+            padding: 10px;
+        }
+
+        .lesson-frame {
+            display: block;
+            width: 100%;
+            height: min(82vh, 980px);
+            border: 0;
+            border-radius: 18px;
+            background: #ffffff;
+        }
+
+        @media (max-width: 900px) {
+            .page-shell {
+                width: min(100%, calc(100% - 24px));
+                margin: 14px auto 0;
+                padding-bottom: 18px;
+            }
+
+            .page-header {
+                padding: 20px 18px 18px;
+            }
+
+            .eyebrow {
+                font-size: 15px;
+                margin-bottom: 8px;
+            }
+
+            .page-header h1 {
+                max-width: calc(100% - 8px);
+            }
+
+            .back-link {
+                position: static;
+                margin-top: 14px;
+                width: fit-content;
+                min-width: 110px;
+                height: 50px;
+                font-size: 16px;
+            }
+
+            .lesson-wrap {
+                padding: 8px;
+            }
+
+            .lesson-frame {
+                height: 80vh;
+                min-height: 660px;
+                border-radius: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-shell">
+        <header class="page-header">
+            <p class="eyebrow">高中數學第二冊｜第四章 三角比的性質與應用｜主題 056</p>
+            <h1>餘弦定理</h1>
+            <a class="back-link" href="../../../index.html#book2" aria-label="回上一頁">回上一頁</a>
+        </header>
+
+        <section class="lesson-wrap" aria-label="餘弦定理互動教材">
+            <iframe
+                class="lesson-frame"
+                src="content.html"
+                title="餘弦定理互動教材"
+                loading="lazy">
+            </iframe>
+        </section>
+    </div>
+</body>
+</html>

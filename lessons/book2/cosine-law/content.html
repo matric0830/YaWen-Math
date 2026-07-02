@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>餘弦定理 — 互動幾何教學</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Microsoft JhengHei", sans-serif;
+            background-color: #f1f5f9;
+            color: #1e293b;
+            min-height: 100vh;
+            padding: 10px;
+            overflow: auto;
+        }
+
+        .app-container {
+            width: 1160px;
+            margin: 0 auto;
+            height: 780px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+            display: flex;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            position: relative;
+        }
+
+        .canvas-section {
+            flex: 1;
+            height: 100%;
+            background-color: #ffffff;
+            position: relative;
+        }
+
+        .app-header {
+            position: absolute;
+            top: 25px;
+            left: 35px;
+            z-index: 10;
+            white-space: nowrap;
+        }
+
+        .app-title {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            line-height: 1.2;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .app-title::before {
+            content: '';
+            display: inline-block;
+            width: 5px;
+            height: 22px;
+            background: linear-gradient(to bottom, #6366f1, #4f46e5);
+            border-radius: 4px;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* LaTeX 承載容器 */
+        .latex-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .latex-label {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        
+        /* 算式基礎排版 */
+        .formula-style {
+            position: absolute;
+            transform: translateY(-50%);
+            font-size: 26px;
+            font-weight: bold;
+            white-space: nowrap;
+            display: none;
+        }
+
+        /* 算式二自然縮小防換行 */
+        #math-formula-2 {
+            font-size: 26px; 
+            letter-spacing: -0.5px;
+        }
+
+        /* 算式三加紅色重點色塊外觀 */
+        #math-formula-3 {
+            background-color: #ffe4e6;
+            border: 2px solid #f43f5e;
+            border-radius: 8px;
+            padding: 6px 14px;
+        }
+
+        /* 算式四加紅色重點色塊外觀，並且精確放大 */
+        #math-formula-4 {
+            font-size: 34px; 
+            background-color: #ffe4e6;
+            border: 2px solid #f43f5e;
+            border-radius: 8px;
+            padding: 8px 18px;
+        }
+
+        .sidebar-section {
+            width: 260px;
+            height: 100%;
+            background-color: #f8fafc;
+            border-left: 1px solid #e2e8f0;
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+        }
+
+        .btn-refresh {
+            width: 40px;
+            height: 40px;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.02);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-refresh:hover {
+            transform: rotate(180deg);
+            background-color: #f1f5f9;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .control-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            user-select: none;
+            font-size: 15px;
+            font-weight: 600;
+            color: #475569;
+            padding: 12px;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            transition: all 0.15s ease;
+        }
+
+        .control-item > span {
+            display: inline-flex;
+            align-items: center;
+            min-height: 24px;
+            line-height: 1.2;
+        }
+
+        .control-item:hover {
+            background-color: #f1f5f9;
+        }
+
+        .checkbox-box {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #94a3b8;
+            border-radius: 5px;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .control-item.checked {
+            background-color: #eff6ff;
+            border-color: #bfdbfe;
+            color: #1e40af;
+        }
+
+        .control-item.checked .checkbox-box {
+            background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+            border-color: #3730a3;
+        }
+
+        .checkbox-box::after {
+            content: '';
+            width: 3.5px;
+            height: 7px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg) translate(-0.5px, -1px);
+            display: none;
+        }
+
+        .control-item.checked .checkbox-box::after {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    
+    <div class="canvas-section">
+        <div class="app-header">
+            <div class="app-title">餘弦定理(Law of Cosines)</div>
+        </div>
+
+        <svg viewBox="0 0 900 660" id="geo-svg">
+            <defs>
+                <marker id="arrow-red" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L8,3 z" fill="#ff0000" />
+                </marker>
+                <marker id="arrow-pink" markerWidth="10" markerHeight="10" refX="0" refY="3" orient="auto">
+                    <path d="M8,0 L8,6 L0,3 z" fill="#cc0066" />
+                </marker>
+                <marker id="arrow-purple" markerWidth="10" markerHeight="10" refX="3" refY="0" orient="auto">
+                    <path d="M0,6 L6,6 L3,0 z" fill="#4b0082" />
+                </marker>
+                <marker id="axis-arrow-x" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L8,3 z" fill="#334155" />
+                </marker>
+                <marker id="axis-arrow-y" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+                    <path d="M 0 1.5 L 9 5 L 0 8.5 z" fill="#334155" />
+                </marker>
+            </defs>
+
+            <g id="coord-axes" style="display: none;">
+                <line x1="115" y1="440" x2="720" y2="440" stroke="#334155" stroke-width="2" stroke-opacity="0.9" marker-end="url(#axis-arrow-x)" />
+                <line x1="250" y1="500" x2="250" y2="100" stroke="#334155" stroke-width="2" stroke-opacity="0.9" marker-end="url(#axis-arrow-y)" />
+            </g>
+
+            <polygon id="triangle-poly" points="250,440 100,180 550,440" fill="#f5ede6" stroke="none" />
+
+            <g id="helper-lines" style="display: none;">
+                <line x1="100" y1="180" x2="100" y2="440" stroke="#ff0000" stroke-width="1.5" stroke-dasharray="5,5" />
+                <line x1="100" y1="180" x2="250" y2="180" stroke="#64748b" stroke-width="1" stroke-dasharray="3,3" />
+            </g>
+
+            <g id="projection-labels" style="display: none;">
+                <path d="M 300 180 L 255 180" stroke="#cc0066" stroke-width="2.5" marker-end="url(#arrow-pink)" fill="none" />
+                <path d="M 100 472 L 100 452" stroke="#4b0082" stroke-width="2.5" marker-end="url(#arrow-purple)" fill="none" />
+                <path d="M 550 474 L 550 454" stroke="#4b0082" stroke-width="2.5" marker-end="url(#arrow-purple)" fill="none" id="path-a-arrow" style="display: none;" />
+            </g>
+
+            <g id="angle-theta-group">
+                <path d="M 250 440 L 305 440 A 55 55 0 0 0 217.4 384.2 Z" fill="#ff0000" fill-opacity="0.35" stroke="none" />
+                <path d="M 305 440 A 55 55 0 0 0 219.5 387.5" fill="none" stroke="#ff0000" stroke-width="2.2" marker-end="url(#arrow-red)" />
+            </g>
+
+            <line id="line-main-a" x1="250" y1="440" x2="550" y2="440" stroke="#334155" stroke-width="3.5" stroke-linecap="round" />
+            <line id="line-main-b" x1="250" y1="440" x2="100" y2="180" stroke="#334155" stroke-width="3.5" stroke-linecap="round" />
+            <line id="line-main-c" x1="100" y1="180" x2="550" y2="440" stroke="#334155" stroke-width="3.5" stroke-linecap="round" />
+
+            <circle id="node-O" cx="250" cy="440" r="8" fill="#00ffff" stroke="#0000ff" stroke-width="2.5" />
+            <circle id="node-A" cx="550" cy="440" r="8" fill="#00ff00" stroke="#006400" stroke-width="2.5" />
+            <circle id="node-B" cx="100" cy="180" r="8" fill="#ff0000" stroke="#8b0000" stroke-width="2.5" />
+
+            <text id="svg-lbl-o" x="225" y="465" font-family="KaTeX_Main, Times New Roman, serif" font-size="25px" font-style="italic" font-weight="bold" fill="#64748b" style="display: none;">O</text>
+        </svg>
+
+        <div class="latex-container">
+            <div id="lbl-coord-x" class="latex-label" style="left: 742px; top: 440px; color: #334155; display:none;">$x$</div>
+            <div id="lbl-coord-y" class="latex-label" style="left: 250px; top: 75px; color: #334155; display:none;">$y$</div>
+
+            <div id="lbl-math-a" class="latex-label" style="left: 400px; top: 478px; color: #000;">$a$</div>
+            <div id="lbl-math-b" class="latex-label" style="left: 125px; top: 315px; color: #000;">$b$</div>
+            <div id="lbl-math-c" class="latex-label" style="left: 350px; top: 285px; color: #000;">$c$</div>
+            <div id="lbl-math-theta" class="latex-label" style="left: 255px; top: 402px; color: #ff0000;">$\theta$</div>
+
+            <div id="lbl-math-bsin" class="latex-label" style="left: 335px; top: 200px; color: #ff0000; display:none;">$b \sin \theta$</div>
+            <div id="lbl-math-bcos" class="latex-label" style="left: 100px; top: 535px; color: #4b0082; display:none;">$b \cos \theta$</div>
+            <div id="lbl-math-purple-a" class="latex-label" style="left: 568px; top: 528px; color: #4b0082; display:none;">$a$</div>
+
+            <div id="math-formula-1" class="formula-style" style="left: 390px; top: 85px; color: #9f1239;">$c^2 = (a - b \cos \theta)^2 + (b \sin \theta)^2$</div>
+            <div id="math-formula-2" class="formula-style" style="left: 310px; top: 145px; color: #581c87;">$c^2 = a^2 - 2ab \cos \theta + b^2 (\cos^2 \theta + \sin^2 \theta)$</div>
+            <div id="math-formula-3" class="formula-style" style="left: 440px; top: 215px; color: #b91c1c;">$c^2 = a^2 + b^2 - 2ab \cos \theta$</div>
+            <div id="math-formula-4" class="formula-style" style="left: 440px; top: 300px; color: #b91c1c;">$\cos \theta \ = \ \frac{a^2 + b^2 - c^2}{2ab}$</div>
+        </div>
+    </div>
+
+    <div class="sidebar-section">
+        <div class="sidebar-header">
+            <div class="btn-refresh" onclick="resetApp()" title="重設圖形">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="control-item" id="item-1" onclick="toggleState(1)">
+                <div class="checkbox-box"></div>
+                <span>建立座標系</span>
+            </div>
+            <div class="control-item" id="item-2" onclick="toggleState(2)">
+                <div class="checkbox-box"></div>
+                <span>計算兩點距離</span>
+            </div>
+            <div class="control-item" id="item-3" onclick="toggleState(3)">
+                <div class="checkbox-box"></div>
+                <span>算式一</span>
+            </div>
+            <div class="control-item" id="item-4" onclick="toggleState(4)">
+                <div class="checkbox-box"></div>
+                <span>算式二</span>
+            </div>
+            <div class="control-item" id="item-5" onclick="toggleState(5)">
+                <div class="checkbox-box"></div>
+                <span>算式三</span>
+            </div>
+            <div class="control-item" id="item-6" onclick="toggleState(6)">
+                <div class="checkbox-box"></div>
+                <span>算式四</span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const labels = document.querySelectorAll('.latex-label, .formula-style');
+        labels.forEach(el => {
+            const text = el.textContent.trim();
+            if (text.startsWith('$') && text.endsWith('$')) {
+                const formula = text.slice(1, -1);
+                katex.render(formula, el, {
+                    throwOnError: false,
+                    displayMode: false
+                });
+            }
+        });
+        renderUI();
+    });
+
+    const appState = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false };
+
+    function toggleState(id) {
+        appState[id] = !appState[id];
+        const element = document.getElementById(`item-${id}`);
+        if (appState[id]) {
+            element.classList.add('checked');
+        } else {
+            element.classList.remove('checked');
+        }
+        renderUI();
+    }
+
+    function renderUI() {
+        const coordAxes = document.getElementById('coord-axes');
+        const trianglePoly = document.getElementById('triangle-poly');
+        const helperLines = document.getElementById('helper-lines');
+        const projLabels = document.getElementById('projection-labels');
+        const lineA = document.getElementById('line-main-a');
+        const lineB = document.getElementById('line-main-b');
+        const lineC = document.getElementById('line-main-c');
+        const pathAArrow = document.getElementById('path-a-arrow');
+        const thetaGroup = document.getElementById('angle-theta-group');
+
+        const lblX = document.getElementById('lbl-coord-x');
+        const lblY = document.getElementById('lbl-coord-y');
+        const lblO = document.getElementById('svg-lbl-o'); 
+        const lblA = document.getElementById('lbl-math-a');
+        const lblB = document.getElementById('lbl-math-b');
+        const lblC = document.getElementById('lbl-math-c');
+        const lblTheta = document.getElementById('lbl-math-theta');
+        const lblBSin = document.getElementById('lbl-math-bsin');
+        const lblBCos = document.getElementById('lbl-math-bcos');
+        const lblPurpleA = document.getElementById('lbl-math-purple-a');
+
+        const f1 = document.getElementById('math-formula-1');
+        const f2 = document.getElementById('math-formula-2');
+        const f3 = document.getElementById('math-formula-3');
+        const f4 = document.getElementById('math-formula-4');
+
+        // 預設初始化狀態
+        coordAxes.style.display = 'none';
+        lblX.style.display = 'none';
+        lblY.style.display = 'none';
+        lblO.style.display = 'none';
+        
+        trianglePoly.style.display = 'block';
+        helperLines.style.display = 'none';
+        projLabels.style.display = 'none';
+        lblBSin.style.display = 'none';
+        lblBCos.style.display = 'none';
+        lblPurpleA.style.display = 'none';
+        
+        thetaGroup.style.display = 'block';
+        lblTheta.style.display = 'block';
+        
+        lineA.style.display = 'block';
+        lineB.style.display = 'block';
+        lineC.style.display = 'block';
+        lineA.setAttribute('stroke', '#334155');
+        lineA.setAttribute('stroke-width', '3.5');
+        lineB.setAttribute('stroke', '#334155');
+        lineB.setAttribute('stroke-width', '3.5');
+        lineC.setAttribute('stroke', '#334155');
+        lineC.setAttribute('stroke-width', '3.5');
+        
+        lblA.style.display = 'block'; // 預設黑a顯示
+        lblB.style.display = 'block';
+        lblC.style.display = 'block';
+        pathAArrow.style.display = 'none';
+
+        f1.style.display = 'none';
+        f2.style.display = 'none';
+        f3.style.display = 'none';
+        f4.style.display = 'none';
+
+        // 核心優先權1：只要點選算式三或算式四，座標系(軸、x、y、O)一律強制關閉
+        if (appState[5] || appState[6]) {
+            coordAxes.style.display = 'none';  
+            lblX.style.display = 'none';       
+            lblY.style.display = 'none';       
+            lblO.style.display = 'none';       
+            
+            trianglePoly.style.display = 'block';
+            thetaGroup.style.display = 'block';
+            lblTheta.style.display = 'block';
+            
+            lineA.style.display = 'block';
+            lineB.style.display = 'block';
+            lineC.style.display = 'block';
+            
+            lblA.style.display = 'block'; // 保留黑a
+            lblB.style.display = 'block';
+            lblC.style.display = 'block';
+        } 
+        // 核心優先權2：若沒點選算式三或四，才照著原本步驟一與步驟二的規則走
+        else {
+            if (appState[1] && !appState[2]) {
+                coordAxes.style.display = 'block';
+                lblX.style.display = 'block';
+                lblY.style.display = 'block';
+                lblO.style.display = 'block';
+                trianglePoly.style.display = 'none';
+                helperLines.style.display = 'block';
+                projLabels.style.display = 'block';
+                lblBSin.style.display = 'block';
+                lblBCos.style.display = 'block';
+                lblPurpleA.style.display = 'block';
+                lineA.setAttribute('stroke', '#ff0000'); 
+                lineA.setAttribute('stroke-width', '4.5');
+                lineB.setAttribute('stroke', '#009933'); 
+                lineB.setAttribute('stroke-width', '4.5');
+                lineC.style.display = 'none';
+                lblC.style.display = 'none';
+                
+                lblA.style.display = 'block'; // 【修正點】在建立座標軸時，強制讓黑色 a 保留出現
+                
+                pathAArrow.style.display = 'block';
+            }
+
+            if (appState[2]) {
+                coordAxes.style.display = 'block';
+                lblX.style.display = 'block';
+                lblY.style.display = 'block';
+                lblO.style.display = 'block';
+                trianglePoly.style.display = 'none';
+                helperLines.style.display = 'block';
+                projLabels.style.display = 'block';
+                lblBSin.style.display = 'block';
+                lblBCos.style.display = 'block';
+                lblPurpleA.style.display = 'block';
+                lineA.style.display = 'none';
+                lineB.style.display = 'none';
+                
+                lblA.style.display = 'block'; // 【修正點】在計算兩點距離時，同樣讓黑色 a 保留出現
+                
+                lblB.style.display = 'none';
+                thetaGroup.style.display = 'none';
+                lblTheta.style.display = 'none';
+                lineC.style.display = 'block';
+                lineC.setAttribute('stroke', '#0000ff'); 
+                lineC.setAttribute('stroke-width', '4.5');
+                lblC.style.display = 'block';
+                pathAArrow.style.display = 'block';
+            }
+        }
+
+        // 公式顯示控制
+        if (appState[3]) f1.style.display = 'block';
+        if (appState[4]) f2.style.display = 'block';
+        if (appState[5]) f3.style.display = 'block';
+        if (appState[6]) f4.style.display = 'block';
+    }
+
+    function resetApp() {
+        for (let i = 1; i <= 6; i++) {
+            appState[i] = false;
+            const element = document.getElementById(`item-${i}`);
+            if(element) element.classList.remove('checked');
+        }
+        renderUI();
+    }
+</script>
+
+</body>
+</html>

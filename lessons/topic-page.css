@@ -168,9 +168,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 .tag-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
+  display: none;
 }
 
 .tag {

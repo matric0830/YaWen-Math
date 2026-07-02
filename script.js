@@ -23,12 +23,17 @@ function topic(number, title, options = {}) {
 }
 
 const CHAPTERS = {
+  junior: [
+    { title: "第一章 根式與化簡", lessons: [
+      topic("001", "最簡根式", { href: "lessons/junior/simplest-radical/index.html", status: "practice", tags: ["挑戰像素玉米"] })
+    ]}
+  ],
   book1: [
     { title: "第一章 數與式", lessons: [
-      topic("001", "數系", { href: "lessons/book1/real-number-system/index.html", status: "practice", tags: ["基礎練習", "互動題", "數系分類"] }),
-      topic("002", "乘法公式", { href: "lessons/book1/multiplication-formula/index.html", status: "practice", tags: ["基礎練習", "互動題", "公式拼圖"] }),
-      topic("003", "雙重根號", { href: "lessons/book1/double-radical/index.html", status: "practice", tags: ["練習題", "根號化簡", "根號估算"] }),
-      topic("004", "算幾不等式", { href: "lessons/book1/am-gm/index.html", status: "ready", tags: ["互動題", "代數證明", "幾何證明"] }),
+      topic("001", "數系", { href: "lessons/book1/real-number-system/index.html", status: "practice", tags: ["實數系統教材", "數系觀念說明", "循環小數化分數"] }),
+      topic("002", "乘法公式", { href: "lessons/book1/multiplication-formula/index.html", status: "practice", tags: ["乘法公式拼圖", "乘法公式練習"] }),
+      topic("003", "雙重根號", { href: "lessons/book1/double-radical/index.html", status: "practice", tags: ["基礎挑戰", "估算特訓", "混和練習"] }),
+      topic("004", "算幾不等式", { href: "lessons/book1/am-gm/index.html", status: "ready", tags: ["算幾不等式互動教材"] }),
       topic("005", "分點公式"), topic("006", "絕對值方程式與不等式"), topic("007", "指數"), topic("008", "常用對數")
     ]},
     { title: "第二章 直線與圓", lessons: [
@@ -56,7 +61,7 @@ const CHAPTERS = {
     { title: "第四章 三角比的性質與應用", lessons: [
       topic("048", "銳角三角比的定義"), topic("049", "廣義角三角比的定義"), topic("050", "三角函數與單位圓"),
       topic("051", "特別角的三角比"), topic("052", "三角比角度變換公式"), topic("053", "極座標與直角坐標"),
-      topic("054", "三角形面積公式"), topic("055", "正弦定理"), topic("056", "餘弦定理"), topic("057", "三角形中分線")
+      topic("054", "三角形面積公式"), topic("055", "正弦定理", { href: "lessons/book2/sine-law/index.html", status: "ready", tags: ["正弦定理教材", "正弦定理練習題"] }), topic("056", "餘弦定理", { href: "lessons/book2/cosine-law/index.html", status: "ready", tags: ["餘弦定理教材", "餘弦定理練習題"] }), topic("057", "三角形中分線")
     ]}
   ],
   book3: [
@@ -153,6 +158,10 @@ function chaptersFor(categoryId) {
   return [...(CHAPTERS[categoryId] || []), ...customLessonsFor(categoryId)];
 }
 
+function shouldShowChapterTabs(categoryId) {
+  return categoryId !== "teacher" && categoryId !== "junior";
+}
+
 function renderCategory(categoryId) {
   currentCategory = categoryId;
   currentChapterIndex = 0;
@@ -168,7 +177,7 @@ function renderCategory(categoryId) {
   const chapterTabs = document.getElementById("chapterTabs");
   const chapterContent = document.getElementById("chapterContent");
   teacherPanel.hidden = categoryId !== "teacher";
-  chapterTabs.hidden = categoryId === "teacher";
+  chapterTabs.hidden = !shouldShowChapterTabs(categoryId);
   chapterContent.hidden = categoryId === "teacher";
 
   if (categoryId === "teacher") return;
@@ -181,6 +190,7 @@ function renderChapterTabs() {
   const chapters = chaptersFor(currentCategory);
   tabs.innerHTML = "";
 
+  if (!shouldShowChapterTabs(currentCategory)) return;
   if (!chapters.length) return;
 
   chapters.forEach((chapter, index) => {
@@ -209,12 +219,18 @@ function renderChapterContent(index) {
   }
 
   const chapter = chapters[index] || chapters[0];
-  const title = document.createElement("h3");
-  title.textContent = chapter.title;
   const grid = document.createElement("div");
   grid.className = "lesson-grid";
   chapter.lessons.forEach(lesson => grid.appendChild(createLessonCard(lesson)));
-  content.append(title, grid);
+
+  if (shouldShowChapterTabs(currentCategory)) {
+    const title = document.createElement("h3");
+    title.textContent = chapter.title;
+    content.append(title, grid);
+    return;
+  }
+
+  content.append(grid);
 }
 
 function createLessonCard(lesson) {
