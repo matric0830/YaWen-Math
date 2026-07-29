@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>實數系統互動教具｜Ya-Wen 的高中數學教室</title>
-
   <script>
     window.MathJax = {
       tex: {
@@ -16,13 +15,12 @@
     };
   </script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-
   <style>
     :root {
       --bg: #20272a;
-      --panel: rgba(9, 16, 18, 0.52);
-      --panel-strong: rgba(0, 0, 0, 0.2);
-      --line: rgba(255, 255, 255, 0.26);
+      --panel: rgba(9, 16, 18, 0.56);
+      --panel-strong: rgba(255, 255, 255, 0.06);
+      --line: rgba(255, 255, 255, 0.22);
       --text: #f8f2e8;
       --muted: rgba(255, 255, 255, 0.72);
       --chalk: #fffdf4;
@@ -32,6 +30,8 @@
       --cream: #f1d2a0;
       --purple: #b9a4ee;
       --orange: #e6a05b;
+      --good: #8bd3c7;
+      --bad: #e28c8c;
     }
 
     * {
@@ -41,9 +41,9 @@
     body {
       min-height: 100vh;
       margin: 0;
-      padding: 22px;
+      padding: 10px;
       background:
-        radial-gradient(circle at 88% 84%, rgba(255,255,255,.12) 0 18px, transparent 19px),
+        radial-gradient(circle at 88% 84%, rgba(255, 255, 255, 0.1) 0 18px, transparent 19px),
         var(--bg);
       color: var(--text);
       font-family: "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
@@ -58,205 +58,243 @@
       text-decoration: none;
     }
 
-    #main-container {
+    .page {
       width: min(1180px, 100%);
-      min-height: calc(100vh - 44px);
       margin: 0 auto;
       display: grid;
-      gap: 18px;
+      gap: 10px;
+    }
+
+    .lesson-header,
+    .panel,
+    .board {
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+        linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+        rgba(9, 16, 18, 0.66);
+      background-size: 34px 34px;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.42);
     }
 
     .lesson-header {
       position: relative;
-      border: 2px solid var(--line);
-      border-radius: 14px;
-      background:
-        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
-        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
-        rgba(9, 16, 18, 0.64);
-      background-size: 34px 34px;
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,.42), 0 18px 34px rgba(0,0,0,.25);
-      padding: 22px 170px 22px 24px;
+      padding: 14px 132px 14px 16px;
+    }
+
+    .back-link,
+    .btn-reset,
+    .zone-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 8px 16px;
+      border: 0;
+      border-radius: 999px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 160ms ease, filter 160ms ease, background 160ms ease;
+    }
+
+    .back-link,
+    .btn-reset {
+      background: var(--cream);
+      color: #17151d;
+    }
+
+    .back-link:hover,
+    .btn-reset:hover,
+    .zone-button:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
     }
 
     .back-link {
       position: absolute;
-      top: 18px;
-      right: 18px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 38px;
-      padding: 8px 15px;
-      border-radius: 999px;
-      background: var(--cream);
-      color: #17151d;
-      font-weight: 900;
-      white-space: nowrap;
-    }
-
-    .back-link:hover {
-      filter: brightness(1.06);
-    }
-
-    .site-footer {
-      width: min(1180px, 100%);
-      margin: 18px auto 0;
-      padding: 18px 24px;
-      background: var(--wood);
-      color: #23160f;
-      text-align: center;
-      font-weight: 900;
-      border-radius: 0;
+      top: 12px;
+      right: 12px;
     }
 
     .lesson-kicker {
-      margin: 0 0 8px;
+      margin: 0 0 4px;
       color: var(--cream);
       font-weight: 900;
+      font-size: 0.92rem;
     }
 
     h1 {
       margin: 0;
       color: var(--chalk);
-      font-size: clamp(2rem, 5vw, 4.2rem);
-      line-height: 1.08;
+      font-size: clamp(1.8rem, 3.8vw, 2.9rem);
+      line-height: 1.02;
     }
 
-    .lesson-intro {
-      margin: 14px 0 0;
-      color: var(--muted);
-      font-weight: 800;
-      line-height: 1.7;
-    }
-
-    #example-panel,
-    #real-number-system {
-      border: 2px solid var(--line);
-      border-radius: 14px;
-      background: var(--panel);
-      box-shadow: inset 0 0 0 1px rgba(0,0,0,.42);
-    }
-
-    #example-panel {
-      padding: 16px;
+    .panel {
+      padding: 12px;
     }
 
     .panel-header-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
-      margin-bottom: 14px;
+      gap: 10px;
+      margin-bottom: 8px;
     }
 
     .panel-title {
-      color: var(--text);
       font-weight: 900;
-      line-height: 1.5;
+      font-size: 0.92rem;
+      line-height: 1.34;
     }
 
-    .btn-reset {
-      min-height: 38px;
-      border: 0;
-      border-radius: 999px;
-      background: var(--cream);
-      color: #17151d;
-      cursor: pointer;
-      font-weight: 900;
-      padding: 8px 14px;
-      white-space: nowrap;
-    }
-
-    .btn-reset:hover {
-      filter: brightness(1.06);
-    }
-
-    #example-buttons {
+    .status-strip {
       display: grid;
-      grid-template-columns: repeat(8, minmax(0, 1fr));
-      gap: 8px;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: stretch;
     }
 
-    .card-example {
-      min-height: 42px;
+    .draw-area {
+      display: grid;
+      gap: 8px;
+      align-items: start;
+    }
+
+    .deck-status {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .deck-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 28px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.86rem;
+    }
+
+    .draw-card-shell {
+      min-height: 104px;
       display: grid;
       place-items: center;
-      border: 2px solid var(--line);
-      border-radius: 10px;
-      background: rgba(0, 0, 0, 0.2);
-      color: var(--chalk);
+      border: 2px dashed rgba(255, 255, 255, 0.24);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 10px;
+    }
+
+    .draw-card-shell.is-finished {
+      border-style: solid;
+      border-color: rgba(139, 211, 199, 0.45);
+      background: rgba(128, 199, 196, 0.08);
+    }
+
+    .current-card {
+      min-width: min(100%, 300px);
+      min-height: 64px;
+      display: grid;
+      place-items: center;
+      padding: 10px 16px;
+      border: 2px solid rgba(255, 255, 255, 0.24);
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(211, 122, 169, 0.98), rgba(185, 164, 238, 0.98));
+      color: #16161d;
       cursor: grab;
-      font-size: 1rem;
+      text-align: center;
+      font-size: clamp(1.15rem, 2.6vw, 1.7rem);
       font-weight: 900;
+      box-shadow: 0 20px 36px rgba(0, 0, 0, 0.26);
       user-select: none;
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
     }
 
-    .card-example:hover {
-      transform: translateY(-1px);
-      border-color: rgba(255,255,255,.55);
+    .current-card.is-selected {
+      outline: 3px solid rgba(255, 255, 255, 0.72);
+      outline-offset: 3px;
     }
 
-    .card-example.selected {
-      background: linear-gradient(135deg, #d37aa9, #b9a4ee);
-      border-color: rgba(255,255,255,.68);
-      color: #151719;
-      cursor: grabbing;
-      box-shadow: 0 0 0 3px rgba(211, 122, 169, 0.22);
-    }
-
-    .card-example.selected mjx-container {
-      color: #151719 !important;
-    }
-
-    .card-example * {
+    .current-card * {
       pointer-events: none !important;
     }
 
-    .card-example mjx-container {
+    .current-card mjx-container {
+      color: #16161d !important;
       margin: 0 !important;
     }
 
-    #chart-area {
-      display: grid;
-      min-height: 520px;
+    .empty-note {
+      color: var(--muted);
+      font-size: 1.06rem;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.75;
     }
 
-    #real-number-system {
-      display: grid;
-      grid-template-rows: auto 1fr;
-      gap: 14px;
-      padding: 18px;
+    .board {
+      padding: 12px;
     }
 
-    #system-title {
+    .board-title {
+      margin: 0 0 8px;
       color: var(--cream);
-      font-size: 1.2rem;
+      font-size: 1rem;
       font-weight: 900;
     }
 
-    #map-grid {
+    .map-grid {
       display: grid;
       grid-template-columns: 1.2fr 0.8fr;
-      gap: 16px;
-      min-height: 440px;
+      gap: 10px;
+      min-height: 280px;
     }
 
     .zone {
+      position: relative;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
       border: 2px solid var(--line);
       border-radius: 12px;
       background: rgba(0, 0, 0, 0.16);
-      padding: 14px;
-      transition: background 160ms ease, border-color 160ms ease;
+      padding: 10px;
+      transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
     }
 
     .zone.drag-over {
-      background: rgba(128, 199, 196, 0.16);
-      border-color: var(--teal);
+      background: rgba(255, 245, 214, 0.3);
+      border-color: #ffe7a8;
+      box-shadow: 0 0 0 4px rgba(255, 231, 168, 0.28), 0 0 24px rgba(255, 231, 168, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+      transform: translateY(-1px);
+    }
+
+    .zone.drag-over .zone-label {
+      color: var(--chalk) !important;
+    }
+
+    .zone.ancestor-over {
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    .zone.ancestor-over > .zone-label {
+      font-weight: 900;
+    }
+
+    .zone.flash-good {
+      background: rgba(128, 199, 196, 0.18);
+      border-color: var(--good);
+    }
+
+    .zone.flash-bad {
+      background: rgba(226, 140, 140, 0.14);
+      border-color: var(--bad);
     }
 
     .zone-label {
@@ -266,58 +304,130 @@
 
     .zone-hint {
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 800;
-      line-height: 1.45;
+      line-height: 1.28;
     }
 
     #q-zone {
       border-color: rgba(185, 164, 238, 0.72);
     }
 
+    #q-zone.drag-over {
+      background: rgba(185, 164, 238, 0.2);
+      border-color: #d8cbff;
+      box-shadow: 0 0 0 4px rgba(185, 164, 238, 0.28), 0 0 24px rgba(185, 164, 238, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+    }
+
+    #q-zone.ancestor-over {
+      background: rgba(185, 164, 238, 0.18);
+      border-color: #d8cbff;
+      box-shadow: 0 0 0 3px rgba(185, 164, 238, 0.2), 0 0 20px rgba(185, 164, 238, 0.14), inset 0 0 0 1px rgba(216, 203, 255, 0.24);
+    }
+
+    #q-zone.ancestor-over > .zone-label {
+      color: #e4daff;
+    }
+
     #z-zone {
-      min-height: 300px;
+      min-height: 188px;
       border-color: rgba(128, 199, 196, 0.72);
     }
 
+    #z-zone.drag-over {
+      background: rgba(128, 199, 196, 0.22);
+      border-color: #9fe7dc;
+      box-shadow: 0 0 0 4px rgba(128, 199, 196, 0.28), 0 0 24px rgba(128, 199, 196, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+    }
+
+    #z-zone.ancestor-over {
+      background: rgba(128, 199, 196, 0.2);
+      border-color: #9fe7dc;
+      box-shadow: 0 0 0 3px rgba(128, 199, 196, 0.2), 0 0 20px rgba(128, 199, 196, 0.14), inset 0 0 0 1px rgba(159, 231, 220, 0.24);
+    }
+
+    #z-zone.ancestor-over > .zone-label {
+      color: #b8f3ea;
+    }
+
     #n-zone {
-      min-height: 145px;
+      min-height: 84px;
       border-color: rgba(241, 210, 160, 0.78);
+    }
+
+    #n-zone.drag-over {
+      background: rgba(241, 210, 160, 0.24);
+      border-color: #ffe2a4;
+      box-shadow: 0 0 0 4px rgba(241, 210, 160, 0.3), 0 0 24px rgba(241, 210, 160, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+    }
+
+    #n-zone.ancestor-over {
+      background: rgba(241, 210, 160, 0.2);
+      border-color: #ffe2a4;
+      box-shadow: 0 0 0 3px rgba(241, 210, 160, 0.2), 0 0 20px rgba(241, 210, 160, 0.14), inset 0 0 0 1px rgba(255, 226, 164, 0.24);
+    }
+
+    #n-zone.ancestor-over > .zone-label {
+      color: #ffe9bd;
     }
 
     #irr-zone {
       border-color: rgba(230, 160, 91, 0.82);
     }
 
-    #q-zone > .zone-label { color: var(--purple); }
-    #z-zone > .zone-label { color: var(--teal); }
-    #n-zone > .zone-label { color: var(--cream); }
-    #irr-zone > .zone-label { color: var(--orange); }
+    #irr-zone.drag-over {
+      background: rgba(230, 160, 91, 0.22);
+      border-color: #ffc489;
+      box-shadow: 0 0 0 4px rgba(230, 160, 91, 0.28), 0 0 24px rgba(230, 160, 91, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+    }
+
+    #irr-zone.ancestor-over {
+      background: rgba(230, 160, 91, 0.09);
+      border-color: rgba(230, 160, 91, 0.9);
+      box-shadow: inset 0 0 0 1px rgba(255, 196, 137, 0.16);
+    }
+
+    #q-zone > .zone-label {
+      color: var(--purple);
+    }
+
+    #z-zone > .zone-label {
+      color: var(--teal);
+    }
+
+    #n-zone > .zone-label {
+      color: var(--cream);
+    }
+
+    #irr-zone > .zone-label {
+      color: var(--orange);
+    }
 
     .space-slot {
       flex: 1;
-      min-height: 64px;
+      min-height: 40px;
       display: flex;
       align-content: flex-start;
       align-items: flex-start;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
       padding-top: 4px;
     }
 
     .placed-number {
-      min-height: 36px;
+      min-height: 28px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      padding: 6px 13px;
+      padding: 4px 10px;
       border-radius: 999px;
       background: var(--pink);
       color: #151719;
       font-weight: 900;
-      box-shadow: 0 8px 20px rgba(0,0,0,.2);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
       animation: popIn 0.22s ease-out;
       white-space: nowrap;
+      font-size: 0.88rem;
     }
 
     .placed-number mjx-container {
@@ -325,9 +435,46 @@
       margin: 0 !important;
     }
 
-    @keyframes popIn {
-      from { transform: scale(.85); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+    .mobile-zone-actions {
+      display: none;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .zone-button {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--chalk);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      min-height: 48px;
+      padding: 10px 14px;
+    }
+
+    .zone-button[data-realm="Natural"] {
+      color: var(--cream);
+    }
+
+    .zone-button[data-realm="Integer"] {
+      color: var(--teal);
+    }
+
+    .zone-button[data-realm="Rational"] {
+      color: var(--purple);
+    }
+
+    .zone-button[data-realm="Irrational"] {
+      color: var(--orange);
+    }
+
+    .site-footer {
+      width: min(1180px, 100%);
+      margin: 8px auto 0;
+      padding: 10px 18px;
+      background: var(--wood);
+      color: #23160f;
+      text-align: center;
+      font-weight: 900;
+      font-size: 0.88rem;
     }
 
     #drag-ghost-container {
@@ -337,17 +484,161 @@
       z-index: -9999;
     }
 
+    @keyframes popIn {
+      from {
+        transform: scale(.85);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @media (min-width: 768px) and (max-width: 1024px) {
+      body {
+        padding: 10px;
+      }
+
+      .page {
+        gap: 10px;
+      }
+
+      .lesson-header {
+        padding: 14px 120px 14px 16px;
+      }
+
+      .lesson-kicker {
+        margin-bottom: 4px;
+        font-size: 0.9rem;
+      }
+
+      h1 {
+        font-size: clamp(1.85rem, 4.2vw, 2.85rem);
+      }
+
+      .panel,
+      .board {
+        padding: 10px;
+      }
+
+      .panel-header-row {
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+
+      .panel-title {
+        font-size: 0.9rem;
+        line-height: 1.35;
+      }
+
+      .deck-status {
+        gap: 6px;
+      }
+
+      .deck-pill {
+        min-height: 26px;
+        padding: 3px 9px;
+        font-size: 0.84rem;
+      }
+
+      .draw-area {
+        gap: 8px;
+      }
+
+      .draw-card-shell {
+        min-height: 100px;
+        padding: 10px;
+      }
+
+      .current-card {
+        min-height: 66px;
+        min-width: min(100%, 248px);
+        padding: 10px 14px;
+        border-radius: 14px;
+        font-size: clamp(1.15rem, 2.9vw, 1.6rem);
+      }
+
+      .board-title {
+        margin-bottom: 8px;
+        font-size: 0.98rem;
+      }
+
+      .map-grid {
+        gap: 10px;
+        min-height: 272px;
+      }
+
+      #z-zone {
+        min-height: 184px;
+      }
+
+      #n-zone {
+        min-height: 84px;
+      }
+
+      .zone {
+        gap: 6px;
+        padding: 8px;
+      }
+
+      .zone-label {
+        font-size: 0.88rem;
+      }
+
+      .zone-hint {
+        font-size: 0.76rem;
+        line-height: 1.3;
+      }
+
+      .space-slot {
+        min-height: 42px;
+        gap: 6px;
+      }
+
+      .placed-number {
+        min-height: 28px;
+        padding: 3px 10px;
+        font-size: 0.9rem;
+      }
+
+      .back-link,
+      .btn-reset {
+        min-height: 32px;
+        padding: 6px 12px;
+        font-size: 0.9rem;
+      }
+
+      .back-link {
+        top: 14px;
+        right: 14px;
+      }
+
+      .mobile-zone-actions {
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .zone-button {
+        min-height: 40px;
+        padding: 8px 10px;
+        font-size: 0.88rem;
+      }
+    }
+
     @media (max-width: 960px) {
       body {
         padding: 12px;
       }
 
-      #example-buttons {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+      .status-strip,
+      .map-grid {
+        grid-template-columns: 1fr;
       }
 
-      #map-grid {
-        grid-template-columns: 1fr;
+      .mobile-zone-actions {
+        display: grid;
       }
     }
 
@@ -366,201 +657,318 @@
         flex-direction: column;
       }
 
-      #example-buttons {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+      .draw-card-shell {
+        min-height: 132px;
+      }
+
+      .current-card {
+        min-height: 84px;
+        padding: 16px;
       }
     }
   </style>
 </head>
 <body>
-  <div id="main-container">
+  <main class="page">
     <header class="lesson-header">
       <a class="back-link" href="index.html">回上一頁</a>
       <p class="lesson-kicker">高一數學｜第一章 數與式｜主題 001 數系</p>
       <h1>實數系統互動教具</h1>
     </header>
 
-    <section id="example-panel">
+    <section class="panel">
       <div class="panel-header-row">
-        <div class="panel-title">請用滑鼠點擊或拖拉上方數字卡，將其分類至下方對應的數系方框中。</div>
-        <button class="btn-reset" onclick="resetGame()">清空重置</button>
+        <div class="panel-title">隨機抽卡後，將目前數字拖曳到對應的數系分類。自然數請放入最內層，自動完成後會繼續抽下一張。</div>
+        <button class="btn-reset" type="button" onclick="resetGame()">重新抽卡</button>
       </div>
-      <div id="example-buttons">
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-m5" data-realm="Integer" data-latex="-5">$-5$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-m4" data-realm="Integer" data-latex="-4">$-4$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-m3" data-realm="Integer" data-latex="-3">$-3$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-m2" data-realm="Integer" data-latex="-2">$-2$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-m1" data-realm="Integer" data-latex="-1">$-1$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-0" data-realm="Integer" data-latex="0">$0$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-1" data-realm="Natural" data-latex="1">$1$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-2" data-realm="Natural" data-latex="2">$2$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-3" data-realm="Natural" data-latex="3">$3$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-4" data-realm="Natural" data-latex="4">$4$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-5" data-realm="Natural" data-latex="5">$5$</div>
 
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-fracm13" data-realm="Rational" data-latex="-\frac{1}{3}">$-\frac{1}{3}$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-frac85" data-realm="Rational" data-latex="\frac{8}{5}">$\frac{8}{5}$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-frac92" data-realm="Rational" data-latex="\frac{9}{2}">$\frac{9}{2}$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-m25" data-realm="Rational" data-latex="-2.5">$-2.5$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-017" data-realm="Rational" data-latex="0.17">$0.17$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-0999" data-realm="Natural" data-latex="0.\overline{9}">$0.\overline{9}$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-314" data-realm="Rational" data-latex="3.14">$3.14$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-017rep" data-realm="Rational" data-latex="0.\overline{17}">$0.\overline{17}$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-123rep" data-realm="Rational" data-latex="1.2\overline{3}">$1.2\overline{3}$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-m616rep" data-realm="Rational" data-latex="-6.\overline{16}">$-6.\overline{16}$</div>
-
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-pi" data-realm="Irrational" data-latex="\pi">$\pi$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-mpi" data-realm="Irrational" data-latex="-\pi">$-\pi$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-sq2" data-realm="Irrational" data-latex="\sqrt{2}">$\sqrt{2}$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-sq3" data-realm="Irrational" data-latex="\sqrt{3}">$\sqrt{3}$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-msq28" data-realm="Irrational" data-latex="-\sqrt{28}">$-\sqrt{28}$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-sq36" data-realm="Natural" data-latex="\sqrt{36}">$\sqrt{36}$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-sq50" data-realm="Irrational" data-latex="\sqrt{50}">$\sqrt{50}$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-sq101" data-realm="Irrational" data-latex="\sqrt{101}">$\sqrt{101}$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-msq49" data-realm="Integer" data-latex="-\sqrt{49}">$-\sqrt{49}$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-8msq2" data-realm="Irrational" data-latex="8-\sqrt{2}">$8-\sqrt{2}$</div>
-        <div class="card-example" draggable="true" ondragstart="drag(event)" onclick="selectCard(this)" id="num-sq25sq59" data-realm="Irrational" data-latex="\sqrt{25+\sqrt{59}}">$\sqrt{25+\sqrt{59}}$</div>
-      </div>
-    </section>
-
-    <section id="chart-area">
-      <div id="real-number-system">
-        <div id="system-title">實數 Real Numbers ($R$)</div>
-        <div id="map-grid">
-          <div class="zone" id="q-zone" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" data-accept="Rational">
-            <div class="zone-label">有理數 Rational ($Q$)</div>
-            <div class="zone-hint">可化成分數，包含有限小數與循環小數。</div>
-            <div class="zone" id="z-zone" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" data-accept="Integer">
-              <div class="zone-label">整數 Integers ($Z$)</div>
-              <div class="zone" id="n-zone" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" data-accept="Natural">
-                <div class="zone-label">自然數 Natural ($N$)</div>
-                <div id="n-space" class="space-slot"></div>
-              </div>
-              <div id="z-space" class="space-slot"></div>
-            </div>
-            <div id="q-space" class="space-slot"></div>
+      <div class="status-strip">
+        <div class="draw-area">
+          <div class="deck-status">
+            <div class="deck-pill">目前第 <span id="progress-now">1</span> 張</div>
+            <div class="deck-pill">剩餘 <span id="remaining-count">32</span> 張</div>
+            <div class="deck-pill">已完成 <span id="completed-count">0</span> 張</div>
           </div>
-          <div class="zone" id="irr-zone" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" data-accept="Irrational">
-            <div class="zone-label">無理數 Irrational</div>
-            <div class="zone-hint">無法化成分數，為無限不循環小數。</div>
-            <div id="irr-space" class="space-slot"></div>
+          <div id="draw-card-shell" class="draw-card-shell">
+            <div id="current-card" class="current-card" draggable="true" aria-label="目前抽到的數字卡"></div>
+          </div>
+          <div class="mobile-zone-actions" aria-label="手機分類按鈕">
+            <button class="zone-button" type="button" data-realm="Natural" onclick="classifyCurrentCard('Natural')">自然數</button>
+            <button class="zone-button" type="button" data-realm="Integer" onclick="classifyCurrentCard('Integer')">整數</button>
+            <button class="zone-button" type="button" data-realm="Rational" onclick="classifyCurrentCard('Rational')">有理數</button>
+            <button class="zone-button" type="button" data-realm="Irrational" onclick="classifyCurrentCard('Irrational')">無理數</button>
           </div>
         </div>
       </div>
     </section>
-  </div>
+
+    <section class="board">
+      <div class="board-title">實數 Real Numbers （ $R$ ）</div>
+      <div class="map-grid">
+        <div class="zone" id="q-zone" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" data-accept="Rational">
+          <div class="zone-label">有理數 Rational （ $Q$ ）</div>
+          <div class="zone-hint">能寫成分數，或有限小數、循環小數，都放在這一層。</div>
+          <div class="zone" id="z-zone" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" data-accept="Integer">
+            <div class="zone-label">整數 Integers （ $Z$ ）</div>
+            <div class="zone" id="n-zone" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" data-accept="Natural">
+              <div class="zone-label">自然數 Natural （ $N$ ）</div>
+              <div id="n-space" class="space-slot"></div>
+            </div>
+            <div id="z-space" class="space-slot"></div>
+          </div>
+          <div id="q-space" class="space-slot"></div>
+        </div>
+
+        <div class="zone" id="irr-zone" ondragover="allowDrop(event)" ondragenter="dragEnter(event)" ondragleave="dragLeave(event)" ondrop="drop(event)" data-accept="Irrational">
+          <div class="zone-label">無理數 Irrational</div>
+          <div class="zone-hint">不能寫成分數，且小數不會終止也不會循環的數，放在這一側。</div>
+          <div id="irr-space" class="space-slot"></div>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <footer class="site-footer">© Ya Wen 的數學教室｜讓數學不只會算，還能玩。</footer>
 
   <div id="drag-ghost-container"></div>
 
   <script>
-    function shuffleCards() {
-      const container = document.getElementById("example-buttons");
-      const cards = Array.from(container.querySelectorAll(".card-example"));
-      for (let i = cards.length - 1; i > 0; i--) {
+    const CARD_BANK = [
+      { id: "num-m5", realm: "Integer", latex: "-5" },
+      { id: "num-m4", realm: "Integer", latex: "-4" },
+      { id: "num-m3", realm: "Integer", latex: "-3" },
+      { id: "num-m2", realm: "Integer", latex: "-2" },
+      { id: "num-m1", realm: "Integer", latex: "-1" },
+      { id: "num-0", realm: "Integer", latex: "0" },
+      { id: "num-1", realm: "Natural", latex: "1" },
+      { id: "num-2", realm: "Natural", latex: "2" },
+      { id: "num-3", realm: "Natural", latex: "3" },
+      { id: "num-4", realm: "Natural", latex: "4" },
+      { id: "num-5", realm: "Natural", latex: "5" },
+      { id: "num-fracm13", realm: "Rational", latex: "-\\frac{1}{3}" },
+      { id: "num-frac85", realm: "Rational", latex: "\\frac{8}{5}" },
+      { id: "num-frac92", realm: "Rational", latex: "\\frac{9}{2}" },
+      { id: "num-m25", realm: "Rational", latex: "-2.5" },
+      { id: "num-017", realm: "Rational", latex: "0.17" },
+      { id: "num-0999", realm: "Natural", latex: "0.\\overline{9}" },
+      { id: "num-314", realm: "Rational", latex: "3.14" },
+      { id: "num-017rep", realm: "Rational", latex: "0.\\overline{17}" },
+      { id: "num-123rep", realm: "Rational", latex: "1.2\\overline{3}" },
+      { id: "num-m616rep", realm: "Rational", latex: "-6.\\overline{16}" },
+      { id: "num-pi", realm: "Irrational", latex: "\\pi" },
+      { id: "num-mpi", realm: "Irrational", latex: "-\\pi" },
+      { id: "num-sq2", realm: "Irrational", latex: "\\sqrt{2}" },
+      { id: "num-sq3", realm: "Irrational", latex: "\\sqrt{3}" },
+      { id: "num-msq28", realm: "Irrational", latex: "-\\sqrt{28}" },
+      { id: "num-sq36", realm: "Natural", latex: "\\sqrt{36}" },
+      { id: "num-sq50", realm: "Irrational", latex: "\\sqrt{50}" },
+      { id: "num-sq101", realm: "Irrational", latex: "\\sqrt{101}" },
+      { id: "num-msq49", realm: "Integer", latex: "-\\sqrt{49}" },
+      { id: "num-8msq2", realm: "Irrational", latex: "8-\\sqrt{2}" },
+      { id: "num-sq25sq59", realm: "Irrational", latex: "\\sqrt{25+\\sqrt{59}}" }
+    ];
+
+    const FIXED_LAST_CARD_ID = "num-0999";
+    let drawPile = [];
+    let currentCard = null;
+    let completedCount = 0;
+    let currentSelected = false;
+
+    function shuffleArray(array) {
+      const newArray = [...array];
+      for (let i = newArray.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [cards[i], cards[j]] = [cards[j], cards[i]];
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
       }
-      cards.forEach(card => container.appendChild(card));
+      return newArray;
     }
 
-    function selectCard(element) {
-      const card = element.closest(".card-example");
-      if (!card) return;
-      document.querySelectorAll(".card-example").forEach(item => item.classList.remove("selected"));
-      card.classList.add("selected");
+    function buildDrawPile() {
+      const fixedLastCard = CARD_BANK.find(card => card.id === FIXED_LAST_CARD_ID);
+      const randomCards = CARD_BANK.filter(card => card.id !== FIXED_LAST_CARD_ID);
+      const shuffledCards = shuffleArray(randomCards);
+
+      if (fixedLastCard) {
+        shuffledCards.push(fixedLastCard);
+      }
+
+      return shuffledCards;
     }
 
-    function drag(event) {
-      const targetCard = event.currentTarget.closest(".card-example");
-      if (!targetCard) return;
-      event.dataTransfer.setData("text/plain", targetCard.id);
-      selectCard(targetCard);
+    function renderCurrentCard() {
+      const cardEl = document.getElementById("current-card");
+      const shellEl = document.getElementById("draw-card-shell");
+      const progressNow = document.getElementById("progress-now");
+      const remainingCount = document.getElementById("remaining-count");
+      const completed = document.getElementById("completed-count");
 
-      const ghostContainer = document.getElementById("drag-ghost-container");
-      ghostContainer.innerHTML = "";
-      const ghost = targetCard.cloneNode(true);
-      ghost.classList.add("selected");
-      ghost.style.width = targetCard.offsetWidth + "px";
-      ghost.style.height = targetCard.offsetHeight + "px";
-      ghost.style.opacity = "0.9";
-      ghostContainer.appendChild(ghost);
-      event.dataTransfer.setDragImage(ghost, targetCard.offsetWidth / 2, targetCard.offsetHeight / 2);
+      completed.textContent = String(completedCount);
+      remainingCount.textContent = String(currentCard ? drawPile.length + 1 : 0);
+      progressNow.textContent = String(completedCount + (currentCard ? 1 : 0));
+
+      if (!currentCard) {
+        shellEl.classList.add("is-finished");
+        cardEl.style.display = "none";
+        shellEl.innerHTML = '<div class="empty-note">32 張數字卡都完成了。<br>按「重新抽卡」可以再玩一次。</div>';
+        return;
+      }
+
+      shellEl.classList.remove("is-finished");
+      if (!shellEl.querySelector("#current-card")) {
+        shellEl.innerHTML = '<div id="current-card" class="current-card" draggable="true" aria-label="目前抽到的數字卡"></div>';
+        bindCardEvents();
+      }
+
+      const currentCardEl = document.getElementById("current-card");
+      currentCardEl.style.display = "";
+      currentCardEl.classList.toggle("is-selected", currentSelected);
+      currentCardEl.dataset.id = currentCard.id;
+      currentCardEl.dataset.realm = currentCard.realm;
+      currentCardEl.dataset.latex = currentCard.latex;
+      currentCardEl.innerHTML = "$" + currentCard.latex + "$";
+
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        MathJax.typesetPromise([currentCardEl]);
+      }
+    }
+
+    function bindCardEvents() {
+      const cardEl = document.getElementById("current-card");
+      if (!cardEl) return;
+
+      cardEl.addEventListener("click", () => {
+        currentSelected = !currentSelected;
+        cardEl.classList.toggle("is-selected", currentSelected);
+      });
+
+      cardEl.addEventListener("dragstart", drag);
+    }
+
+    function drawNextCard() {
+      currentSelected = false;
+      currentCard = drawPile.shift() || null;
+      renderCurrentCard();
     }
 
     function allowDrop(event) {
       event.preventDefault();
+      updateActiveZone(event);
+    }
+
+    function clearActiveZones() {
+      document.querySelectorAll(".zone").forEach(zone => zone.classList.remove("drag-over", "ancestor-over"));
+    }
+
+    function updateActiveZone(event) {
+      const zone = event.target.closest(".zone");
+      clearActiveZones();
+      if (!zone) return;
+
+      zone.classList.add("drag-over");
+      let parentZone = zone.parentElement ? zone.parentElement.closest(".zone") : null;
+      while (parentZone) {
+        parentZone.classList.add("ancestor-over");
+        parentZone = parentZone.parentElement ? parentZone.parentElement.closest(".zone") : null;
+      }
     }
 
     function dragEnter(event) {
       event.stopPropagation();
-      const zone = event.target.closest(".zone");
-      if (zone) zone.classList.add("drag-over");
+      updateActiveZone(event);
     }
 
     function dragLeave(event) {
-      const zone = event.target.closest(".zone");
-      if (zone) zone.classList.remove("drag-over");
+      const related = event.relatedTarget;
+      if (related && event.currentTarget.contains(related)) return;
+      clearActiveZones();
+    }
+
+    function drag(event) {
+      if (!currentCard) return;
+
+      event.dataTransfer.setData("text/plain", currentCard.id);
+      const targetCard = event.currentTarget;
+      const ghostContainer = document.getElementById("drag-ghost-container");
+      ghostContainer.innerHTML = "";
+
+      const ghost = targetCard.cloneNode(true);
+      ghost.classList.add("is-selected");
+      ghost.style.width = targetCard.offsetWidth + "px";
+      ghost.style.height = targetCard.offsetHeight + "px";
+      ghost.style.opacity = "0.92";
+      ghostContainer.appendChild(ghost);
+
+      event.dataTransfer.setDragImage(ghost, targetCard.offsetWidth / 2, targetCard.offsetHeight / 2);
+    }
+
+    function flashZone(zone, type) {
+      if (!zone) return;
+      const className = type === "good" ? "flash-good" : "flash-bad";
+      zone.classList.add(className);
+      setTimeout(() => zone.classList.remove(className), 220);
+    }
+
+    function appendPlacedCard(card) {
+      let spaceId = "";
+      if (card.realm === "Natural") spaceId = "n-space";
+      else if (card.realm === "Integer") spaceId = "z-space";
+      else if (card.realm === "Rational") spaceId = "q-space";
+      else if (card.realm === "Irrational") spaceId = "irr-space";
+
+      const newNum = document.createElement("div");
+      newNum.className = "placed-number";
+      newNum.id = "placed-" + card.id;
+      newNum.innerHTML = "$" + card.latex + "$";
+      document.getElementById(spaceId).appendChild(newNum);
+
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        MathJax.typesetPromise([newNum]);
+      }
+    }
+
+    function classifyCurrentCard(targetRealm, zoneEl) {
+      if (!currentCard) return;
+
+      if (currentCard.realm === targetRealm) {
+        appendPlacedCard(currentCard);
+        completedCount += 1;
+        flashZone(zoneEl || document.querySelector('[data-accept="' + targetRealm + '"]'), "good");
+        drawNextCard();
+      } else {
+        flashZone(zoneEl || document.querySelector('[data-accept="' + targetRealm + '"]'), "bad");
+      }
     }
 
     function drop(event) {
       event.preventDefault();
       event.stopPropagation();
 
-      document.querySelectorAll(".zone").forEach(zone => zone.classList.remove("drag-over"));
-      document.querySelectorAll(".card-example").forEach(card => card.classList.remove("selected"));
+      clearActiveZones();
 
-      const id = event.dataTransfer.getData("text/plain");
-      const draggedElement = document.getElementById(id);
-      if (!draggedElement) return;
-
-      const correctRealm = draggedElement.getAttribute("data-realm");
-      const latexStr = draggedElement.getAttribute("data-latex");
       const targetZone = event.target.closest(".zone");
-      if (!targetZone) return;
+      if (!targetZone || !currentCard) return;
 
       const targetRealm = targetZone.getAttribute("data-accept");
-      if (correctRealm === targetRealm) {
-        let spaceId = "";
-        if (correctRealm === "Natural") spaceId = "n-space";
-        else if (correctRealm === "Integer") spaceId = "z-space";
-        else if (correctRealm === "Rational") spaceId = "q-space";
-        else if (correctRealm === "Irrational") spaceId = "irr-space";
-
-        if (document.getElementById("placed-" + id)) {
-          alert("這張數字卡已經放進分類中了。");
-          return;
-        }
-
-        draggedElement.style.visibility = "hidden";
-        const newNum = document.createElement("div");
-        newNum.className = "placed-number";
-        newNum.id = "placed-" + id;
-        newNum.innerHTML = "$" + latexStr + "$";
-        document.getElementById(spaceId).appendChild(newNum);
-
-        if (window.MathJax && window.MathJax.typesetPromise) {
-          MathJax.typesetPromise([newNum]);
-        }
-      } else {
-        alert("分類不正確，請再想想這個數屬於哪一個數系。");
-      }
+      classifyCurrentCard(targetRealm, targetZone);
     }
 
     function resetGame() {
       ["n-space", "z-space", "q-space", "irr-space"].forEach(id => {
         document.getElementById(id).innerHTML = "";
       });
-      document.querySelectorAll(".card-example").forEach(card => {
-        card.style.visibility = "visible";
-        card.classList.remove("selected");
-      });
+
+      drawPile = buildDrawPile();
+      completedCount = 0;
       document.getElementById("drag-ghost-container").innerHTML = "";
-      shuffleCards();
+      document.querySelectorAll(".zone").forEach(zone => {
+        zone.classList.remove("drag-over", "ancestor-over", "flash-good", "flash-bad");
+      });
+      drawNextCard();
     }
 
-    shuffleCards();
+    document.addEventListener("dragend", clearActiveZones);
+
+    resetGame();
   </script>
 </body>
 </html>
