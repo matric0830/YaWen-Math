@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>分點公式教材｜Ya-Wen 的高中數學教室</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] },
+      options: { enableMenu: false }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      --bg: #20272a;
+      --panel: rgba(9, 16, 18, 0.54);
+      --line: rgba(255, 255, 255, 0.26);
+      --text: #f8f2e8;
+      --muted: rgba(255, 255, 255, 0.72);
+      --chalk: #fffdf4;
+      --cream: #f1d2a0;
+      --teal: #80c7c4;
+      --pink: #d37aa9;
+      --ink: #171b21;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 22px;
+      background:
+        radial-gradient(circle at 88% 84%, rgba(255,255,255,.12) 0 18px, transparent 19px),
+        var(--bg);
+      color: var(--text);
+      font-family: "Noto Sans TC", "Microsoft JhengHei", Arial, sans-serif;
+    }
+
+    .page {
+      width: min(1240px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 18px;
+    }
+
+    .lesson-header,
+    .content-panel {
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.42), 0 18px 34px rgba(0,0,0,.2);
+    }
+
+    .lesson-header {
+      position: relative;
+      padding: clamp(18px, 4vw, 28px);
+      padding-right: 170px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        rgba(9, 16, 18, 0.66);
+      background-size: 34px 34px;
+    }
+
+    .back-button {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      min-height: 38px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--cream);
+      color: var(--ink);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 900;
+      padding: 8px 15px;
+      white-space: nowrap;
+    }
+
+    .lesson-kicker {
+      margin: 0 0 10px;
+      color: var(--cream);
+      font-weight: 900;
+      font-size: clamp(1rem, 2vw, 1.25rem);
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--chalk);
+      font-size: clamp(2.8rem, 7vw, 5.4rem);
+      line-height: 1.02;
+    }
+
+    .content-panel {
+      display: grid;
+      gap: 18px;
+      padding: 18px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        rgba(9, 16, 18, 0.6);
+      background-size: 34px 34px;
+    }
+
+    .section {
+      display: grid;
+      gap: 18px;
+      background: transparent;
+    }
+
+    .section h2 {
+      margin: 0;
+      color: var(--chalk);
+      font-size: clamp(1.45rem, 3vw, 2rem);
+    }
+
+    .formula-layout,
+    .example-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(240px, .9fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .formula-main,
+    .example-steps {
+      display: grid;
+      gap: 12px;
+    }
+
+    .formula-main p,
+    .step p {
+      margin: 0;
+      color: var(--chalk);
+      line-height: 1.85;
+      font-weight: 700;
+    }
+
+    .display,
+    .step {
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.05);
+    }
+
+    .display {
+      text-align: center;
+      font-size: clamp(1.3rem, 3vw, 2rem);
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--cream);
+      font-size: 1rem;
+    }
+
+    .diagram-box {
+      display: grid;
+      place-items: center;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,.03);
+      min-height: 220px;
+    }
+
+    .diagram-stage {
+      position: relative;
+      width: min(100%, 320px);
+      aspect-ratio: 320 / 170;
+    }
+
+    .segment-diagram {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .diagram-label {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      font-weight: 800;
+      line-height: 1;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .diagram-label mjx-container {
+      margin: 0 !important;
+    }
+
+    .label-point {
+      color: var(--chalk);
+      font-size: 1.8rem;
+    }
+
+    .label-ratio {
+      color: var(--teal);
+      font-size: 1.2rem;
+    }
+
+    .label-value {
+      color: var(--cream);
+      font-size: 1.45rem;
+    }
+
+    .label-x {
+      color: var(--teal);
+      font-size: 1.05rem;
+    }
+
+    .point-focus {
+      fill: none;
+      stroke: #fffdf4;
+      stroke-width: 2.5;
+      opacity: 0.9;
+    }
+
+    .point-guide {
+      stroke: #80c7c4;
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+
+    mjx-container {
+      margin: 0 !important;
+    }
+
+    .site-footer {
+      margin-top: 24px;
+      padding: 18px 24px;
+      background: #bd8959;
+      color: #23160f;
+      text-align: center;
+      font-weight: 900;
+      border-radius: 12px;
+    }
+
+    @media (max-width: 980px) {
+      .formula-layout,
+      .example-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .lesson-header {
+        padding-right: 24px;
+      }
+
+      .back-button {
+        position: static;
+        margin-top: 16px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 12px;
+      }
+
+      .content-panel {
+        padding: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="lesson-header">
+      <p class="lesson-kicker">高一數學｜第一章 數與式｜主題 005</p>
+      <h1>分點公式</h1>
+      <button class="back-button" type="button" onclick="location.href='index.html'">回上一頁</button>
+    </section>
+
+    <section class="content-panel">
+      <section class="section" aria-labelledby="coreFormula">
+        <h2 id="coreFormula">核心公式</h2>
+        <div class="formula-layout">
+          <div class="formula-main">
+            <p>設 $A$、$B$ 兩點坐標為 $a$、$b$，且 $m > 0$、$n > 0$。</p>
+            <p>若 $P$ 在線段 $\overline{AB}$ 上，且 $\overline{AP} : \overline{BP} = m : n$，則：</p>
+            <div class="display">
+              $P = \dfrac{na + mb}{m + n}$
+            </div>
+          </div>
+
+          <div class="diagram-box" aria-label="分點公式線段示意圖">
+            <div class="diagram-stage">
+              <svg class="segment-diagram" viewBox="0 0 320 170" role="img" aria-label="A 到 B 的線段上，P 將線段分成 m 比 n">
+                <line x1="40" y1="88" x2="280" y2="88" stroke="#fffdf4" stroke-width="6" stroke-linecap="round"></line>
+                <circle cx="55" cy="88" r="8" fill="#d37aa9"></circle>
+                <circle cx="265" cy="88" r="8" fill="#d37aa9"></circle>
+                <circle class="point-focus" cx="160" cy="88" r="13"></circle>
+                <circle cx="160" cy="88" r="8" fill="#80c7c4"></circle>
+                <line class="point-guide" x1="160" y1="48" x2="160" y2="70"></line>
+                <path d="M64 64 C92 38, 117 38, 152 64" fill="none" stroke="#80c7c4" stroke-width="4"></path>
+                <path d="M168 64 C196 38, 223 38, 256 64" fill="none" stroke="#80c7c4" stroke-width="4"></path>
+              </svg>
+              <div class="diagram-label label-point" style="left: 16%; top: 24%;">$A$</div>
+              <div class="diagram-label label-point" style="left: 50%; top: 24%;">$P$</div>
+              <div class="diagram-label label-point" style="left: 84%; top: 24%;">$B$</div>
+              <div class="diagram-label label-ratio" style="left: 35%; top: 17%;">$m$</div>
+              <div class="diagram-label label-ratio" style="left: 69%; top: 17%;">$n$</div>
+              <div class="diagram-label label-value" style="left: 16%; top: 73%;">$a$</div>
+              <div class="diagram-label label-x" style="left: 50%; top: 74%;">$\dfrac{na+mb}{m+n}$</div>
+              <div class="diagram-label label-value" style="left: 84%; top: 73%;">$b$</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>例題說明</h2>
+        <div class="example-layout">
+          <div class="example-steps">
+            <article class="step">
+              <strong>題目</strong>
+              <p>已知 $A(a)$、$B(b)$，且 $a < b$。點 $P$ 在線段 $\overline{AB}$ 上，滿足 $\overline{AP} : \overline{BP} = 4 : 3$，求點 $P$ 的坐標。</p>
+            </article>
+
+            <article class="step">
+              <strong>步驟 1</strong>
+              <p>設點 $P$ 的坐標為 $x$，則 $\overline{AP} = x-a$，$\overline{BP} = b-x$。</p>
+            </article>
+
+            <article class="step">
+              <strong>步驟 2</strong>
+              <p>由比例關係可得 $(x-a):(b-x)=4:3$，因此 $4(b-x)=3(x-a)$。</p>
+            </article>
+
+            <article class="step">
+              <strong>步驟 3</strong>
+              <p>$4b-4x=3x-3a$，整理後得到 $4b+3a=7x$，所以 $x=\dfrac{3a+4b}{4+3}$。</p>
+            </article>
+
+          </div>
+
+          <div class="diagram-box" aria-label="分點公式例題示意圖">
+            <div class="diagram-stage">
+              <svg class="segment-diagram" viewBox="0 0 320 170" role="img" aria-label="A 到 B 的線段上，P 將線段分成四比三">
+                <line x1="40" y1="88" x2="280" y2="88" stroke="#fffdf4" stroke-width="6" stroke-linecap="round"></line>
+                <circle cx="55" cy="88" r="8" fill="#d37aa9"></circle>
+                <circle cx="265" cy="88" r="8" fill="#d37aa9"></circle>
+                <circle class="point-focus" cx="160" cy="88" r="13"></circle>
+                <circle cx="160" cy="88" r="8" fill="#80c7c4"></circle>
+                <line class="point-guide" x1="160" y1="48" x2="160" y2="70"></line>
+                <path d="M64 64 C92 38, 117 38, 152 64" fill="none" stroke="#80c7c4" stroke-width="4"></path>
+                <path d="M168 64 C196 38, 223 38, 256 64" fill="none" stroke="#80c7c4" stroke-width="4"></path>
+              </svg>
+              <div class="diagram-label label-point" style="left: 16%; top: 24%;">$A$</div>
+              <div class="diagram-label label-point" style="left: 50%; top: 24%;">$P$</div>
+              <div class="diagram-label label-point" style="left: 84%; top: 24%;">$B$</div>
+              <div class="diagram-label label-ratio" style="left: 35%; top: 17%;">$4$</div>
+              <div class="diagram-label label-ratio" style="left: 69%; top: 17%;">$3$</div>
+              <div class="diagram-label label-value" style="left: 16%; top: 73%;">$a$</div>
+              <div class="diagram-label label-x" style="left: 50%; top: 74%;">$x$</div>
+              <div class="diagram-label label-value" style="left: 84%; top: 73%;">$b$</div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer">© Ya Wen 的數學教室｜讓數學不只會算，還能玩。</footer>
+</body>
+</html>

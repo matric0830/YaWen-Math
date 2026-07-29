@@ -34,7 +34,7 @@ const CHAPTERS = {
       topic("002", "乘法公式", { href: "lessons/book1/multiplication-formula/index.html", status: "practice", tags: ["乘法公式拼圖", "乘法公式練習"] }),
       topic("003", "雙重根號", { href: "lessons/book1/double-radical/index.html", status: "practice", tags: ["基礎挑戰", "估算特訓", "混和練習"] }),
       topic("004", "算幾不等式", { href: "lessons/book1/am-gm/index.html", status: "ready", tags: ["算幾不等式互動教材"] }),
-      topic("005", "分點公式"), topic("006", "絕對值方程式與不等式"), topic("007", "指數"), topic("008", "常用對數")
+      topic("005", "分點公式", { href: "lessons/book1/division-point-formula/index.html", status: "ready", tags: ["分點公式教材", "例題說明"] }), topic("006", "絕對值方程式與不等式"), topic("007", "指數"), topic("008", "常用對數")
     ]},
     { title: "第二章 直線與圓", lessons: [
       topic("009", "斜率"), topic("010", "直線方程式"), topic("011", "兩線平行與垂直"), topic("012", "點與線的關係"),
