@@ -928,6 +928,18 @@
         padding: 18px 12px;
       }
 
+      #practice .flashcard,
+      #practice .flashcard-inner,
+      #practice .flashcard-face,
+      #test .challenge-question-card {
+        height: auto !important;
+        min-height: 0 !important;
+      }
+
+      #practice .flashcard-face {
+        padding: 22px 16px;
+      }
+
       .flash-actions {
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 8px;
@@ -974,52 +986,22 @@
       <div class="panel-header">
         <div>
           <h2>使用方式</h2>
-          <p>先觀察象限與特殊角，再判斷函數值的正負與大小。若是
-            <span>\(\tan\theta\)</span>
-            在
-            <span>\(\frac{\pi}{2}\)</span>
-            或
-            <span>\(\frac{3\pi}{2}\)</span>
-            時，要特別注意不存在。</p>
         </div>
         <div class="badge">共 51 題題庫</div>
       </div>
 
       <div class="tips">
         <article class="tip">
-          <h3>第 1 步：先看參考角</h3>
-          <p>看到弧度先轉成熟悉的特殊角，例如
-            <span>\(\frac{5\pi}{6}\)</span>
-            的參考角是
-            <span>\(\frac{\pi}{6}\)</span>。</p>
+          <h3>第 1 步：先找參考角</h3>
         </article>
         <article class="tip">
-          <h3>第 2 步：判斷象限正負</h3>
-          <p>單位圓上，第二象限
-            <span>\(\sin\theta\)</span>
-            為正、第三象限
-            <span>\(\tan\theta\)</span>
-            為正，這是快速判斷的核心。</p>
+          <h3>第 2 步：用 A、S、T、C 判斷正負</h3>
         </article>
         <article class="tip">
           <h3>第 3 步：對應特殊值</h3>
-          <p>把
-            <span>\(\frac{\pi}{6}\)</span>、
-            <span>\(\frac{\pi}{4}\)</span>、
-            <span>\(\frac{\pi}{3}\)</span>
-            對應到
-            <span>\(\frac{1}{2}\)</span>、
-            <span>\(\frac{\sqrt{2}}{2}\)</span>、
-            <span>\(\frac{\sqrt{3}}{2}\)</span>
-            或
-            <span>\(\frac{\sqrt{3}}{3}\)</span>、
-            <span>\(\sqrt{3}\)</span>。</p>
         </article>
       </div>
 
-      <p class="footnote">
-        這個版本以弧度量為主，不再使用度數表示；互動邏輯則保留成「先練習，再小測」的流程，方便課堂投影、自主練習或快速檢核。
-      </p>
     </section>
 
     <section class="panel active" id="practice">
