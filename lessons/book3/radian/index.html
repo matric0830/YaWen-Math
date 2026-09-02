@@ -9,18 +9,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #f5efe4;
-      --paper: rgba(255, 252, 246, 0.92);
-      --panel: rgba(255, 248, 235, 0.9);
+      --bg: #f5f8fb;
+      --paper: #ffffff;
+      --panel: #ffffff;
       --ink: #1f2a37;
       --muted: #5e6b78;
-      --line: rgba(107, 74, 36, 0.16);
-      --accent: #bf5a2a;
-      --accent-strong: #8a3b17;
-      --accent-soft: #f3d4c4;
+      --line: #dfe7f0;
+      --accent: #4b90e5;
+      --accent-strong: #2872c8;
+      --accent-soft: #dce7f3;
       --ok: #156f52;
       --bad: #a33d2d;
-      --shadow: 0 20px 40px rgba(82, 54, 29, 0.12);
+      --shadow: 0 16px 32px rgba(55, 85, 120, 0.08);
       --radius: 24px;
     }
 
@@ -34,15 +34,12 @@
       overflow-x: hidden;
       font-family: "Noto Sans TC", sans-serif;
       color: var(--ink);
-      background:
-        radial-gradient(circle at top left, rgba(252, 213, 167, 0.65), transparent 30%),
-        radial-gradient(circle at top right, rgba(187, 225, 250, 0.55), transparent 24%),
-        linear-gradient(180deg, #f6f1e8 0%, #efe6d6 100%);
+      background: #f5f8fb;
     }
 
     .shell {
       width: min(1120px, calc(100% - 32px));
-      margin: 24px auto 48px;
+      margin: 26px auto 48px;
     }
 
     .hero {
@@ -127,17 +124,17 @@
     .tabs {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin: 22px 0 18px;
+      gap: 12px;
+      margin: 18px 0;
     }
 
     .tab-button {
-      flex: 1 1 130px;
-      border: 1px solid rgba(138, 59, 23, 0.18);
-      background: rgba(255, 252, 247, 0.92);
-      color: var(--muted);
-      border-radius: 999px;
-      padding: 12px 18px;
+      flex: 1 1 0;
+      border: 0;
+      background: #e1e8f1;
+      color: #3d5876;
+      border-radius: 12px;
+      padding: 16px 18px;
       font: inherit;
       font-weight: 700;
       cursor: pointer;
@@ -147,7 +144,7 @@
     .tab-button.active,
     .tab-button:hover {
       color: white;
-      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      background: #4b90e5;
       transform: translateY(-1px);
     }
 
@@ -379,9 +376,38 @@
       perspective: 1400px;
     }
 
+    #practice {
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    #practice .card {
+      padding: 22px 24px 24px;
+      border: 0;
+      border-radius: 18px;
+      background: #ffffff;
+      box-shadow: var(--shadow);
+    }
+
+    .flash-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+      color: #617896;
+      font-size: 1rem;
+    }
+
+    .flash-meta p {
+      margin: 0;
+    }
+
     .flashcard {
       width: 100%;
-      min-height: 350px;
+      min-height: 272px;
       padding: 0;
       border: 0;
       background: transparent;
@@ -393,7 +419,7 @@
     .flashcard-inner {
       position: relative;
       width: 100%;
-      min-height: 350px;
+      min-height: 272px;
       transition: transform 0.58s cubic-bezier(0.2, 0.75, 0.25, 1);
       transform-style: preserve-3d;
     }
@@ -409,45 +435,41 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: clamp(24px, 5vw, 46px);
-      border: 1px solid rgba(94, 139, 192, 0.25);
-      border-radius: 24px;
+      padding: clamp(22px, 5vw, 42px);
+      border: 1px solid #d9e4ef;
+      border-radius: 12px;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
     }
 
     .flashcard-front {
-      background: linear-gradient(145deg, #ffffff, #f7fbff);
+      background: #ffffff;
     }
 
     .flashcard-back {
       align-items: stretch;
       justify-content: flex-start;
       overflow: auto;
-      background: linear-gradient(145deg, #edf8ff, #dceefa);
+      background: #eaf7ff;
       transform: rotateY(180deg);
     }
 
     .flashcard-kicker {
-      margin-bottom: 18px;
-      color: #487fb9;
-      font-size: 0.95rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
+      display: none;
     }
 
     .flashcard-question {
       width: 100%;
       min-width: 0;
       color: #1f2a37;
-      font-size: clamp(2rem, 7vw, 3.7rem);
+      font-size: clamp(2.25rem, 7vw, 3.7rem);
       font-family: "Newsreader", serif;
       font-weight: 700;
     }
 
     .flashcard-hint {
-      margin: 24px 0 0;
-      color: #7a91aa;
+      margin: 18px 0 0;
+      color: #9aacbf;
       font-size: 1rem;
     }
 
@@ -481,7 +503,7 @@
     }
 
     .solution-answer {
-      margin-top: 18px;
+      margin-top: 24px;
       padding: 16px 18px;
       border: 1px solid rgba(74, 143, 223, 0.38);
       border-radius: 14px;
@@ -502,7 +524,7 @@
 
     .flash-actions .btn {
       min-height: 52px;
-      border-radius: 14px;
+      border-radius: 10px;
       color: #2b6fbd;
       background: #edf3f8;
       box-shadow: none;
@@ -510,7 +532,7 @@
 
     .flash-actions .btn:nth-child(2) {
       color: #175f9d;
-      background: #bfe1f6;
+      background: #b9def4;
     }
 
     .challenge-card {
@@ -888,10 +910,9 @@
 
   <div class="shell">
     <div class="tabs">
-      <button class="tab-button active" data-tab="home">首頁</button>
-      <button class="tab-button" data-tab="practice">練習模式</button>
+      <button class="tab-button active" data-tab="practice">記憶閃卡</button>
       <button class="tab-button" data-tab="test">10 題挑戰賽</button>
-      <span class="student-label" id="student-label">目前學生：<strong id="student-name-display"></strong></span>
+      <span class="student-label" id="student-label" hidden><strong id="student-name-display"></strong></span>
     </div>
 
     <section class="panel active" id="home">
@@ -946,18 +967,12 @@
       </p>
     </section>
 
-    <section class="panel" id="practice">
-      <div class="panel-header">
-        <div>
-          <h2>記憶閃卡</h2>
-          <p>共
-            51
-            張。先看題目並自行思考，點擊卡片後翻面查看完整詳解。</p>
-        </div>
-        <div class="badge" id="flash-progress">第 1 題 ／ 51 題</div>
-      </div>
-
+    <section class="panel active" id="practice">
       <div class="card">
+        <div class="flash-meta">
+          <p id="flash-greeting">嗨，準備好了！</p>
+          <p id="flash-progress">1 ／ 51</p>
+        </div>
         <div class="flashcard-stage">
           <button class="flashcard" id="flashcard" type="button" aria-label="翻轉閃卡查看詳解">
             <div class="flashcard-inner">
@@ -1330,7 +1345,7 @@
       const card = document.getElementById("flashcard");
       document.getElementById("flash-question").innerHTML = formulaHtml(current.latex);
       document.getElementById("flash-explanation").innerHTML = getFlashExplanation(current);
-      document.getElementById("flash-progress").textContent = `第 ${state.flash.currentIndex + 1} 題 ／ ${state.flash.cards.length} 題`;
+      document.getElementById("flash-progress").textContent = `${state.flash.currentIndex + 1} ／ ${state.flash.cards.length}`;
       card.classList.remove("is-flipped");
       card.setAttribute("aria-label", "翻轉閃卡查看詳解");
       renderMath();
@@ -1540,7 +1555,7 @@
 
       input.setCustomValidity("");
       document.getElementById("student-name-display").textContent = studentName;
-      document.getElementById("student-label").classList.add("visible");
+      document.getElementById("flash-greeting").textContent = `嗨，${studentName}！`;
       document.getElementById("name-dialog").classList.add("is-hidden");
     }
 
