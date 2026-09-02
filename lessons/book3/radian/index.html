@@ -284,9 +284,26 @@
     }
 
     mjx-container[jax="SVG"] {
+      box-sizing: border-box;
       max-width: 100%;
-      overflow-x: auto;
-      overflow-y: hidden;
+      overflow: visible !important;
+    }
+
+    .flashcard-question mjx-container[jax="SVG"],
+    .challenge-question mjx-container[jax="SVG"],
+    .solution-answer mjx-container[jax="SVG"] {
+      display: block !important;
+      width: 100% !important;
+      margin: 0 !important;
+      text-align: center;
+    }
+
+    .flashcard-question mjx-container[jax="SVG"] svg,
+    .challenge-question mjx-container[jax="SVG"] svg,
+    .solution-answer mjx-container[jax="SVG"] svg {
+      max-width: 100%;
+      height: auto;
+      margin: 0 auto;
     }
 
     .math-function {
@@ -420,6 +437,8 @@
     }
 
     .flashcard-question {
+      width: 100%;
+      min-width: 0;
       color: #1f2a37;
       font-size: clamp(2rem, 7vw, 3.7rem);
       font-family: "Newsreader", serif;
@@ -471,7 +490,7 @@
       font-size: clamp(1.2rem, 3vw, 1.65rem);
       font-weight: 700;
       text-align: center;
-      overflow-x: auto;
+      overflow: visible;
     }
 
     .flash-actions {
@@ -535,6 +554,8 @@
     }
 
     .challenge-question {
+      width: 100%;
+      min-width: 0;
       font-family: "Newsreader", serif;
       font-size: clamp(2rem, 6vw, 3.3rem);
       font-weight: 700;
