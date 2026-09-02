@@ -637,7 +637,7 @@
 
     .challenge-actions {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
       gap: 12px;
       margin-top: 18px;
     }
@@ -652,8 +652,12 @@
       display: none;
     }
 
-    .challenge-next[hidden] + #test-restart {
+    #test-restart {
       grid-column: 1 / -1;
+    }
+
+    .challenge-actions:has(.challenge-next:not([hidden])) #test-restart {
+      grid-column: auto;
     }
 
     .challenge-result {
@@ -1055,8 +1059,8 @@
         <div class="choices" id="test-choices"></div>
         <div class="summary-list" id="test-summary"></div>
         <div class="challenge-actions">
-          <button class="btn btn-primary challenge-next" id="test-next" type="button" hidden>下一題</button>
           <button class="btn btn-secondary" id="test-restart" type="button">重新挑戰</button>
+          <button class="btn btn-primary challenge-next" id="test-next" type="button" hidden>下一題</button>
         </div>
       </div>
     </section>
