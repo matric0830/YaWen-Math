@@ -260,15 +260,19 @@
     }
 
     .choice.correct {
-      border-color: rgba(21, 111, 82, 0.32);
-      background: rgba(21, 111, 82, 0.1);
-      color: var(--ok);
+      border-color: #22c55e;
+      background: #d7f2df;
+      color: #166534;
     }
 
     .choice.incorrect {
-      border-color: rgba(163, 61, 45, 0.28);
-      background: rgba(163, 61, 45, 0.08);
-      color: var(--bad);
+      border-color: #ff5d55;
+      background: #fbd8d9;
+      color: #8d2420;
+    }
+
+    .choice[disabled]:not(.correct):not(.incorrect) {
+      opacity: 0.42;
     }
 
     .math-expression {
@@ -602,6 +606,10 @@
       text-align: center;
     }
 
+    .challenge-hint:not(.is-ready) {
+      display: none;
+    }
+
     .challenge-card .choices {
       margin-top: 6px;
     }
@@ -916,7 +924,7 @@
   <div class="shell">
     <div class="tabs">
       <button class="tab-button active" data-tab="practice">記憶閃卡</button>
-      <button class="tab-button" data-tab="test">10 題挑戰賽</button>
+      <button class="tab-button" data-tab="test">5 題挑戰賽</button>
       <span class="student-label" id="student-label" hidden><strong id="student-name-display"></strong></span>
     </div>
 
@@ -1003,12 +1011,12 @@
     <section class="panel" id="test">
       <div class="panel-header">
         <div>
-          <h2>10 題挑戰賽</h2>
+          <h2>5 題挑戰賽</h2>
           <p>隨機挑選
-            10
+            5
             題。每題作答後立即顯示正誤，也可翻開題目查看詳解。</p>
         </div>
-        <div class="badge" id="test-progress">第 1 題 ／ 10 題</div>
+        <div class="badge" id="test-progress">第 1 題 ／ 5 題</div>
       </div>
 
       <div class="challenge-card">
@@ -1019,7 +1027,7 @@
           <div class="challenge-question" id="test-question"></div>
           <div class="challenge-explanation" id="test-explanation" hidden></div>
         </button>
-        <p class="challenge-hint" id="test-hint">請選擇正確答案。</p>
+        <p class="challenge-hint" id="test-hint" hidden></p>
         <div class="choices" id="test-choices"></div>
         <button class="btn btn-primary challenge-next" id="test-next" type="button" hidden>下一題</button>
         <div class="summary-list" id="test-summary"></div>
@@ -1086,7 +1094,7 @@
     ];
 
     const answerPool = [...new Set(questionBank.map((item) => item.answer))];
-    const challengeQuestionCount = 10;
+    const challengeQuestionCount = 5;
 
     const angleDetails = {
       "0": { reference: "0", location: "正 x 軸上", sign: "不需要判斷象限正負。" },
@@ -1441,7 +1449,7 @@
       if (state.test.finished) {
         const studentName = document.getElementById("student-name-display").textContent;
         const elapsed = state.test.finishedAt - state.test.startedAt;
-        const score = state.test.correct * 10;
+        const score = Math.round((state.test.correct / challengeQuestionCount) * 100);
         questionEl.textContent = "挑戰完成！";
         questionEl.hidden = false;
         explanationEl.hidden = true;
@@ -1465,7 +1473,8 @@
 
       const current = state.test.questions[state.test.currentIndex];
       const record = state.test.records[state.test.currentIndex];
-      hintEl.hidden = false;
+      hintEl.hidden = !state.test.answered;
+      hintEl.classList.toggle("is-ready", state.test.answered);
       questionEl.innerHTML = formulaHtml(`${current.latex}=?`);
       explanationEl.innerHTML = getFlashExplanation(current);
       questionEl.hidden = state.test.showExplanation;
@@ -1477,9 +1486,7 @@
           : "挑戰題目，請先選擇答案"
       );
       choicesEl.innerHTML = "";
-      hintEl.textContent = state.test.answered
-        ? (record.choice === current.answer ? "答對了。可點擊上方題目查看詳解。" : "答錯了。可點擊上方題目查看詳解。")
-        : "請選擇正確答案。";
+      hintEl.textContent = state.test.answered ? "點擊上方題目可翻面看詳解 ▽" : "";
       nextButton.hidden = !state.test.answered;
 
       current.choices.forEach((choice) => {
