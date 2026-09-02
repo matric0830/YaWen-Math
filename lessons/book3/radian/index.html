@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>廣義角三角函數（弧度量）練習與測驗</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Newsreader:opsz,wght@6..72,600;6..72,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5efe4;
+      --paper: rgba(255, 252, 246, 0.92);
+      --panel: rgba(255, 248, 235, 0.9);
+      --ink: #1f2a37;
+      --muted: #5e6b78;
+      --line: rgba(107, 74, 36, 0.16);
+      --accent: #bf5a2a;
+      --accent-strong: #8a3b17;
+      --accent-soft: #f3d4c4;
+      --ok: #156f52;
+      --bad: #a33d2d;
+      --shadow: 0 20px 40px rgba(82, 54, 29, 0.12);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-family: "Noto Sans TC", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(252, 213, 167, 0.65), transparent 30%),
+        radial-gradient(circle at top right, rgba(187, 225, 250, 0.55), transparent 24%),
+        linear-gradient(180deg, #f6f1e8 0%, #efe6d6 100%);
+    }
+
+    .shell {
+      width: min(1120px, calc(100% - 32px));
+      margin: 24px auto 48px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      background: linear-gradient(135deg, rgba(255, 251, 245, 0.95), rgba(248, 237, 217, 0.92));
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      right: -70px;
+      top: -110px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(191, 90, 42, 0.18), rgba(191, 90, 42, 0));
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(191, 90, 42, 0.08);
+      color: var(--accent-strong);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    h1 {
+      margin: 18px 0 10px;
+      font-family: "Newsreader", serif;
+      font-size: clamp(2rem, 4vw, 3.8rem);
+      line-height: 1.08;
+    }
+
+    .hero p {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      max-width: 720px;
+      font-size: 1.02rem;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .hero-card {
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.56);
+      backdrop-filter: blur(8px);
+    }
+
+    .hero-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--accent-strong);
+      font-size: 1rem;
+    }
+
+    .hero-card span {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 22px 0 18px;
+    }
+
+    .tab-button {
+      flex: 1 1 130px;
+      border: 1px solid rgba(138, 59, 23, 0.18);
+      background: rgba(255, 252, 247, 0.92);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 12px 18px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .tab-button.active,
+    .tab-button:hover {
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      transform: translateY(-1px);
+    }
+
+    .panel {
+      display: none;
+      padding: 24px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .panel.active {
+      display: block;
+      animation: fade-in 0.32s ease;
+    }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .panel-header h2 {
+      margin: 0 0 8px;
+      font-family: "Newsreader", serif;
+      font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+    }
+
+    .panel-header p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .badge {
+      flex-shrink: 0;
+      padding: 10px 14px;
+      border-radius: 18px;
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      font-weight: 700;
+      min-width: 120px;
+      text-align: center;
+    }
+
+    .grid-two {
+      display: grid;
+      grid-template-columns: 1.25fr 0.95fr;
+      gap: 18px;
+    }
+
+    .card {
+      padding: 22px;
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+    }
+
+    .question-box {
+      margin: 16px 0 18px;
+      padding: 22px;
+      border-radius: 22px;
+      background: white;
+      border: 1px dashed rgba(138, 59, 23, 0.24);
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .question-label {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .question-math {
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      font-weight: 700;
+    }
+
+    .choices {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .choice {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(31, 42, 55, 0.1);
+      background: white;
+      color: var(--ink);
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.18s ease;
+      text-align: left;
+    }
+
+    .choice:hover:not([disabled]) {
+      transform: translateY(-1px);
+      border-color: rgba(191, 90, 42, 0.38);
+    }
+
+    .choice.correct {
+      border-color: rgba(21, 111, 82, 0.32);
+      background: rgba(21, 111, 82, 0.1);
+      color: var(--ok);
+    }
+
+    .choice.incorrect {
+      border-color: rgba(163, 61, 45, 0.28);
+      background: rgba(163, 61, 45, 0.08);
+      color: var(--bad);
+    }
+
+    .math-expression {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.04em;
+      font-family: "Newsreader", "Times New Roman", serif;
+      font-style: normal;
+      white-space: nowrap;
+    }
+
+    mjx-container[jax="SVG"] {
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    .math-function {
+      font-style: italic;
+    }
+
+    .math-fraction {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 0.08em;
+      line-height: 1.05;
+      vertical-align: middle;
+    }
+
+    .math-fraction > span:first-child {
+      padding: 0 0.14em 0.07em;
+      border-bottom: 1.5px solid currentColor;
+    }
+
+    .math-fraction > span:last-child {
+      padding: 0.07em 0.14em 0;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .btn-primary {
+      color: white;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      box-shadow: 0 14px 24px rgba(191, 90, 42, 0.18);
+    }
+
+    .btn-secondary {
+      color: var(--accent-strong);
+      background: rgba(191, 90, 42, 0.12);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .feedback {
+      min-height: 32px;
+      margin-top: 14px;
+      font-weight: 700;
+    }
+
+    .feedback.ok {
+      color: var(--ok);
+    }
+
+    .feedback.bad {
+      color: var(--bad);
+    }
+
+    .flashcard-stage {
+      perspective: 1400px;
+    }
+
+    .flashcard {
+      width: 100%;
+      min-height: 350px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+    }
+
+    .flashcard-inner {
+      position: relative;
+      width: 100%;
+      min-height: 350px;
+      transition: transform 0.58s cubic-bezier(0.2, 0.75, 0.25, 1);
+      transform-style: preserve-3d;
+    }
+
+    .flashcard.is-flipped .flashcard-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flashcard-face {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: clamp(24px, 5vw, 46px);
+      border: 1px solid rgba(94, 139, 192, 0.25);
+      border-radius: 24px;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+
+    .flashcard-front {
+      background: linear-gradient(145deg, #ffffff, #f7fbff);
+    }
+
+    .flashcard-back {
+      align-items: stretch;
+      justify-content: flex-start;
+      overflow: auto;
+      background: linear-gradient(145deg, #edf8ff, #dceefa);
+      transform: rotateY(180deg);
+    }
+
+    .flashcard-kicker {
+      margin-bottom: 18px;
+      color: #487fb9;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+
+    .flashcard-question {
+      color: #1f2a37;
+      font-size: clamp(2rem, 7vw, 3.7rem);
+      font-family: "Newsreader", serif;
+      font-weight: 700;
+    }
+
+    .flashcard-hint {
+      margin: 24px 0 0;
+      color: #7a91aa;
+      font-size: 1rem;
+    }
+
+    .solution-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .solution-step {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+      margin: 0;
+      color: #35445a;
+      font-size: clamp(1rem, 2.5vw, 1.18rem);
+      font-weight: 600;
+      line-height: 1.55;
+    }
+
+    .solution-step-number {
+      display: inline-grid;
+      width: 1.42em;
+      height: 1.42em;
+      flex: 0 0 auto;
+      place-items: center;
+      border-radius: 50%;
+      background: #28384e;
+      color: white;
+      font-size: 0.9em;
+      line-height: 1;
+    }
+
+    .solution-answer {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border: 1px solid rgba(74, 143, 223, 0.38);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.8);
+      color: #287bd8;
+      font-size: clamp(1.2rem, 3vw, 1.65rem);
+      font-weight: 700;
+      text-align: center;
+      overflow-x: auto;
+    }
+
+    .flash-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .flash-actions .btn {
+      min-height: 52px;
+      border-radius: 14px;
+      color: #2b6fbd;
+      background: #edf3f8;
+      box-shadow: none;
+    }
+
+    .flash-actions .btn:nth-child(2) {
+      color: #175f9d;
+      background: #bfe1f6;
+    }
+
+    .challenge-card {
+      padding: clamp(18px, 4vw, 28px);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.76);
+    }
+
+    .challenge-progress {
+      width: 100%;
+      height: 9px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #dfe4e9;
+    }
+
+    .challenge-progress-value {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: #4a8fdf;
+      transition: width 0.28s ease;
+    }
+
+    .challenge-question-card {
+      width: 100%;
+      min-height: 190px;
+      margin-top: 24px;
+      padding: 28px;
+      border: 3px solid #e0e8f1;
+      border-radius: 20px;
+      background: #fbfdff;
+      color: var(--ink);
+      cursor: pointer;
+      font: inherit;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .challenge-question-card:hover {
+      border-color: #9bc8ec;
+    }
+
+    .challenge-question {
+      font-family: "Newsreader", serif;
+      font-size: clamp(2rem, 6vw, 3.3rem);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .challenge-explanation[hidden],
+    .challenge-question[hidden] {
+      display: none;
+    }
+
+    .challenge-hint {
+      min-height: 28px;
+      margin: 18px 0;
+      color: #ef6460;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .challenge-card .choices {
+      margin-top: 6px;
+    }
+
+    .challenge-card .choice {
+      min-height: 84px;
+      font-size: 1.35rem;
+      text-align: center;
+      background: #fbfcfe;
+    }
+
+    .challenge-next {
+      width: 100%;
+      margin-top: 18px;
+      border-radius: 14px;
+      font-size: 1.1rem;
+    }
+
+    .challenge-next[hidden] {
+      display: none;
+    }
+
+    .challenge-result {
+      margin: 26px 0 18px;
+      padding: 28px;
+      border-radius: 20px;
+      background: linear-gradient(145deg, #f3fbff, #ffffff);
+      text-align: center;
+    }
+
+    .challenge-result h3 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 1.35rem;
+    }
+
+    .challenge-result-score {
+      margin: 10px 0;
+      color: #4a8fdf;
+      font-family: "Newsreader", serif;
+      font-size: clamp(2.6rem, 8vw, 4.5rem);
+      font-weight: 700;
+    }
+
+    .challenge-result p {
+      margin: 6px 0;
+      color: var(--muted);
+    }
+
+    .stats {
+      display: grid;
+      gap: 12px;
+    }
+
+    .stat {
+      padding: 16px;
+      border-radius: 18px;
+      background: white;
+      border: 1px solid rgba(31, 42, 55, 0.07);
+    }
+
+    .stat strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 1.55rem;
+      font-family: "Newsreader", serif;
+    }
+
+    .stat span {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.95rem;
+    }
+
+    .tips {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .tip {
+      padding: 18px;
+      border-radius: 18px;
+      background: white;
+      border: 1px solid rgba(31, 42, 55, 0.07);
+    }
+
+    .tip h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      color: var(--accent-strong);
+    }
+
+    .tip p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 0.95rem;
+    }
+
+    .summary-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .summary-item {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: white;
+      border: 1px solid rgba(31, 42, 55, 0.08);
+    }
+
+    .summary-item strong {
+      color: var(--accent-strong);
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .footnote {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.7;
+    }
+
+    .student-label {
+      display: none;
+      margin-left: auto;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(255, 252, 247, 0.86);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .student-label.visible {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .student-label strong {
+      color: var(--accent-strong);
+    }
+
+    .name-dialog {
+      position: fixed;
+      z-index: 10;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(246, 241, 232, 0.78);
+      backdrop-filter: blur(6px);
+    }
+
+    .name-dialog.is-hidden {
+      display: none;
+    }
+
+    .name-card {
+      width: min(600px, 100%);
+      padding: clamp(30px, 6vw, 46px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 24px 60px rgba(61, 76, 96, 0.16);
+      text-align: center;
+    }
+
+    .name-card h2 {
+      margin: 0 0 26px;
+      color: #3f86db;
+      font-size: clamp(1.5rem, 4vw, 2.05rem);
+    }
+
+    .name-card input {
+      width: 100%;
+      padding: 16px 18px;
+      border: 3px solid #dfe6ef;
+      border-radius: 12px;
+      color: var(--ink);
+      font: inherit;
+      font-size: 1.1rem;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .name-card input:focus {
+      border-color: #4a8fdf;
+      box-shadow: 0 0 0 4px rgba(74, 143, 223, 0.14);
+    }
+
+    .name-card button {
+      width: 100%;
+      margin-top: 24px;
+      padding: 16px 20px;
+      border: 0;
+      border-radius: 12px;
+      background: #4a8fdf;
+      color: white;
+      font: inherit;
+      font-size: 1.18rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .name-card button:hover {
+      background: #347dcc;
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 900px) {
+      .grid-two,
+      .hero-grid,
+      .tips {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-header {
+        flex-direction: column;
+      }
+
+      .student-label {
+        margin-left: 0;
+      }
+
+      .flashcard,
+      .flashcard-inner {
+        min-height: 380px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        width: min(100% - 20px, 1120px);
+      }
+
+      .hero,
+      .panel,
+      .card,
+      .challenge-card {
+        padding: 18px;
+      }
+
+      .tabs {
+        gap: 8px;
+      }
+
+      .tab-button {
+        flex-basis: 140px;
+        padding: 11px 12px;
+        font-size: 0.95rem;
+      }
+
+      .student-label {
+        flex-basis: 100%;
+        justify-content: center;
+      }
+
+      .challenge-card .choices {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .challenge-card .choice {
+        min-height: 72px;
+        padding: 10px 6px;
+        font-size: 1.12rem;
+      }
+
+      .challenge-question-card {
+        min-height: 160px;
+        margin-top: 16px;
+        padding: 18px 12px;
+      }
+
+      .flashcard,
+      .flashcard-inner {
+        min-height: 400px;
+      }
+
+      .flash-actions {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .flash-actions .btn {
+        min-height: 48px;
+        padding: 10px 6px;
+        font-size: 0.92rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="name-dialog" id="name-dialog" role="dialog" aria-modal="true" aria-labelledby="name-dialog-title">
+    <form class="name-card" id="name-form">
+      <h2 id="name-dialog-title">廣義角三角函數值特訓</h2>
+      <input id="student-name-input" name="student-name" type="text" maxlength="20" autocomplete="name" placeholder="請輸入您的姓名" aria-label="姓名" required autofocus>
+      <button type="submit">開始特訓</button>
+    </form>
+  </div>
+
+  <div class="shell">
+    <div class="tabs">
+      <button class="tab-button active" data-tab="home">首頁</button>
+      <button class="tab-button" data-tab="practice">練習模式</button>
+      <button class="tab-button" data-tab="test">10 題挑戰賽</button>
+      <span class="student-label" id="student-label">目前學生：<strong id="student-name-display"></strong></span>
+    </div>
+
+    <section class="panel active" id="home">
+      <div class="panel-header">
+        <div>
+          <h2>使用方式</h2>
+          <p>先觀察象限與特殊角，再判斷函數值的正負與大小。若是
+            <span>\(\tan\theta\)</span>
+            在
+            <span>\(\frac{\pi}{2}\)</span>
+            或
+            <span>\(\frac{3\pi}{2}\)</span>
+            時，要特別注意不存在。</p>
+        </div>
+        <div class="badge">共 51 題題庫</div>
+      </div>
+
+      <div class="tips">
+        <article class="tip">
+          <h3>第 1 步：先看參考角</h3>
+          <p>看到弧度先轉成熟悉的特殊角，例如
+            <span>\(\frac{5\pi}{6}\)</span>
+            的參考角是
+            <span>\(\frac{\pi}{6}\)</span>。</p>
+        </article>
+        <article class="tip">
+          <h3>第 2 步：判斷象限正負</h3>
+          <p>單位圓上，第二象限
+            <span>\(\sin\theta\)</span>
+            為正、第三象限
+            <span>\(\tan\theta\)</span>
+            為正，這是快速判斷的核心。</p>
+        </article>
+        <article class="tip">
+          <h3>第 3 步：對應特殊值</h3>
+          <p>把
+            <span>\(\frac{\pi}{6}\)</span>、
+            <span>\(\frac{\pi}{4}\)</span>、
+            <span>\(\frac{\pi}{3}\)</span>
+            對應到
+            <span>\(\frac{1}{2}\)</span>、
+            <span>\(\frac{\sqrt{2}}{2}\)</span>、
+            <span>\(\frac{\sqrt{3}}{2}\)</span>
+            或
+            <span>\(\frac{\sqrt{3}}{3}\)</span>、
+            <span>\(\sqrt{3}\)</span>。</p>
+        </article>
+      </div>
+
+      <p class="footnote">
+        這個版本以弧度量為主，不再使用度數表示；互動邏輯則保留成「先練習，再小測」的流程，方便課堂投影、自主練習或快速檢核。
+      </p>
+    </section>
+
+    <section class="panel" id="practice">
+      <div class="panel-header">
+        <div>
+          <h2>記憶閃卡</h2>
+          <p>共
+            51
+            張。先看題目並自行思考，點擊卡片後翻面查看完整詳解。</p>
+        </div>
+        <div class="badge" id="flash-progress">第 1 題 ／ 51 題</div>
+      </div>
+
+      <div class="card">
+        <div class="flashcard-stage">
+          <button class="flashcard" id="flashcard" type="button" aria-label="翻轉閃卡查看詳解">
+            <div class="flashcard-inner">
+              <div class="flashcard-face flashcard-front">
+                <div class="flashcard-kicker">請求出下列三角函數值</div>
+                <div class="flashcard-question" id="flash-question"></div>
+                <p class="flashcard-hint">點擊卡片查看詳解</p>
+              </div>
+              <div class="flashcard-face flashcard-back">
+                <div id="flash-explanation"></div>
+              </div>
+            </div>
+          </button>
+        </div>
+        <div class="flash-actions">
+          <button class="btn" id="flash-previous" type="button">上一張</button>
+          <button class="btn" id="flash-shuffle" type="button">打亂</button>
+          <button class="btn" id="flash-next" type="button">下一張</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" id="test">
+      <div class="panel-header">
+        <div>
+          <h2>10 題挑戰賽</h2>
+          <p>隨機挑選
+            10
+            題。每題作答後立即顯示正誤，也可翻開題目查看詳解。</p>
+        </div>
+        <div class="badge" id="test-progress">第 1 題 ／ 10 題</div>
+      </div>
+
+      <div class="challenge-card">
+        <div class="challenge-progress" aria-label="挑戰進度">
+          <div class="challenge-progress-value" id="test-progress-bar"></div>
+        </div>
+        <button class="challenge-question-card" id="test-card" type="button" aria-label="翻轉題目查看詳解">
+          <div class="challenge-question" id="test-question"></div>
+          <div class="challenge-explanation" id="test-explanation" hidden></div>
+        </button>
+        <p class="challenge-hint" id="test-hint">請選擇正確答案。</p>
+        <div class="choices" id="test-choices"></div>
+        <button class="btn btn-primary challenge-next" id="test-next" type="button" hidden>下一題</button>
+        <div class="summary-list" id="test-summary"></div>
+        <div class="actions">
+          <button class="btn btn-secondary" id="test-restart" type="button">重新挑戰</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const questionBank = [
+      { latex: "\\sin\\left(\\frac{\\pi}{6}\\right)", answer: "\\frac{1}{2}" },
+      { latex: "\\sin\\left(\\frac{\\pi}{4}\\right)", answer: "\\frac{\\sqrt{2}}{2}" },
+      { latex: "\\sin\\left(\\frac{\\pi}{3}\\right)", answer: "\\frac{\\sqrt{3}}{2}" },
+      { latex: "\\sin\\left(\\frac{\\pi}{2}\\right)", answer: "1" },
+      { latex: "\\sin\\left(\\frac{2\\pi}{3}\\right)", answer: "\\frac{\\sqrt{3}}{2}" },
+      { latex: "\\sin\\left(\\frac{3\\pi}{4}\\right)", answer: "\\frac{\\sqrt{2}}{2}" },
+      { latex: "\\sin\\left(\\frac{5\\pi}{6}\\right)", answer: "\\frac{1}{2}" },
+      { latex: "\\sin\\left(\\pi\\right)", answer: "0" },
+      { latex: "\\sin\\left(\\frac{7\\pi}{6}\\right)", answer: "-\\frac{1}{2}" },
+      { latex: "\\sin\\left(\\frac{5\\pi}{4}\\right)", answer: "-\\frac{\\sqrt{2}}{2}" },
+      { latex: "\\sin\\left(\\frac{4\\pi}{3}\\right)", answer: "-\\frac{\\sqrt{3}}{2}" },
+      { latex: "\\sin\\left(\\frac{3\\pi}{2}\\right)", answer: "-1" },
+      { latex: "\\sin\\left(\\frac{5\\pi}{3}\\right)", answer: "-\\frac{\\sqrt{3}}{2}" },
+      { latex: "\\sin\\left(\\frac{7\\pi}{4}\\right)", answer: "-\\frac{\\sqrt{2}}{2}" },
+      { latex: "\\sin\\left(\\frac{11\\pi}{6}\\right)", answer: "-\\frac{1}{2}" },
+      { latex: "\\sin\\left(2\\pi\\right)", answer: "0" },
+      { latex: "\\cos\\left(\\frac{\\pi}{6}\\right)", answer: "\\frac{\\sqrt{3}}{2}" },
+      { latex: "\\cos\\left(\\frac{\\pi}{4}\\right)", answer: "\\frac{\\sqrt{2}}{2}" },
+      { latex: "\\cos\\left(\\frac{\\pi}{3}\\right)", answer: "\\frac{1}{2}" },
+      { latex: "\\cos\\left(\\frac{\\pi}{2}\\right)", answer: "0" },
+      { latex: "\\cos\\left(\\frac{2\\pi}{3}\\right)", answer: "-\\frac{1}{2}" },
+      { latex: "\\cos\\left(\\frac{3\\pi}{4}\\right)", answer: "-\\frac{\\sqrt{2}}{2}" },
+      { latex: "\\cos\\left(\\frac{5\\pi}{6}\\right)", answer: "-\\frac{\\sqrt{3}}{2}" },
+      { latex: "\\cos\\left(\\pi\\right)", answer: "-1" },
+      { latex: "\\cos\\left(\\frac{7\\pi}{6}\\right)", answer: "-\\frac{\\sqrt{3}}{2}" },
+      { latex: "\\cos\\left(\\frac{5\\pi}{4}\\right)", answer: "-\\frac{\\sqrt{2}}{2}" },
+      { latex: "\\cos\\left(\\frac{4\\pi}{3}\\right)", answer: "-\\frac{1}{2}" },
+      { latex: "\\cos\\left(\\frac{3\\pi}{2}\\right)", answer: "0" },
+      { latex: "\\cos\\left(\\frac{5\\pi}{3}\\right)", answer: "\\frac{1}{2}" },
+      { latex: "\\cos\\left(\\frac{7\\pi}{4}\\right)", answer: "\\frac{\\sqrt{2}}{2}" },
+      { latex: "\\cos\\left(\\frac{11\\pi}{6}\\right)", answer: "\\frac{\\sqrt{3}}{2}" },
+      { latex: "\\cos\\left(2\\pi\\right)", answer: "1" },
+      { latex: "\\tan\\left(\\frac{\\pi}{6}\\right)", answer: "\\frac{\\sqrt{3}}{3}" },
+      { latex: "\\tan\\left(\\frac{\\pi}{4}\\right)", answer: "1" },
+      { latex: "\\tan\\left(\\frac{\\pi}{3}\\right)", answer: "\\sqrt{3}" },
+      { latex: "\\tan\\left(\\frac{\\pi}{2}\\right)", answer: "\\text{不存在}" },
+      { latex: "\\tan\\left(\\frac{2\\pi}{3}\\right)", answer: "-\\sqrt{3}" },
+      { latex: "\\tan\\left(\\frac{3\\pi}{4}\\right)", answer: "-1" },
+      { latex: "\\tan\\left(\\frac{5\\pi}{6}\\right)", answer: "-\\frac{\\sqrt{3}}{3}" },
+      { latex: "\\tan\\left(\\pi\\right)", answer: "0" },
+      { latex: "\\tan\\left(\\frac{7\\pi}{6}\\right)", answer: "\\frac{\\sqrt{3}}{3}" },
+      { latex: "\\tan\\left(\\frac{5\\pi}{4}\\right)", answer: "1" },
+      { latex: "\\tan\\left(\\frac{4\\pi}{3}\\right)", answer: "\\sqrt{3}" },
+      { latex: "\\tan\\left(\\frac{3\\pi}{2}\\right)", answer: "\\text{不存在}" },
+      { latex: "\\tan\\left(\\frac{5\\pi}{3}\\right)", answer: "-\\sqrt{3}" },
+      { latex: "\\tan\\left(\\frac{7\\pi}{4}\\right)", answer: "-1" },
+      { latex: "\\tan\\left(\\frac{11\\pi}{6}\\right)", answer: "-\\frac{\\sqrt{3}}{3}" },
+      { latex: "\\tan\\left(2\\pi\\right)", answer: "0" },
+      { latex: "\\sin\\left(0\\right)", answer: "0" },
+      { latex: "\\cos\\left(0\\right)", answer: "1" },
+      { latex: "\\tan\\left(0\\right)", answer: "0" }
+    ];
+
+    const answerPool = [...new Set(questionBank.map((item) => item.answer))];
+    const challengeQuestionCount = 10;
+
+    const angleDetails = {
+      "0": { reference: "0", location: "正 x 軸上", sign: "不需要判斷象限正負。" },
+      "\\frac{\\pi}{6}": { reference: "\\frac{\\pi}{6}", location: "第一象限", sign: "此象限中 \\(\\sin\\theta\\)、\\(\\cos\\theta\\)、\\(\\tan\\theta\\) 都是正值。" },
+      "\\frac{\\pi}{4}": { reference: "\\frac{\\pi}{4}", location: "第一象限", sign: "此象限中 \\(\\sin\\theta\\)、\\(\\cos\\theta\\)、\\(\\tan\\theta\\) 都是正值。" },
+      "\\frac{\\pi}{3}": { reference: "\\frac{\\pi}{3}", location: "第一象限", sign: "此象限中 \\(\\sin\\theta\\)、\\(\\cos\\theta\\)、\\(\\tan\\theta\\) 都是正值。" },
+      "\\frac{\\pi}{2}": { reference: "\\frac{\\pi}{2}", location: "正 y 軸上", sign: "座標為 \\( (0, 1) \\)，因此 \\(\\cos\\theta=0\\)。" },
+      "\\frac{2\\pi}{3}": { reference: "\\frac{\\pi}{3}", location: "第二象限", sign: "此象限中 \\(\\sin\\theta\\) 為正，\\(\\cos\\theta\\) 與 \\(\\tan\\theta\\) 為負。" },
+      "\\frac{3\\pi}{4}": { reference: "\\frac{\\pi}{4}", location: "第二象限", sign: "此象限中 \\(\\sin\\theta\\) 為正，\\(\\cos\\theta\\) 與 \\(\\tan\\theta\\) 為負。" },
+      "\\frac{5\\pi}{6}": { reference: "\\frac{\\pi}{6}", location: "第二象限", sign: "此象限中 \\(\\sin\\theta\\) 為正，\\(\\cos\\theta\\) 與 \\(\\tan\\theta\\) 為負。" },
+      "\\pi": { reference: "0", location: "負 x 軸上", sign: "座標為 \\( (-1, 0) \\)，不需要判斷象限正負。" },
+      "\\frac{7\\pi}{6}": { reference: "\\frac{\\pi}{6}", location: "第三象限", sign: "此象限中 \\(\\sin\\theta\\) 與 \\(\\cos\\theta\\) 為負，\\(\\tan\\theta\\) 為正。" },
+      "\\frac{5\\pi}{4}": { reference: "\\frac{\\pi}{4}", location: "第三象限", sign: "此象限中 \\(\\sin\\theta\\) 與 \\(\\cos\\theta\\) 為負，\\(\\tan\\theta\\) 為正。" },
+      "\\frac{4\\pi}{3}": { reference: "\\frac{\\pi}{3}", location: "第三象限", sign: "此象限中 \\(\\sin\\theta\\) 與 \\(\\cos\\theta\\) 為負，\\(\\tan\\theta\\) 為正。" },
+      "\\frac{3\\pi}{2}": { reference: "\\frac{\\pi}{2}", location: "負 y 軸上", sign: "座標為 \\( (0, -1) \\)，因此 \\(\\cos\\theta=0\\)。" },
+      "\\frac{5\\pi}{3}": { reference: "\\frac{\\pi}{3}", location: "第四象限", sign: "此象限中 \\(\\sin\\theta\\) 與 \\(\\tan\\theta\\) 為負，\\(\\cos\\theta\\) 為正。" },
+      "\\frac{7\\pi}{4}": { reference: "\\frac{\\pi}{4}", location: "第四象限", sign: "此象限中 \\(\\sin\\theta\\) 與 \\(\\tan\\theta\\) 為負，\\(\\cos\\theta\\) 為正。" },
+      "\\frac{11\\pi}{6}": { reference: "\\frac{\\pi}{6}", location: "第四象限", sign: "此象限中 \\(\\sin\\theta\\) 與 \\(\\tan\\theta\\) 為負，\\(\\cos\\theta\\) 為正。" },
+      "2\\pi": { reference: "0", location: "正 x 軸上", sign: "座標為 \\( (1, 0) \\)，不需要判斷象限正負。" }
+    };
+
+    const state = {
+      flash: {
+        cards: [...questionBank],
+        currentIndex: 0
+      },
+      test: {
+        questions: [],
+        currentIndex: -1,
+        correct: 0,
+        started: false,
+        finished: false,
+        records: [],
+        answered: false,
+        showExplanation: false,
+        startedAt: null,
+        finishedAt: null
+      }
+    };
+
+    function shuffle(list) {
+      const copy = [...list];
+      for (let i = copy.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    const distractorMap = {
+      "0": ["1", "-1", "\\text{不存在}"],
+      "1": ["-1", "\\frac{\\sqrt{3}}{2}", "\\frac{1}{2}"],
+      "-1": ["1", "-\\frac{\\sqrt{3}}{2}", "-\\frac{1}{2}"],
+      "\\frac{1}{2}": ["-\\frac{1}{2}", "\\frac{\\sqrt{3}}{2}", "-\\frac{\\sqrt{3}}{2}"],
+      "-\\frac{1}{2}": ["\\frac{1}{2}", "-\\frac{\\sqrt{3}}{2}", "\\frac{\\sqrt{3}}{2}"],
+      "\\frac{\\sqrt{2}}{2}": ["-\\frac{\\sqrt{2}}{2}", "\\frac{\\sqrt{3}}{2}", "\\frac{1}{2}"],
+      "-\\frac{\\sqrt{2}}{2}": ["\\frac{\\sqrt{2}}{2}", "-\\frac{\\sqrt{3}}{2}", "-\\frac{1}{2}"],
+      "\\frac{\\sqrt{3}}{2}": ["-\\frac{\\sqrt{3}}{2}", "\\frac{1}{2}", "-\\frac{1}{2}"],
+      "-\\frac{\\sqrt{3}}{2}": ["\\frac{\\sqrt{3}}{2}", "-\\frac{1}{2}", "\\frac{1}{2}"],
+      "\\frac{\\sqrt{3}}{3}": ["-\\frac{\\sqrt{3}}{3}", "\\sqrt{3}", "-\\sqrt{3}"],
+      "-\\frac{\\sqrt{3}}{3}": ["\\frac{\\sqrt{3}}{3}", "-\\sqrt{3}", "\\sqrt{3}"],
+      "\\sqrt{3}": ["-\\sqrt{3}", "\\frac{\\sqrt{3}}{3}", "-\\frac{\\sqrt{3}}{3}"],
+      "-\\sqrt{3}": ["\\sqrt{3}", "-\\frac{\\sqrt{3}}{3}", "\\frac{\\sqrt{3}}{3}"],
+      "\\text{不存在}": ["0", "1", "-1"]
+    };
+
+    function buildChoices(answer) {
+      const targeted = distractorMap[answer] ?? [];
+      const fillers = shuffle(answerPool.filter((item) => item !== answer && !targeted.includes(item)));
+      const distractors = [...targeted, ...fillers].slice(0, 3);
+      return shuffle([answer, ...distractors]);
+    }
+
+    function escapeHtml(value) {
+      return value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+    }
+
+    function readLatexGroup(value, start) {
+      let depth = 0;
+      for (let index = start; index < value.length; index += 1) {
+        if (value[index] === "{") {
+          depth += 1;
+        } else if (value[index] === "}") {
+          depth -= 1;
+          if (depth === 0) {
+            return { content: value.slice(start + 1, index), nextIndex: index + 1 };
+          }
+        }
+      }
+      return null;
+    }
+
+    function formulaHtml(latex) {
+      const source = escapeHtml(latex.trim());
+
+      function convert(value) {
+        let result = "";
+        for (let index = 0; index < value.length;) {
+          if (value.startsWith("\\frac{", index)) {
+            const numerator = readLatexGroup(value, index + 5);
+            const denominator = numerator ? readLatexGroup(value, numerator.nextIndex) : null;
+            if (numerator && denominator) {
+              result += `<span class="math-fraction"><span>${convert(numerator.content)}</span><span>${convert(denominator.content)}</span></span>`;
+              index = denominator.nextIndex;
+              continue;
+            }
+          }
+
+          if (value.startsWith("\\sqrt{", index)) {
+            const radicand = readLatexGroup(value, index + 5);
+            if (radicand) {
+              result += `√<span>${convert(radicand.content)}</span>`;
+              index = radicand.nextIndex;
+              continue;
+            }
+          }
+
+          if (value.startsWith("\\text{", index)) {
+            const text = readLatexGroup(value, index + 5);
+            if (text) {
+              result += text.content;
+              index = text.nextIndex;
+              continue;
+            }
+          }
+
+          if (value.startsWith("\\sin", index) || value.startsWith("\\cos", index) || value.startsWith("\\tan", index)) {
+            result += `<span class="math-function">${value.slice(index + 1, index + 4)}</span>`;
+            index += 4;
+            continue;
+          }
+
+          if (value.startsWith("\\theta", index)) {
+            result += "θ";
+            index += 6;
+            continue;
+          }
+
+          if (value.startsWith("\\pi", index)) {
+            result += "π";
+            index += 3;
+            continue;
+          }
+
+          if (value.startsWith("\\left", index)) {
+            index += 5;
+            continue;
+          }
+
+          if (value.startsWith("\\right", index)) {
+            index += 6;
+            continue;
+          }
+
+          result += value[index];
+          index += 1;
+        }
+        return result;
+      }
+
+      return `<span class="math-expression" data-latex="${source}">${convert(source)}</span>`;
+    }
+
+    function prepareLatexNodes(root = document) {
+      const nodes = [...root.querySelectorAll("[data-latex]")];
+      nodes.forEach((node) => {
+        node.textContent = `\\(${node.dataset.latex}\\)`;
+        node.removeAttribute("data-latex");
+      });
+      return nodes;
+    }
+
+    function typesetLatexNodes() {
+      if (!window.MathJax?.typesetPromise) {
+        return;
+      }
+      const nodes = prepareLatexNodes();
+      if (nodes.length > 0) {
+        window.MathJax.typesetPromise(nodes);
+      }
+    }
+
+    function inlineMathHtml(text) {
+      let output = "";
+      let cursor = 0;
+      while (cursor < text.length) {
+        const start = text.indexOf("\\(", cursor);
+        if (start === -1) {
+          output += escapeHtml(text.slice(cursor));
+          break;
+        }
+        const end = text.indexOf("\\)", start + 2);
+        if (end === -1) {
+          output += escapeHtml(text.slice(cursor));
+          break;
+        }
+        output += escapeHtml(text.slice(cursor, start));
+        output += formulaHtml(text.slice(start + 2, end));
+        cursor = end + 2;
+      }
+      return output;
+    }
+
+    function renderMath() {
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      const nodes = [];
+      let node;
+      while ((node = walker.nextNode())) {
+        if (!node.parentElement.closest("script, style") && node.textContent.includes("\\(")) {
+          nodes.push(node);
+        }
+      }
+      nodes.forEach((textNode) => {
+        const wrapper = document.createElement("span");
+        wrapper.innerHTML = inlineMathHtml(textNode.textContent);
+        textNode.replaceWith(wrapper);
+      });
+      typesetLatexNodes();
+    }
+
+    function setActiveTab(tabId) {
+      document.querySelectorAll(".tab-button").forEach((button) => {
+        button.classList.toggle("active", button.dataset.tab === tabId);
+      });
+      document.querySelectorAll(".panel").forEach((panel) => {
+        panel.classList.toggle("active", panel.id === tabId);
+      });
+      if (tabId === "test" && !state.test.started) {
+        startTest();
+      } else {
+        renderMath();
+      }
+    }
+
+    function getFlashExplanation(question) {
+      const functionName = question.latex.startsWith("\\sin") ? "sin" : question.latex.startsWith("\\cos") ? "cos" : "tan";
+      const angleStart = question.latex.indexOf("\\left(") + 6;
+      const angleEnd = question.latex.lastIndexOf("\\right)");
+      const angle = question.latex.slice(angleStart, angleEnd);
+      const detail = angleDetails[angle];
+      const isUndefined = question.answer === "\\text{不存在}";
+      const unsignedValue = question.answer.startsWith("-") ? question.answer.slice(1) : question.answer;
+      const sign = isUndefined ? "不存在" : question.answer === "0" ? "0" : question.answer.startsWith("-") ? "負" : "正";
+      const referenceFunction = `\\${functionName}\\left(${detail.reference}\\right)`;
+      const derivation = isUndefined || ["0", "1", "-1"].includes(question.answer)
+        ? `${question.latex}=${question.answer}`
+        : `${question.latex}=${sign === "負" ? "-" : ""}${referenceFunction}=${question.answer}`;
+
+      return `
+        <div class="solution-list">
+          <div class="solution-step"><span class="solution-step-number">1</span><span>參考角：${formulaHtml(detail.reference)}</span></div>
+          <div class="solution-step"><span class="solution-step-number">2</span><span>正負號：${detail.location} → ${sign}</span></div>
+          <div class="solution-step"><span class="solution-step-number">3</span><span>求解值：</span></div>
+        </div>
+        <div class="solution-answer">${formulaHtml(derivation)}</div>
+      `;
+    }
+
+    function renderFlashcard() {
+      const current = state.flash.cards[state.flash.currentIndex];
+      const card = document.getElementById("flashcard");
+      document.getElementById("flash-question").innerHTML = formulaHtml(current.latex);
+      document.getElementById("flash-explanation").innerHTML = getFlashExplanation(current);
+      document.getElementById("flash-progress").textContent = `第 ${state.flash.currentIndex + 1} 題 ／ ${state.flash.cards.length} 題`;
+      card.classList.remove("is-flipped");
+      card.setAttribute("aria-label", "翻轉閃卡查看詳解");
+      renderMath();
+    }
+
+    function moveFlashcard(step) {
+      state.flash.currentIndex = (state.flash.currentIndex + step + state.flash.cards.length) % state.flash.cards.length;
+      renderFlashcard();
+    }
+
+    function shuffleFlashcards() {
+      state.flash.cards = shuffle(questionBank);
+      state.flash.currentIndex = 0;
+      renderFlashcard();
+    }
+
+    function flipFlashcard() {
+      const card = document.getElementById("flashcard");
+      const isFlipped = card.classList.toggle("is-flipped");
+      card.setAttribute("aria-label", isFlipped ? "翻轉閃卡查看題目" : "翻轉閃卡查看詳解");
+    }
+
+    function buildTestSet() {
+      state.test.questions = shuffle(questionBank).slice(0, challengeQuestionCount).map((item) => ({
+        ...item,
+        choices: buildChoices(item.answer)
+      }));
+      state.test.currentIndex = 0;
+      state.test.correct = 0;
+      state.test.started = true;
+      state.test.finished = false;
+      state.test.records = [];
+      state.test.answered = false;
+      state.test.showExplanation = false;
+      state.test.startedAt = new Date();
+      state.test.finishedAt = null;
+    }
+
+    function formatDateTime(date) {
+      const parts = new Intl.DateTimeFormat("zh-TW", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
+      }).formatToParts(date).reduce((result, part) => ({ ...result, [part.type]: part.value }), {});
+      return `${parts.year}/${parts.month}/${parts.day} ${parts.hour}:${parts.minute}:${parts.second}`;
+    }
+
+    function formatDuration(milliseconds) {
+      const totalSeconds = Math.max(0, Math.floor(milliseconds / 1000));
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      return `${minutes} 分 ${String(seconds).padStart(2, "0")} 秒`;
+    }
+
+    function updateChallengeProgress() {
+      const completed = state.test.finished
+        ? challengeQuestionCount
+        : state.test.currentIndex + 1;
+      document.getElementById("test-progress").textContent = `第 ${completed} 題 ／ ${challengeQuestionCount} 題`;
+      document.getElementById("test-progress-bar").style.width = `${(completed / challengeQuestionCount) * 100}%`;
+    }
+
+    function renderTestQuestion() {
+      const questionEl = document.getElementById("test-question");
+      const explanationEl = document.getElementById("test-explanation");
+      const cardEl = document.getElementById("test-card");
+      const choicesEl = document.getElementById("test-choices");
+      const hintEl = document.getElementById("test-hint");
+      const nextButton = document.getElementById("test-next");
+      const summaryEl = document.getElementById("test-summary");
+
+      summaryEl.innerHTML = "";
+
+      if (!state.test.started) {
+        questionEl.textContent = "請選擇挑戰模式開始作答。";
+        questionEl.hidden = false;
+        explanationEl.hidden = true;
+        choicesEl.innerHTML = "";
+        nextButton.hidden = true;
+        updateChallengeProgress();
+        return;
+      }
+
+      if (state.test.finished) {
+        const studentName = document.getElementById("student-name-display").textContent;
+        const elapsed = state.test.finishedAt - state.test.startedAt;
+        const score = state.test.correct * 10;
+        questionEl.textContent = "挑戰完成！";
+        questionEl.hidden = false;
+        explanationEl.hidden = true;
+        choicesEl.innerHTML = "";
+        hintEl.textContent = "";
+        hintEl.hidden = true;
+        nextButton.hidden = true;
+        summaryEl.innerHTML = `
+          <section class="challenge-result">
+            <h3>${studentName ? `${escapeHtml(studentName)}，` : ""}挑戰完成！</h3>
+            <div class="challenge-result-score">${score} 分</div>
+            <p>答對 ${state.test.correct} 題 ／ ${challengeQuestionCount} 題</p>
+            <p>測驗完成時間：${formatDateTime(state.test.finishedAt)}</p>
+            <p>作答時間：${formatDuration(elapsed)}</p>
+          </section>
+        `;
+        updateChallengeProgress();
+        renderMath();
+        return;
+      }
+
+      const current = state.test.questions[state.test.currentIndex];
+      const record = state.test.records[state.test.currentIndex];
+      hintEl.hidden = false;
+      questionEl.innerHTML = formulaHtml(`${current.latex}=?`);
+      explanationEl.innerHTML = getFlashExplanation(current);
+      questionEl.hidden = state.test.showExplanation;
+      explanationEl.hidden = !state.test.showExplanation;
+      cardEl.setAttribute(
+        "aria-label",
+        state.test.answered
+          ? (state.test.showExplanation ? "翻轉詳解查看題目" : "翻轉題目查看詳解")
+          : "挑戰題目，請先選擇答案"
+      );
+      choicesEl.innerHTML = "";
+      hintEl.textContent = state.test.answered
+        ? (record.choice === current.answer ? "答對了。可點擊上方題目查看詳解。" : "答錯了。可點擊上方題目查看詳解。")
+        : "請選擇正確答案。";
+      nextButton.hidden = !state.test.answered;
+
+      current.choices.forEach((choice) => {
+        const button = document.createElement("button");
+        button.className = "choice";
+        button.dataset.value = choice;
+        button.innerHTML = formulaHtml(choice);
+        button.disabled = state.test.answered;
+        if (state.test.answered && choice === current.answer) {
+          button.classList.add("correct");
+        }
+        if (state.test.answered && choice === record.choice && choice !== current.answer) {
+          button.classList.add("incorrect");
+        }
+        button.addEventListener("click", () => gradeTest(choice));
+        choicesEl.appendChild(button);
+      });
+
+      updateChallengeProgress();
+      renderMath();
+    }
+
+    function gradeTest(choice) {
+      if (state.test.answered) {
+        return;
+      }
+
+      const current = state.test.questions[state.test.currentIndex];
+      const isCorrect = choice === current.answer;
+      if (isCorrect) {
+        state.test.correct += 1;
+      }
+      state.test.records.push({
+        question: current.latex,
+        choice,
+        answer: current.answer
+      });
+      state.test.answered = true;
+      renderTestQuestion();
+    }
+
+    function nextTestQuestion() {
+      state.test.currentIndex += 1;
+      if (state.test.currentIndex >= state.test.questions.length) {
+        state.test.finished = true;
+        state.test.finishedAt = new Date();
+      } else {
+        state.test.answered = false;
+        state.test.showExplanation = false;
+      }
+      renderTestQuestion();
+    }
+
+    function startTest() {
+      buildTestSet();
+      renderTestQuestion();
+    }
+
+    function toggleTestExplanation() {
+      if (!state.test.started || state.test.finished || !state.test.answered) {
+        return;
+      }
+
+      state.test.showExplanation = !state.test.showExplanation;
+      renderTestQuestion();
+    }
+
+    function startTraining(event) {
+      event.preventDefault();
+      const input = document.getElementById("student-name-input");
+      const studentName = input.value.trim();
+
+      if (!studentName) {
+        input.setCustomValidity("請先輸入姓名。");
+        input.reportValidity();
+        return;
+      }
+
+      input.setCustomValidity("");
+      document.getElementById("student-name-display").textContent = studentName;
+      document.getElementById("student-label").classList.add("visible");
+      document.getElementById("name-dialog").classList.add("is-hidden");
+    }
+
+    document.querySelectorAll(".tab-button").forEach((button) => {
+      button.addEventListener("click", () => setActiveTab(button.dataset.tab));
+    });
+
+    document.getElementById("flashcard").addEventListener("click", flipFlashcard);
+    document.getElementById("flash-previous").addEventListener("click", () => moveFlashcard(-1));
+    document.getElementById("flash-shuffle").addEventListener("click", shuffleFlashcards);
+    document.getElementById("flash-next").addEventListener("click", () => moveFlashcard(1));
+    document.getElementById("test-card").addEventListener("click", toggleTestExplanation);
+    document.getElementById("test-next").addEventListener("click", nextTestQuestion);
+    document.getElementById("test-restart").addEventListener("click", startTest);
+    document.getElementById("name-form").addEventListener("submit", startTraining);
+    document.getElementById("student-name-input").addEventListener("input", (event) => {
+      event.target.setCustomValidity("");
+    });
+
+    renderFlashcard();
+    renderTestQuestion();
+  </script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["\\(", "\\)"]],
+        displayMath: [["\\[", "\\]"]]
+      },
+      svg: {
+        fontCache: "global"
+      },
+      startup: {
+        ready: () => {
+          prepareLatexNodes();
+          MathJax.startup.defaultReady();
+        }
+      }
+    };
+  </script>
+  <script defer src="mathjax-tex-svg.js"></script>
+</body>
+</html>
