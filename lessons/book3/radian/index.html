@@ -411,7 +411,6 @@
 
     .flashcard {
       width: 100%;
-      min-height: 272px;
       padding: 0;
       border: 0;
       background: transparent;
@@ -423,18 +422,11 @@
     .flashcard-inner {
       position: relative;
       width: 100%;
-      min-height: 272px;
-      transition: transform 0.58s cubic-bezier(0.2, 0.75, 0.25, 1);
-      transform-style: preserve-3d;
-    }
-
-    .flashcard.is-flipped .flashcard-inner {
-      transform: rotateY(180deg);
+      transition: opacity 0.2s ease;
     }
 
     .flashcard-face {
-      position: absolute;
-      inset: 0;
+      position: relative;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -442,8 +434,6 @@
       padding: clamp(22px, 5vw, 42px);
       border: 1px solid #d9e4ef;
       border-radius: 12px;
-      backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
     }
 
     .flashcard-front {
@@ -455,7 +445,16 @@
       justify-content: flex-start;
       overflow: auto;
       background: #eaf7ff;
-      transform: rotateY(180deg);
+      display: none;
+    }
+
+    .flashcard.is-flipped .flashcard-front {
+      display: none;
+    }
+
+    .flashcard.is-flipped .flashcard-back {
+      display: flex;
+      animation: fade-in 0.2s ease;
     }
 
     .flashcard-kicker {
@@ -581,7 +580,6 @@
 
     .challenge-question-card {
       width: 100%;
-      min-height: 190px;
       margin-top: 24px;
       padding: 28px;
       border: 3px solid #e0e8f1;
@@ -885,10 +883,6 @@
         margin-left: 0;
       }
 
-      .flashcard,
-      .flashcard-inner {
-        min-height: 380px;
-      }
     }
 
     @media (max-width: 640px) {
@@ -930,14 +924,8 @@
       }
 
       .challenge-question-card {
-        min-height: 160px;
         margin-top: 16px;
         padding: 18px 12px;
-      }
-
-      .flashcard,
-      .flashcard-inner {
-        min-height: 400px;
       }
 
       .flash-actions {
