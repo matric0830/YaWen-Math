@@ -621,15 +621,25 @@
       background: #fbfcfe;
     }
 
-    .challenge-next {
-      width: 100%;
+    .challenge-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
       margin-top: 18px;
+    }
+
+    .challenge-actions .btn {
+      min-height: 52px;
       border-radius: 14px;
       font-size: 1.1rem;
     }
 
     .challenge-next[hidden] {
       display: none;
+    }
+
+    .challenge-next[hidden] + #test-restart {
+      grid-column: 1 / -1;
     }
 
     .challenge-result {
@@ -1029,9 +1039,9 @@
         </button>
         <p class="challenge-hint" id="test-hint" hidden></p>
         <div class="choices" id="test-choices"></div>
-        <button class="btn btn-primary challenge-next" id="test-next" type="button" hidden>下一題</button>
         <div class="summary-list" id="test-summary"></div>
-        <div class="actions">
+        <div class="challenge-actions">
+          <button class="btn btn-primary challenge-next" id="test-next" type="button" hidden>下一題</button>
           <button class="btn btn-secondary" id="test-restart" type="button">重新挑戰</button>
         </div>
       </div>
