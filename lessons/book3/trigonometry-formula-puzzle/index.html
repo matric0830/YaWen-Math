@@ -409,5 +409,11 @@ document.querySelectorAll('[data-page]').forEach(function(tab){tab.onclick=funct
   });
 
   syncFormulaNote();
+
+  // The initial renderer runs before the final flash-card behavior is declared.
+  if (activePage === 'flash') {
+    renderFlash();
+    typeset();
+  }
 </script>
 </body></html>
