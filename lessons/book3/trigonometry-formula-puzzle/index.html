@@ -74,7 +74,8 @@
   .test-lhs { background: #081113; color: var(--cream); font-size: clamp(25px, 4vw, 40px); }
   .test-answer { border: 2px dashed var(--line); background: #0b1517; justify-content: flex-start; }
   .test-answer:has(.selected) { border-color: var(--cream); background: rgba(255, 216, 155, .08); box-shadow: 0 0 0 3px rgba(255, 216, 155, .12); }
-  .test-answer .area.selected { border-color: var(--cream); }
+  .test-answer .area.selected, .test-answer .field.selected { border-color: var(--cream); background: rgba(255, 216, 155, .18); box-shadow: 0 0 0 3px rgba(255, 216, 155, .58), 0 0 20px rgba(255, 216, 155, .35); animation: selected-field-pulse 1.2s ease-in-out infinite; }
+  .test-answer .selected .placeholder { color: var(--cream); font-weight: 900; }
   .test-answer .area { width: 100%; min-height: 64px; }
   .test-token-bank { margin-top: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: #102124; }
   .test-token-sections { display: grid; gap: 8px; }
@@ -82,6 +83,7 @@
   .test-token-section .token-group-title { margin: 0 0 7px; font-size: 13px; }
   .test-token-section .token-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
   .test-token-section .token { width: 100%; min-width: 0; min-height: 44px; height: 44px; padding: 3px; font-size: 16px; }
+  @keyframes selected-field-pulse { 50% { box-shadow: 0 0 0 5px rgba(255, 216, 155, .24), 0 0 26px rgba(255, 216, 155, .48); } }
   .test-token-section.sin-piece .token { background: #88d2cc; }
   .test-token-section.cos-piece .token { background: #659fbd; }
   .test-token-section.tan-piece .token { background: #d378ac; }
@@ -213,9 +215,10 @@ document.querySelectorAll('[data-page]').forEach(function(tab){tab.onclick=funct
 
   function testField(part) {
     const values = testPlaced[part], active = testSelected === part ? ' selected' : '';
+    const label = testSelected === part ? '目前填入' + (part === 'top' ? '分子' : '分母') : '選填' + (part === 'top' ? '分子' : '分母');
     const body = values.length ? values.map(function(value, index) {
       return '<button class="piece" data-test-remove="' + part + ':' + index + '">' + tx(value) + '</button>';
-    }).join('') : '<span class="placeholder">選填' + (part === 'top' ? '分子' : '分母') + '</span>';
+    }).join('') : '<span class="placeholder">' + label + '</span>';
     return '<div class="field ' + (part === 'top' ? 'topfield' : 'bottomfield') + active + '" data-test-field="' + part + '">' + body + '</div>';
   }
 
