@@ -117,9 +117,20 @@
   }
   @media (max-width: 600px) {
     .page { padding: 8px; }
+    .page-tabs { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 7px; }
+    .page-tab { grid-column: span 2; }
+    .page-tab:nth-child(4), .page-tab:nth-child(5) { grid-column: span 3; }
     .layout { grid-template-columns: minmax(0, 1.18fr) minmax(126px, .82fr); gap: 8px; }
     .board, .bank { padding: 8px; border-width: 2px; }
     .bank { position: sticky; top: 8px; align-self: start; max-height: calc(100dvh - 16px); overflow-y: auto; scrollbar-width: thin; }
+    .row:has(.radicand) .lhs { padding: 7px 5px; font-size: 15px; }
+    .row:has(.radicand) .lhs small { margin-right: 4px; font-size: 11px; }
+    .area:has(.radicand) { flex-wrap: nowrap; gap: 2px; padding-left: 4px; }
+    .area:has(.radicand) .pm { flex: 0 0 auto; font-size: 17px; }
+    .area:has(.radicand) .radicand { flex: 1 1 auto; min-width: 0; }
+    .area:has(.radicand) .root { flex: 0 0 auto; font-size: 42px; margin: 8px -3px 0 0; }
+    .area:has(.radicand) .fraction { min-width: 0; width: 100%; }
+    .area:has(.radicand) .fraction .field { min-height: 32px; padding: 3px 5px; }
     .head { align-items: flex-start; gap: 6px; }
     .head h2 { font-size: 15px; }
     .board-actions { gap: 4px; }
