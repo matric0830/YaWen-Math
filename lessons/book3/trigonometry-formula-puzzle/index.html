@@ -129,6 +129,11 @@
     .action { min-height: 40px; font-size: 14px; }
     .result { font-size: 12px; }
   }
+  @media (min-width: 601px) {
+    .row { grid-template-columns: max-content minmax(0, 1fr); gap: 6px; }
+    .area { padding-left: 8px; }
+  }
+  .triple-row { grid-template-columns: minmax(0, 1fr); gap: 0; }
 </style>
 <script>window.MathJax={tex:{inlineMath:[['\\(','\\)']]},svg:{fontCache:'global'}};</script><script defer src="mathjax-tex-svg.js"></script>
 </head>
@@ -154,7 +159,7 @@ let order=F.map(function(_,i){return i}),selected=null,activePage='flash',flashO
 function tx(v){return '\\('+v+'\\)'}function typeset(){if(window.MathJax&&window.MathJax.typesetPromise)window.MathJax.typesetPromise()}
 function field(i,part){const a=placed[i][part],focus=selected&&selected.i===i&&selected.part===part?' selected':'';let body=a.length?a.map(function(v,n){return '<button class="piece" data-remove="'+part+':'+n+'">'+tx(v)+'</button>'}).join(''):'<span class="placeholder">選填'+(part==='top'?'分子':'分母')+'</span>';return '<div class="field '+(part==='top'?'topfield':'bottomfield')+focus+'" data-field="'+part+'">'+body+'</div>'}
 function tripleField(i,part){const a=placed[i][part],focus=selected&&selected.i===i&&selected.part===part?' selected':'';let body=a.length?a.map(function(v,n){return '<button class="piece" data-remove="'+part+':'+n+'">'+tx(v)+'</button>'}).join(''):'<span class="placeholder">填入等價式</span>';return '<div class="field triple-field'+focus+'" data-field="'+part+'">'+body+'</div>'}
-function right(i,f){if(f[1]==='plain'){const a=placed[i].main;return '<div class="area" data-field="main"><div class="trail">'+(a.length?a.map(function(v,n){return '<button class="piece" data-remove="main:'+n+'">'+tx(v)+'</button>'}).join(''):'<span class="placeholder">點選此處後，從右側選取零件</span>')+'</div></div>'}if(f[1]==='triple')return '<div class="area"><div class="triple-answer"><div class="triple-row"><span class="fixed-equals">'+tx('=')+'</span>'+tripleField(i,'first')+'</div><div class="triple-row"><span class="fixed-equals">'+tx('=')+'</span>'+tripleField(i,'second')+'</div><div class="triple-row"><span class="fixed-equals">'+tx('=')+'</span>'+tripleField(i,'third')+'</div></div></div>';let before='',after='';if(f[1]==='root'){before='<span class="pm">'+tx('\\pm')+'</span><span class="radicand"><span class="root">√</span>';after='</span>'}return '<div class="area">'+before+'<div class="fraction">'+field(i,'top')+field(i,'bottom')+'</div>'+after+'</div>'}
+function right(i,f){if(f[1]==='plain'){const a=placed[i].main;return '<div class="area" data-field="main"><div class="trail">'+(a.length?a.map(function(v,n){return '<button class="piece" data-remove="main:'+n+'">'+tx(v)+'</button>'}).join(''):'<span class="placeholder">點選此處後，從右側選取零件</span>')+'</div></div>'}if(f[1]==='triple')return '<div class="area"><div class="triple-answer"><div class="triple-row">'+tripleField(i,'first')+'</div><div class="triple-row">'+tripleField(i,'second')+'</div><div class="triple-row">'+tripleField(i,'third')+'</div></div></div>';let before='',after='';if(f[1]==='root'){before='<span class="pm">'+tx('\\pm')+'</span><span class="radicand"><span class="root">√</span>';after='</span>'}return '<div class="area">'+before+'<div class="fraction">'+field(i,'top')+field(i,'bottom')+'</div>'+after+'</div>'}
 function pageGroups(){return activePage==='sum'?['和差角公式']:['倍角公式','半角公式']}function renderTabs(){document.querySelectorAll('[data-page]').forEach(function(tab){tab.classList.toggle('active',tab.dataset.page===activePage)})}function flashFormula(f){if(f[1]==='plain')return f[2]+f[3].join('');if(f[1]==='triple')return f[2]+f[3].join('')+'='+f[4].join('')+'='+f[5].join('');if(f[1]==='frac')return f[2]+'\\dfrac{'+f[3].join('')+'}{'+f[4].join('')+'}';return f[2]+'\\pm\\sqrt{\\dfrac{'+f[3].join('')+'}{'+f[4].join('')+'}}'}function renderFlash(){const index=flashOrder[flashIndex],f=F[index],content=flashShown?tx(flashFormula(f)):tx(f[2]),prompt=flashShown?'完整公式':'請說出等號右邊的公式';groups.innerHTML='<section class="flash-stage"><div><p class="flash-meta">第 '+(flashIndex+1)+' ／ '+flashOrder.length+' 張　｜　'+f[0]+'</p><article class="flash-card" id="flashCard"><div><p class="flash-category">'+prompt+'</p><div class="flash-formula">'+content+'</div><p class="flash-prompt">點選卡片即可翻面</p></div></article><div class="flash-actions"><button class="flash-action" id="flashPrev">上一張</button><button class="flash-action primary" id="flashFlip">'+(flashShown?'查看題目':'翻面看答案')+'</button><button class="flash-action" id="flashNext">下一張</button><button class="flash-action" id="flashShuffle">隨機順序</button></div></div></section>';document.getElementById('flashCard').onclick=function(){flashShown=!flashShown;renderFlash();typeset()};document.getElementById('flashFlip').onclick=function(){flashShown=!flashShown;renderFlash();typeset()};document.getElementById('flashPrev').onclick=function(){flashIndex=(flashIndex+flashOrder.length-1)%flashOrder.length;flashShown=false;renderFlash();typeset()};document.getElementById('flashNext').onclick=function(){flashIndex=(flashIndex+1)%flashOrder.length;flashShown=false;renderFlash();typeset()};document.getElementById('flashShuffle').onclick=function(){flashOrder.sort(function(){return Math.random()-.5});flashIndex=0;flashShown=false;renderFlash();typeset()}}function render(){const layout=document.querySelector('.layout'),bank=document.querySelector('.bank'),title=document.querySelector('.board .head h2'),shuffle=document.getElementById('shuffle');if(activePage==='flash'){layout.classList.add('flash-mode');bank.hidden=true;title.textContent='所有公式閃卡練習';shuffle.hidden=true;renderFlash();renderTabs();typeset();return}layout.classList.remove('flash-mode');bank.hidden=false;title.textContent='公式題目填充軌道';shuffle.hidden=false;groups.innerHTML='';pageGroups().forEach(function(g){let box=document.createElement('section');box.innerHTML='<div class="label">'+g+'</div>';order.filter(function(i){return F[i][0]===g}).forEach(function(i){let f=F[i],row=document.createElement('article');row.className='row'+(selected&&selected.i===i?' selected':'');row.dataset.i=i;row.innerHTML='<div class="lhs"><small>('+String(i+1).padStart(2,'0')+')</small>'+tx(f[2])+'</div>'+right(i,f);row.addEventListener('click',function(e){let remove=e.target.closest('[data-remove]');if(remove){let p=remove.dataset.remove.split(':');placed[i][p[0]].splice(Number(p[1]),1);row.classList.remove('correct','wrong');render();return}let target=e.target.closest('[data-field]');if(target){selected={i:i,part:target.dataset.field};result.textContent='已選擇'+(target.dataset.field==='main'?'等號右邊':target.dataset.field==='top'?'分子':'分母')+'填答區。';result.className='result';render()}});box.appendChild(row)});groups.appendChild(box)});renderTabs();typeset()}
 function renderTokens(){tokens.innerHTML=BANK.map(function(v){let c=[T.ta,T.tb,T.tt].includes(v)?'tan ':'';if([T.plus,T.minus,T.eq].includes(v))c+='sign ';if(v.length>9)c+='wide';return '<button class="token '+c+'" data-t="'+encodeURIComponent(v)+'">'+tx(v)+'</button>'}).join('');tokens.querySelectorAll('[data-t]').forEach(function(b){b.addEventListener('click',function(){if(!selected){result.textContent='請先選擇一個填答區。';result.className='result bad';return}placed[selected.i][selected.part].push(decodeURIComponent(b.dataset.t));result.textContent='零件已加入填答區。';result.className='result';render()})});typeset()}
 function renderTokens(){const groups=activePage==='sum'?[['三角函數零件',[T.sa,T.sb,T.ca,T.cb]],['正切零件',[T.ta,T.tb]],['常數與運算符號',[T.one,T.plus,T.minus]]]:[['三角函數零件',[T.st,T.ct,T.tt]],['平方與常數',[T.cs,T.ss,T.ts,T.two,T.one]],['運算符號',[T.plus,T.minus]]];tokens.innerHTML=groups.map(function(group){return '<section class="token-group"><p class="token-group-title">'+group[0]+'</p><div class="token-grid">'+group[1].map(function(v){let c=[T.ta,T.tb,T.tt,T.ts].includes(v)?'tan ':'';if([T.plus,T.minus].includes(v))c+='sign ';return '<button class="token '+c+'" data-t="'+encodeURIComponent(v)+'">'+tx(v)+'</button>'}).join('')+'</div></section>'}).join('');tokens.querySelectorAll('[data-t]').forEach(function(b){b.addEventListener('click',function(){if(!selected){result.textContent='請先選擇一個填答區。';result.className='result bad';return}placed[selected.i][selected.part].push(decodeURIComponent(b.dataset.t));result.textContent='零件已加入填答區。';result.className='result';render()})});typeset()}
@@ -228,7 +233,7 @@ document.querySelectorAll('[data-page]').forEach(function(tab){tab.onclick=funct
       return '<div class="area' + (testSelected === 'main' ? ' selected' : '') + '" data-test-field="main"><div class="trail">' + body + '</div></div>';
     }
     if (f[1] === 'triple') {
-      return '<div class="area"><div class="triple-answer"><div class="triple-row"><span class="fixed-equals">' + tx('=') + '</span>' + testTripleField('first') + '</div><div class="triple-row"><span class="fixed-equals">' + tx('=') + '</span>' + testTripleField('second') + '</div><div class="triple-row"><span class="fixed-equals">' + tx('=') + '</span>' + testTripleField('third') + '</div></div></div>';
+      return '<div class="area"><div class="triple-answer"><div class="triple-row">' + testTripleField('first') + '</div><div class="triple-row">' + testTripleField('second') + '</div><div class="triple-row">' + testTripleField('third') + '</div></div></div>';
     }
     const prefix = f[1] === 'root' ? '<span class="pm">' + tx('\\pm') + '</span><span class="radicand"><span class="root">√</span>' : '';
     const suffix = f[1] === 'root' ? '</span>' : '';
@@ -328,7 +333,7 @@ document.querySelectorAll('[data-page]').forEach(function(tab){tab.onclick=funct
     tab.onclick = function() {
       activePage = tab.dataset.page; selected = null;
       if (activePage === 'test') renderTest(); else { render(); if (activePage !== 'flash') renderTokens(); }
-      result.textContent = activePage === 'test' ? '' : '已切換頁面。';
+      result.textContent = '';
       result.className = 'result';
     };
   });
@@ -339,9 +344,8 @@ document.querySelectorAll('[data-page]').forEach(function(tab){tab.onclick=funct
     const face = flashShown ? tx(answerOnly(f)) : tx(f[2].replace(/=$/, ''));
     const title = flashShown ? '公式答案' : '回想公式';
     const note = flashShown && f[0] === '半角公式' ? '<p class="flash-half-note">正負要看 ' + tx('\\dfrac{\\theta}{2}') + ' 的正負。</p>' : '';
-    groups.innerHTML = '<section class="flash-stage"><div><p class="flash-meta">第 ' + (flashIndex + 1) + ' ／ ' + flashOrder.length + ' 張　｜　' + f[0] + '</p><article class="flash-card" id="flashCard"><div><p class="flash-category">' + title + '</p><div class="flash-formula"><div class="flash-lines"><div>' + face + '</div></div></div>' + note + '<p class="flash-prompt">點選卡片即可翻面</p></div></article><div class="flash-actions"><button class="flash-action" id="flashPrev">上一張</button><button class="flash-action primary" id="flashFlip">' + (flashShown ? '查看題目' : '翻面看答案') + '</button><button class="flash-action" id="flashNext">下一張</button><button class="flash-action" id="flashShuffle">隨機順序</button></div></div></section>';
+    groups.innerHTML = '<section class="flash-stage"><div><p class="flash-meta">第 ' + (flashIndex + 1) + ' ／ ' + flashOrder.length + ' 張　｜　' + f[0] + '</p><article class="flash-card" id="flashCard"><div><p class="flash-category">' + title + '</p><div class="flash-formula"><div class="flash-lines"><div>' + face + '</div></div></div>' + note + '<p class="flash-prompt">點選卡片即可翻面</p></div></article><div class="flash-actions"><button class="flash-action" id="flashPrev">上一張</button><button class="flash-action" id="flashNext">下一張</button><button class="flash-action" id="flashShuffle">隨機順序</button></div></div></section>';
     document.getElementById('flashCard').onclick = function(){ flashShown = !flashShown; renderFlash(); typeset(); };
-    document.getElementById('flashFlip').onclick = function(){ flashShown = !flashShown; renderFlash(); typeset(); };
     document.getElementById('flashPrev').onclick = function(){ flashIndex = (flashIndex + flashOrder.length - 1) % flashOrder.length; flashShown = false; renderFlash(); typeset(); };
     document.getElementById('flashNext').onclick = function(){ flashIndex = (flashIndex + 1) % flashOrder.length; flashShown = false; renderFlash(); typeset(); };
     document.getElementById('flashShuffle').onclick = function(){ flashOrder.sort(function(){ return Math.random() - .5; }); flashIndex = 0; flashShown = false; renderFlash(); typeset(); };
@@ -392,14 +396,14 @@ document.querySelectorAll('[data-page]').forEach(function(tab){tab.onclick=funct
 
   function syncFormulaNote() {
     formulaNote.hidden = activePage !== 'half';
-    resetButton.hidden = activePage === 'test';
+    resetButton.hidden = activePage === 'test' || activePage === 'flash';
     resetButton.textContent = '回復順序';
   }
 
   document.querySelectorAll('[data-page]').forEach(function(tab) {
     tab.addEventListener('click', function() {
       formulaNote.hidden = tab.dataset.page !== 'half';
-      resetButton.hidden = tab.dataset.page === 'test';
+      resetButton.hidden = tab.dataset.page === 'test' || tab.dataset.page === 'flash';
       resetButton.textContent = '回復順序';
     }, true);
   });
