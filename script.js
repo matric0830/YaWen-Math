@@ -66,7 +66,7 @@ const CHAPTERS = {
   ],
   book3: [
     { title: "第一章 三角函數", lessons: [
-topic("058", "弧度量", { href: "lessons/book3/radian/index.html", status: "practice", tags: ["弧度量三角函數値"] }), topic("059", "扇形的周長與面積"), topic("060", "三角函數的圖形"),
+topic("058", "弧度量", { href: "lessons/book3/radian/index.html", status: "practice", tags: ["函數值閃卡", "函數值測驗"] }), topic("059", "扇形的周長與面積"), topic("060", "三角函數的圖形"),
       topic("061", "三角函數的週期與伸縮平移"),
       { ...topic("062", "和差角公式、二倍角公式與半角公式", { href: "lessons/book3/trigonometry-formula-puzzle/index.html", status: "practice", tags: ["閃卡", "公式拼圖", "測驗"] }), number: "主題062～064" },
       topic("065", "正餘弦疊合")
