@@ -117,6 +117,7 @@
     .page { padding: 8px; }
     .layout { grid-template-columns: minmax(0, 1.18fr) minmax(126px, .82fr); gap: 8px; }
     .board, .bank { padding: 8px; border-width: 2px; }
+    .bank { position: sticky; top: 8px; align-self: start; max-height: calc(100dvh - 16px); overflow-y: auto; scrollbar-width: thin; }
     .head { align-items: flex-start; gap: 6px; }
     .head h2 { font-size: 15px; }
     .board-actions { gap: 4px; }
