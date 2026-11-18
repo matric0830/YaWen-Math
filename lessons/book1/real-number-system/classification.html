@@ -214,6 +214,18 @@
       font-weight: 900;
       box-shadow: 0 20px 36px rgba(0, 0, 0, 0.26);
       user-select: none;
+      -webkit-user-select: none;
+      touch-action: none;
+    }
+
+    .touch-drag-preview {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      min-width: 0;
+      pointer-events: none;
+      opacity: 0.76;
     }
 
     .current-card.is-selected {
@@ -272,7 +284,6 @@
       background: rgba(255, 245, 214, 0.3);
       border-color: #ffe7a8;
       box-shadow: 0 0 0 4px rgba(255, 231, 168, 0.28), 0 0 24px rgba(255, 231, 168, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.14);
-      transform: translateY(-1px);
     }
 
     .zone.drag-over .zone-label {
@@ -842,6 +853,94 @@
       });
 
       cardEl.addEventListener("dragstart", drag);
+      cardEl.addEventListener("pointerdown", startTouchDrag);
+      cardEl.addEventListener("pointermove", moveTouchDrag);
+      cardEl.addEventListener("pointerup", endTouchDrag);
+      cardEl.addEventListener("pointercancel", cancelTouchDrag);
+      cardEl.addEventListener("lostpointercapture", cancelTouchDrag);
+    }
+
+    let touchDrag = null;
+
+    function startTouchDrag(event) {
+      if (event.pointerType === "mouse" || event.button !== 0 || touchDrag || !currentCard) return;
+
+      const source = event.currentTarget;
+      const rect = source.getBoundingClientRect();
+      source.setPointerCapture(event.pointerId);
+      touchDrag = {
+        pointerId: event.pointerId,
+        source,
+        x: event.clientX,
+        y: event.clientY,
+        offsetX: event.clientX - rect.left,
+        offsetY: event.clientY - rect.top,
+        preview: null,
+        frame: 0,
+        zone: null
+      };
+    }
+
+    function moveTouchDrag(event) {
+      if (touchDrag?.pointerId !== event.pointerId) return;
+
+      const state = touchDrag;
+      if (!state.preview) {
+        if (Math.hypot(event.clientX - state.x, event.clientY - state.y) < 6) return;
+
+        const preview = state.source.cloneNode(true);
+        preview.removeAttribute("id");
+        preview.setAttribute("aria-hidden", "true");
+        preview.classList.add("touch-drag-preview");
+        preview.style.width = state.source.offsetWidth + "px";
+        document.body.appendChild(preview);
+        state.preview = preview;
+        state.frame = requestAnimationFrame(updateTouchDrag);
+      }
+
+      state.x = event.clientX;
+      state.y = event.clientY;
+      state.preview.style.transform = `translate(${state.x - state.offsetX}px, ${state.y - state.offsetY}px)`;
+    }
+
+    function zoneAtPoint(x, y) {
+      return document.elementFromPoint(x, y)?.closest(".zone") ?? null;
+    }
+
+    function updateTouchDrag() {
+      const state = touchDrag;
+      const viewportHeight = window.visualViewport?.height ?? window.innerHeight;
+      const edge = 56;
+      if (state.y < edge) window.scrollBy(0, -10);
+      else if (state.y > viewportHeight - edge) window.scrollBy(0, 10);
+
+      const zone = zoneAtPoint(state.x, state.y);
+      if (zone !== state.zone) {
+        state.zone = zone;
+        highlightZone(zone);
+      }
+      state.frame = requestAnimationFrame(updateTouchDrag);
+    }
+
+    function clearTouchDrag() {
+      if (!touchDrag) return;
+      const { source, pointerId, preview, frame } = touchDrag;
+      touchDrag = null;
+      cancelAnimationFrame(frame);
+      preview?.remove();
+      if (source.hasPointerCapture(pointerId)) source.releasePointerCapture(pointerId);
+      clearActiveZones();
+    }
+
+    function cancelTouchDrag(event) {
+      if (touchDrag?.pointerId === event.pointerId) clearTouchDrag();
+    }
+
+    function endTouchDrag(event) {
+      if (touchDrag?.pointerId !== event.pointerId) return;
+      const zone = touchDrag.preview ? zoneAtPoint(event.clientX, event.clientY) : null;
+      clearTouchDrag();
+      if (zone) classifyCurrentCard(zone.dataset.accept, zone);
     }
 
     function drawNextCard() {
@@ -860,7 +959,10 @@
     }
 
     function updateActiveZone(event) {
-      const zone = event.target.closest(".zone");
+      highlightZone(event.target.closest(".zone"));
+    }
+
+    function highlightZone(zone) {
       clearActiveZones();
       if (!zone) return;
 
@@ -884,6 +986,10 @@
     }
 
     function drag(event) {
+      if (touchDrag) {
+        event.preventDefault();
+        return;
+      }
       if (!currentCard) return;
 
       event.dataTransfer.setData("text/plain", currentCard.id);
@@ -892,6 +998,7 @@
       ghostContainer.innerHTML = "";
 
       const ghost = targetCard.cloneNode(true);
+      ghost.removeAttribute("id");
       ghost.classList.add("is-selected");
       ghost.style.width = targetCard.offsetWidth + "px";
       ghost.style.height = targetCard.offsetHeight + "px";
@@ -946,13 +1053,14 @@
       clearActiveZones();
 
       const targetZone = event.target.closest(".zone");
-      if (!targetZone || !currentCard) return;
+      if (!targetZone || !currentCard || event.dataTransfer.getData("text/plain") !== currentCard.id) return;
 
       const targetRealm = targetZone.getAttribute("data-accept");
       classifyCurrentCard(targetRealm, targetZone);
     }
 
     function resetGame() {
+      clearTouchDrag();
       ["n-space", "z-space", "q-space", "irr-space"].forEach(id => {
         document.getElementById(id).innerHTML = "";
       });
@@ -968,6 +1076,7 @@
 
     document.addEventListener("dragend", clearActiveZones);
 
+    bindCardEvents();
     resetGame();
   </script>
 </body>
