@@ -296,18 +296,53 @@ h2,.hero-topic,.geo-title,.geo-question,.proof-title,.known,.geo-proof,.geo-main
 .small,.footer{color:rgba(255,255,255,.72)!important;}
 .geo-line.equal-active{background:rgba(250,204,21,.10)!important;border-color:#facc15!important;box-shadow:0 0 0 3px rgba(250,204,21,.38),0 0 24px rgba(250,204,21,.28)!important;color:#fff7df!important;}
 .geo-line.equal-active mjx-container{color:#fff7df!important;}
+#geoPanel{--geo-cd:#c4a5f5;}
+.geo-svg .cd{stroke:var(--geo-cd);}
+#gSqrtLabel{color:var(--geo-cd);}
 .geo-svg.equal .cd,.geo-svg.equal .od{filter:drop-shadow(0 0 10px #facc15)!important;stroke:#facc15!important;}
 .back-button{position:static;z-index:20;display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:9px 18px;border:2px solid rgba(255,255,255,.25);border-radius:999px;background:#f6d28b;color:#17151d;font-weight:900;cursor:pointer;text-decoration:none;box-shadow:0 10px 22px rgba(0,0,0,.24);white-space:nowrap;flex-shrink:0;}
 .back-button:hover{filter:brightness(1.06)}
 .site-footer{margin:18px -22px -22px;padding:18px 24px;background:#bd8959;color:#23160f;text-align:center;font-weight:900;}
 .footer{display:none;}
+.geo-label{left:var(--geo-label-x,50%);}
+.geo-svg-wrap{
+  --geo-label-gutter:clamp(0px,calc(5.5rem - 16%),3.5rem);
+  width:calc(100% - 2 * var(--geo-label-gutter));
+}
+#gSqrtLabel,#gODLabel{width:max-content;transform:translate(var(--geo-label-offset,-50%),-50%);}
+#gODLabel{padding-block:.2em;line-height:1.5;z-index:1;}
+#gODLabel mjx-container,#gODLabel mjx-math{overflow:visible;}
+@media (max-width:1180px){
+  #gSqrtLabel,#gODLabel{font-size:.85rem;}
+}
 @media(max-width:680px){.wrap{padding:14px!important}.hero{padding:18px!important}.hero-topbar{flex-direction:column;align-items:flex-start}.site-footer{margin-left:-14px;margin-right:-14px;margin-bottom:-14px}}
+#quizPanel.panel.active{overflow:auto;}
+.practice-card{min-width:0;}
+.practice-picker,.practice-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.practice-picker .btn[aria-pressed="true"]{background:var(--good);color:#152024;}
+.practice-tools{justify-content:space-between;}
+.practice-tools .btn{background:var(--soft);color:var(--ink);}
+.practice-prompt{margin:10px 0 8px;line-height:1.65;}
+.practice-pad{
+  display:block;width:100%;height:240px;touch-action:none;cursor:crosshair;
+  border:1px solid var(--line);border-radius:8px;background-color:#1b2326;
+  background-image:linear-gradient(#ffffff12 1px,transparent 1px),linear-gradient(90deg,#ffffff12 1px,transparent 1px);
+  background-size:20px 20px;
+}
+.practice-answers{margin:10px 0 0;padding:0;border:0;min-width:0;}
+.practice-answers legend{padding:0;font-weight:800;}
+.practice-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:6px;}
+.practice-options .choice{margin:0;min-height:44px;text-align:center;}
+.practice-options .choice.correct{border:2px solid var(--good);}
+.practice-options .choice.wrong{border:2px solid #e28c8c;}
+.practice-feedback{margin:8px 0 0;color:var(--warn);overflow-wrap:anywhere;}
+@media(max-height:780px){.practice-pad{height:180px;}}
+@media(max-width:420px){.practice-options{grid-template-columns:1fr;}}
 </style>
 <script>
 function showSteps(id){document.querySelectorAll('#'+id+' .step').forEach((e,i)=>setTimeout(()=>e.classList.add('show'),i*220));}
 function resetSteps(id){document.querySelectorAll('#'+id+' .step').forEach(e=>e.classList.remove('show'));}
 function typesetMath(){if(window.MathJax&&MathJax.typesetPromise){MathJax.typesetPromise();}}
-function check(btn,ok,msg){let p=btn.parentElement;p.querySelectorAll('.choice').forEach(b=>b.disabled=true);btn.classList.add(ok?'correct':'wrong');p.querySelector('.ans').innerHTML=(ok?'✅ 正確！':'❌ 再想想：')+msg;typesetMath();}
 function updateGeo(){
   let a=Number(document.getElementById('a').value), b=Number(document.getElementById('b').value);
   let am=(a+b)/2;
@@ -329,6 +364,15 @@ function updateGeo(){
 
 let geoAutoTimer=null;
 let geoAutoDir=1;
+let geomProofFrame=null;
+
+function scheduleGeomProof(){
+  if(geomProofFrame!==null) return;
+  geomProofFrame=requestAnimationFrame(()=>{
+    geomProofFrame=null;
+    updateGeomProof();
+  });
+}
 
 function updateGeomProof(renderMath=false){
   const slider=document.getElementById('cpos');
@@ -341,7 +385,13 @@ function updateGeomProof(renderMath=false){
   const Dy=baseY - Math.sqrt(Math.max(0,R*R-dx*dx));
   const same=Math.abs(Number(slider.value)-50)<0.12;
   const set=(id,attrs)=>{const el=document.getElementById(id); if(!el) return; Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));};
-  const posLabel=(id,x,y)=>{const el=document.getElementById(id); if(!el) return; el.style.left=(x/520*100)+'%'; el.style.top=(y/320*100)+'%';};
+  const posLabel=(id,x,y,side)=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.style.setProperty('--geo-label-x',(x/520*100)+'%');
+    el.style.top=(y/320*100)+'%';
+    if(side) el.style.setProperty('--geo-label-offset',side==='left'?'calc(-100% - 5px)':'5px');
+  };
   set('gC',{cx:Cx}); set('gD',{cx:Cx,cy:Dy});
   set('gCD',{x1:Cx,y1:baseY,x2:Cx,y2:Dy});
   set('gOD',{x1:Ox,y1:baseY,x2:Cx,y2:Dy});
@@ -355,7 +405,9 @@ function updateGeomProof(renderMath=false){
   set('gAngleD',{points:`${p1x},${p1y} ${p3x},${p3y} ${p2x},${p2y}`});
   set('gAseg',{x1:Ax,x2:Cx}); set('gBseg',{x1:Cx,x2:Bx});
   set('gRightV',{x:Cx+2,y:baseY-18}); set('gClabel',{x:Cx-8}); set('gDlabel',{x:Cx-10,y:Dy-14});
-  posLabel('gSqrtLabel', Cx-78, (baseY+Dy)/2-8); posLabel('gODLabel', (Ox+Cx)/2+28, (baseY+Dy)/2-4);
+  const midY=(baseY+Dy)/2;
+  posLabel('gSqrtLabel', Cx, midY, dx<=0?'left':'right');
+  posLabel('gODLabel', (Ox+Cx)/2, midY, dx<=0?'right':'left');
   posLabel('gALabel', (Ax+Cx)/2, 292); posLabel('gBLabel', (Cx+Bx)/2, 292);
   const svg=document.getElementById('geoSvg'); if(svg) svg.classList.toggle('equal', same);
   document.getElementById('lineGreater')?.classList.toggle('active', !same);
@@ -510,7 +562,7 @@ window.onload=function(){updateGeo();updateGeomProof(true);openPanel('expPanel')
       </svg>
       <div id="gALabel" class="geo-label purple">\(a\)</div>
       <div id="gBLabel" class="geo-label orange">\(b\)</div>
-      <div id="gSqrtLabel" class="geo-label red">\(\overline{CD}=\sqrt{ab}\)</div>
+      <div id="gSqrtLabel" class="geo-label">\(\overline{CD}=\sqrt{ab}\)</div>
       <div id="gODLabel" class="geo-label green">\(\overline{OD}=\dfrac{a+b}{2}\)</div>
       </div>
     </div>
@@ -519,7 +571,7 @@ window.onload=function(){updateGeo();updateGeomProof(true);openPanel('expPanel')
         <label>C 點位置</label>
         <button id="geoAutoBtn" class="geo-auto-btn" type="button" onclick="toggleGeoAuto()">▶ 自動滑動</button>
       </div>
-      <input id="cpos" class="slider" type="range" min="8" max="92" step="0.01" value="34" oninput="updateGeomProof(false)">
+      <input id="cpos" class="slider" type="range" min="8" max="92" step="0.01" value="34" oninput="scheduleGeomProof()">
     </div>
   </div>
   <div class="geo-proof-card geo-proof">
@@ -545,15 +597,52 @@ window.onload=function(){updateGeo();updateGeomProof(true);openPanel('expPanel')
 </section>
 
 <section id="quizPanel" class="panel">
-<section class="grid">
-<div class="card quiz"><b>第 1 題</b><p>若 \(a=9,b=16\)，\(\sqrt{ab}\) 是多少？</p><button class="btn choice" onclick="check(this,false,'\\(\\sqrt{9+16}\\) 不是這題喔，小心加乘不分。')">5</button><button class="btn choice" onclick="check(this,true,'\\(\\sqrt{9\\times16}=\\sqrt{144}=12\\)。')">12</button><button class="btn choice" onclick="check(this,false,'這是算術平均，不是幾何平均。')">12.5</button><div class="ans"></div></div>
-<div class="card quiz"><b>第 2 題</b><p>算幾不等式中，等號什麼時候成立？</p><button class="btn choice" onclick="check(this,true,'當兩數相等，\\(a=b\\)。')">\(a=b\)</button><button class="btn choice" onclick="check(this,false,'不是 a+b=0，除非兩個都 0。')">\(a+b=0\)</button><button class="btn choice" onclick="check(this,false,'不是越大越好，數學不是喊口號。')">\(a\) 和 \(b\) 都很大</button><div class="ans"></div></div>
-<div class="card quiz"><b>第 3 題</b><p>若 \(x>0\)，求 \(x+\frac{9}{x}\) 的最小值。</p><button class="btn choice" onclick="check(this,false,'還沒用到算幾不等式。')">3</button><button class="btn choice" onclick="check(this,true,'\\(x+\\frac{9}{x}\\ge2\\sqrt{x\\cdot9/x}=6\\)，等號於 \\(x=3\\)。')">6</button><button class="btn choice" onclick="check(this,false,'這個太貪心，最小值沒那麼大。')">9</button><div class="ans"></div></div>
-</section>
-
+  <section class="card practice-card">
+    <div class="practice-picker" role="group" aria-label="選擇題目">
+      <button class="btn" type="button" aria-controls="amgm-practice-1" aria-pressed="false">第 1 題</button>
+      <button class="btn" type="button" aria-controls="amgm-practice-2" aria-pressed="false">第 2 題</button>
+    </div>
+    <article id="amgm-practice-1" class="practice-question" hidden>
+      <p class="practice-prompt">已知 \(a\ge0\)、\(b\ge0\) 且 \(2a+3b=12\)，求 \(ab\) 的最大值及對應的 \((a,b)\)。</p>
+      <div class="practice-tools"><strong>手寫計算區</strong><button class="btn practice-clear" type="button">清除筆跡</button></div>
+      <canvas class="practice-pad" aria-label="第 1 題手寫計算區"></canvas>
+      <fieldset class="practice-answers">
+        <legend>選擇最大值及對應的 \((a,b)\)</legend>
+        <div class="practice-options">
+          <button class="btn choice" type="button">\(\frac{9}{2},\quad(a,b)=(\frac{3}{2},3)\)</button>
+          <button class="btn choice" type="button" data-correct>\(6,\quad(a,b)=(3,2)\)</button>
+          <button class="btn choice" type="button">\(\frac{16}{3},\quad(a,b)=(4,\frac{4}{3})\)</button>
+          <button class="btn choice" type="button">\(0,\quad(a,b)=(6,0)\)</button>
+        </div>
+      </fieldset>
+      <div class="practice-feedback" role="status">
+        <span class="practice-retry" hidden>再想想，請重新選一個答案。</span>
+        <span class="practice-solution" hidden>答對了！\(12=2a+3b\ge 2\sqrt{6ab}\)，所以 \(ab\le6\)。等號在 \(2a=3b=6\) 時成立。</span>
+      </div>
+    </article>
+    <article id="amgm-practice-2" class="practice-question" hidden>
+      <p class="practice-prompt">已知 \(a\ge0\)、\(b\ge0\) 且 \(ab=10\)，求 \(5a+2b\) 的最小值及對應的 \((a,b)\)。</p>
+      <div class="practice-tools"><strong>手寫計算區</strong><button class="btn practice-clear" type="button">清除筆跡</button></div>
+      <canvas class="practice-pad" aria-label="第 2 題手寫計算區"></canvas>
+      <fieldset class="practice-answers">
+        <legend>選擇最小值及對應的 \((a,b)\)</legend>
+        <div class="practice-options">
+          <button class="btn choice" type="button">\(29,\quad(a,b)=(5,2)\)</button>
+          <button class="btn choice" type="button">\(25,\quad(a,b)=(1,10)\)</button>
+          <button class="btn choice" type="button">\(52,\quad(a,b)=(10,1)\)</button>
+          <button class="btn choice" type="button" data-correct>\(20,\quad(a,b)=(2,5)\)</button>
+        </div>
+      </fieldset>
+      <div class="practice-feedback" role="status">
+        <span class="practice-retry" hidden>再想想，請重新選一個答案。</span>
+        <span class="practice-solution" hidden>答對了！\(5a+2b\ge2\sqrt{10ab}=20\)。等號在 \(5a=2b=10\) 時成立。</span>
+      </div>
+    </article>
+  </section>
 </section>
 <footer class="site-footer">© Ya Wen 的數學教室｜讓數學不只會算，還能玩。</footer>
 </div>
+<script src="practice.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </body></html>
 
