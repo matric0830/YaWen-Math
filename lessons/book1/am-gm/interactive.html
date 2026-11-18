@@ -294,6 +294,7 @@ h2,.hero-topic,.geo-title,.geo-question,.proof-title,.known,.geo-proof,.geo-main
 .choice.correct{background:rgba(128,199,196,.24)!important;border-color:#80c7c4!important;}
 .choice.wrong{background:rgba(211,122,169,.24)!important;border-color:#d37aa9!important;}
 .small,.footer{color:rgba(255,255,255,.72)!important;}
+#lineGreater.active{background:rgba(128,199,196,.13)!important;border-color:#80c7c4!important;box-shadow:0 0 0 3px rgba(128,199,196,.38),0 0 24px rgba(128,199,196,.28);}
 .geo-line.equal-active{background:rgba(250,204,21,.10)!important;border-color:#facc15!important;box-shadow:0 0 0 3px rgba(250,204,21,.38),0 0 24px rgba(250,204,21,.28)!important;color:#fff7df!important;}
 .geo-line.equal-active mjx-container{color:#fff7df!important;}
 #geoPanel{--geo-cd:#c4a5f5;}
@@ -318,10 +319,12 @@ h2,.hero-topic,.geo-title,.geo-question,.proof-title,.known,.geo-proof,.geo-main
 @media(max-width:680px){.wrap{padding:14px!important}.hero{padding:18px!important}.hero-topbar{flex-direction:column;align-items:flex-start}.site-footer{margin-left:-14px;margin-right:-14px;margin-bottom:-14px}}
 #quizPanel.panel.active{overflow:auto;}
 .practice-card{min-width:0;}
-.practice-picker,.practice-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
-.practice-picker .btn[aria-pressed="true"]{background:var(--good);color:#152024;}
+.practice-picker,.practice-tools,.practice-tool-buttons{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.practice-picker .btn[aria-pressed="false"]{background:var(--soft)!important;color:var(--ink)!important;}
+.practice-picker .btn[aria-pressed="true"]{background:var(--good)!important;color:#152024!important;box-shadow:inset 0 0 0 2px #b4e5e3;}
 .practice-tools{justify-content:space-between;}
 .practice-tools .btn{background:var(--soft);color:var(--ink);}
+.practice-tools .practice-eraser[aria-pressed="true"]{background:var(--good);color:#152024;}
 .practice-prompt{margin:10px 0 8px;line-height:1.65;}
 .practice-pad{
   display:block;width:100%;height:240px;touch-action:none;cursor:crosshair;
@@ -599,12 +602,18 @@ window.onload=function(){updateGeo();updateGeomProof(true);openPanel('expPanel')
 <section id="quizPanel" class="panel">
   <section class="card practice-card">
     <div class="practice-picker" role="group" aria-label="選擇題目">
-      <button class="btn" type="button" aria-controls="amgm-practice-1" aria-pressed="false">第 1 題</button>
+      <button class="btn" type="button" aria-controls="amgm-practice-1" aria-pressed="true">第 1 題</button>
       <button class="btn" type="button" aria-controls="amgm-practice-2" aria-pressed="false">第 2 題</button>
     </div>
-    <article id="amgm-practice-1" class="practice-question" hidden>
+    <article id="amgm-practice-1" class="practice-question">
       <p class="practice-prompt">已知 \(a\ge0\)、\(b\ge0\) 且 \(2a+3b=12\)，求 \(ab\) 的最大值及對應的 \((a,b)\)。</p>
-      <div class="practice-tools"><strong>手寫計算區</strong><button class="btn practice-clear" type="button">清除筆跡</button></div>
+      <div class="practice-tools">
+        <strong>手寫計算區</strong>
+        <div class="practice-tool-buttons">
+          <button class="btn practice-eraser" type="button" aria-pressed="false">橡皮擦</button>
+          <button class="btn practice-clear" type="button">清除筆跡</button>
+        </div>
+      </div>
       <canvas class="practice-pad" aria-label="第 1 題手寫計算區"></canvas>
       <fieldset class="practice-answers">
         <legend>選擇最大值及對應的 \((a,b)\)</legend>
@@ -622,7 +631,13 @@ window.onload=function(){updateGeo();updateGeomProof(true);openPanel('expPanel')
     </article>
     <article id="amgm-practice-2" class="practice-question" hidden>
       <p class="practice-prompt">已知 \(a\ge0\)、\(b\ge0\) 且 \(ab=10\)，求 \(5a+2b\) 的最小值及對應的 \((a,b)\)。</p>
-      <div class="practice-tools"><strong>手寫計算區</strong><button class="btn practice-clear" type="button">清除筆跡</button></div>
+      <div class="practice-tools">
+        <strong>手寫計算區</strong>
+        <div class="practice-tool-buttons">
+          <button class="btn practice-eraser" type="button" aria-pressed="false">橡皮擦</button>
+          <button class="btn practice-clear" type="button">清除筆跡</button>
+        </div>
+      </div>
       <canvas class="practice-pad" aria-label="第 2 題手寫計算區"></canvas>
       <fieldset class="practice-answers">
         <legend>選擇最小值及對應的 \((a,b)\)</legend>

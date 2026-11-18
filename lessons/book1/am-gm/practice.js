@@ -33,13 +33,21 @@
 
     const canvas = question.querySelector('.practice-pad');
     const context = canvas.getContext('2d');
+    const eraser = question.querySelector('.practice-eraser');
     const strokes = [];
     let activeStroke = null;
     let pointerId = null;
     let width = 0;
     let height = 0;
 
-    function drawSegment(from, to) {
+    eraser.addEventListener('click', () => {
+      const isErasing = eraser.getAttribute('aria-pressed') === 'true';
+      eraser.setAttribute('aria-pressed', String(!isErasing));
+    });
+
+    function drawSegment(from, to, erase) {
+      context.globalCompositeOperation = erase ? 'destination-out' : 'source-over';
+      context.lineWidth = erase ? 16 : 2.5;
       context.beginPath();
       context.moveTo(from.x * width, from.y * height);
       context.lineTo(to.x * width + (from === to ? 0.01 : 0), to.y * height);
@@ -57,10 +65,9 @@
       canvas.height = Math.round(height * scale);
       context.setTransform(canvas.width / width, 0, 0, canvas.height / height, 0, 0);
       context.strokeStyle = '#fff5dd';
-      context.lineWidth = 2.5;
       context.lineCap = 'round';
-      strokes.forEach(stroke => {
-        stroke.forEach((point, index) => drawSegment(stroke[index - 1] ?? point, point));
+      strokes.forEach(({ points, erase }) => {
+        points.forEach((point, index) => drawSegment(points[index - 1] ?? point, point, erase));
       });
     }
 
@@ -81,16 +88,17 @@
       const point = pointAt(event);
       canvas.setPointerCapture(event.pointerId);
       pointerId = event.pointerId;
-      activeStroke = [point];
+      activeStroke = { points: [point], erase: eraser.getAttribute('aria-pressed') === 'true' };
       strokes.push(activeStroke);
-      drawSegment(point, point);
+      drawSegment(point, point, activeStroke.erase);
     });
 
     canvas.addEventListener('pointermove', event => {
       if (event.pointerId !== pointerId) return;
       const point = pointAt(event);
-      drawSegment(activeStroke[activeStroke.length - 1], point);
-      activeStroke.push(point);
+      const { points, erase } = activeStroke;
+      drawSegment(points[points.length - 1], point, erase);
+      points.push(point);
     });
 
     function endStroke(event) {
